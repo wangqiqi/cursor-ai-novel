@@ -1,0 +1,61 @@
+---
+name: novel-plan
+description: 小说创作规划技能。维护 `.cursorGrowth/plan.md` 工作板，确保复杂任务先规划、后执行。适用于用户说"规划"、"做计划"或任务 ≥ 5 步时。
+disable-model-invocation: false
+---
+
+# 小说创作规划 · novel-plan
+
+> **".cursorGrowth/plan.md` 是工作板，不是档案馆。"**
+> 本技能负责维护 `.cursorGrowth/plan.md` 的卫生与任务流转。
+
+## 触发场景
+
+- 用户说："规划"、"做计划"、"先想清楚"
+- 任务 ≥ 5 个步骤（按用户规则 #10 强制）
+- 涉及跨章节、多角色或底层规则的重大变更
+- 启动新 Sprint 或大版本修订
+
+## 工作流（5 阶段）
+
+### 阶段 1：需求澄清 (Clarify)
+- **动作**：复述目标，识别歧义，用 `AskQuestion` 确认。
+- **输出**：明确「成功标准」与「范围边界」。
+
+### 阶段 2：现状盘点 (Inventory)
+- **动作**：扫描 `主题/`、`章节/`、`人物/` 及 `CHANGELOG.md`。
+- **输出**：识别已有资产与当前缺口，避免重复造轮子。
+
+### 阶段 3：任务分解 (Decompose)
+- **动作**：拆解为 ≤ 5 步的子任务。
+- **原则**：每步必须「可验证」且「依赖明确」。
+
+### 阶段 4：写入 `.cursorGrowth/plan.md` (Commit)
+- **动作**：按 `cursor-ai` 范式更新 `.cursorGrowth/plan.md`。
+- **规范**：
+    - 更新头部 HTML 注释（`PLANNING: true`）。
+    - 填充 `Active sprint` 区块（Goal / Done when / Task Table）。
+    - 维护 `下一 Sprint 候选表`。
+
+### 阶段 5：用户确认 (Confirm)
+- **动作**：停下来，展示 `plan.md` 变更，等待用户输入「go/开始/确认」；确认后写 `PLAN_APPROVED: true`、`SPRINT_STATUS: active`。
+- **与 `/nloop`**：新 Sprint / 首次批准 **不可**跳过。仅当已批准且无 `decision_needed` 时，loop 内「补位拆下一小批（≤5、不扩 scope）」可不停问。
+
+## `.cursorGrowth/plan.md` 维护规范
+
+1. **头部卫生**：始终保持 HTML 注释处于最新状态（`LAST_DONE`、`ACTIVE` 等）。
+2. **活跃内容控制**：`plan.md` 活跃内容应 ≤ 150 行（硬上限 300 行）。
+3. **即时清理**：任务一旦 ✅ 完成，立即整段移除并写入 `.cursorGrowth/archive/`。
+4. **先总后分**：先在 `plan.md` 定大方向，再在子任务中细化。
+
+## 反模式
+
+- ❌ 任务超过 5 步不写 `plan.md`。
+- ❌ 把 `plan.md` 当作历史记录（已完成任务不清理）。
+- ❌ 规划内容与 `.cursor/rules` 重复（规则应归位到 rules）。
+- ❌ 任务分解粒度过粗（无法在一个 turn 内完成）。
+
+## 关联
+- **下游**：`novel-run`（执行流）
+- **规则**：`00-novel-meta.mdc`（元规则）、`99-novel-archive.mdc`（归档）
+- **命令**：`/nplan`

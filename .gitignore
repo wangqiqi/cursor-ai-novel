@@ -1,0 +1,53 @@
+# ────── IDE / 编辑器 ──────
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.cline/
+.trae/
+.cursorGrowth/
+.cursorindexerignore
+.cursorworktrees
+
+# ────── plan 真源在 Growth（禁止根目录第二份）──────
+/plan.md
+# 真源：.cursorGrowth/plan.md（随 .cursorGrowth/ 一并忽略）
+
+# ────── .cursor/ 软退路（事故快照 / 重放中转，不入库）──────
+.cursor.bak*
+.cursor.new*
+
+# ────── 系统垃圾 ──────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ────── 临时文件 ──────
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+
+# ────── 环境 / 构建产物 ──────
+.env
+.env.local
+.env.*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
+out/
+coverage/
+.cache/
+.turbo/

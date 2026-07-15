@@ -1,0 +1,35 @@
+{
+  "profile": "novel",
+  "plan_file": ".cursorGrowth/plan.md",
+  "archive_dir": ".cursorGrowth/archive",
+  "growth": {
+    "enabled": true,
+    "dir": ".cursorGrowth",
+    "learn_dir": "learn",
+    "learn_sources": [
+      "CHANGELOG.md",
+      ".cursorGrowth/archive/",
+      ".cursorGrowth/plan.md",
+      "主题/_meta/"
+    ]
+  },
+  "autonomous": {
+    "default": true,
+    "max_loops_default": 15,
+    "confirm_before": [
+      "core_setting_change",
+      "character_death",
+      "major_plot_turn"
+    ],
+    "interrupt_on": [
+      "decision_needed",
+      "blocker",
+      "check_fail_twice",
+      "goal_drift"
+    ]
+  },
+  "role": {
+    "default": "dashu",
+    "config": ".cursor/config/roles.json"
+  }
+}
