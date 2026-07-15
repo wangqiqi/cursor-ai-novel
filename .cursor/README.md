@@ -1,8 +1,7 @@
 # `.cursor` · 小说创作母版
 
 > **本目录是小说编写 Cursor 工具链的唯一母版真源。**  
-> 仓库：`cursor-ai-novel`  
-> 同步基线：自 Formatted-Paradise `.cursor` 完整吸收（对齐 v0.65.1）
+> 随仓库 `cursor-ai-novel` 分发。复制到新书项目根即可用，**不含本机绝对路径、不含具体小说内容**。
 
 ---
 
@@ -29,17 +28,18 @@ Agent 层级：`agents/README.md`
 3. **项目特化**：只写进 `主题/` 与 `.cursorGrowth/`，**禁止**回写母版
 
 ```bash
-# 示例（本机）
-cp -a /home/jwzhou/workspace/cursor-ai-novel/.cursor /path/to/新小说项目/.cursor
-cd /path/to/新小说项目
-# 再在 Cursor 中 /nnew <项目名>
+# 假定母版仓与新书目录同级（按需改相对路径）
+cp -a ../cursor-ai-novel/.cursor ./my-novel/.cursor
+cp ../cursor-ai-novel/.gitignore ./my-novel/   # 可选
+cd my-novel
+# 用 Cursor 打开本目录后执行：/nnew <项目名>
 ```
 
 ---
 
 ## 母版维护约定
 
-1. **通用性**：不写具体书名、角色、绝对高潮章号  
+1. **通用性**：不写具体书名、角色、绝对高潮章号；不写本机绝对路径  
 2. **节奏窗**：只给比例公式（`skills/novel-plot/reference/opening-protocol.md`）；绝对章号只在各项目 `主题/_meta/节奏窗.md`  
 3. **回灌**：某书沉淀出的通用技法，经授权后再合入本母版；项目偏好用 `/nlearn` 进 Growth  
 4. **版本**：母版变更记入仓库根 `CHANGELOG.md`，并打 tag
@@ -50,4 +50,4 @@ cd /path/to/新小说项目
 
 - 正文文件只含小说文稿；检测/批注进 `主题/_meta/`  
 - plan 真源：`.cursorGrowth/plan.md`（见 `config/workflow.json`）  
-- 中文交流；操作前确认绝对路径  
+- 中文交流；操作前确认**当前工作区**路径（勿把本机路径写进母版文档）  

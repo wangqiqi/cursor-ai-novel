@@ -16,7 +16,7 @@ description: 新项目骨架搭建。基于 `.cursor/templates/scaffold/` 基座
 ## 前置条件
 
 - 新项目根已有从母版仓库 **`cursor-ai-novel`** 复制的完整 `.cursor/`（见 `/nnew` Step 0）。
-- 母版路径示例：`/home/jwzhou/workspace/cursor-ai-novel/.cursor`
+- 复制方式用相对路径或 `git clone` 后的仓根，**禁止**在文档/示例中写本机绝对路径。
 
 ## 输入
 

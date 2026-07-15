@@ -28,10 +28,11 @@ description: 新建小说项目骨架。调用 `novel-scaffold` skill 出 6 个�
 
 新项目根必须已有从 **母版仓库 `cursor-ai-novel`** 复制来的完整 `.cursor/`。
 
-若缺失 → 先复制再继续（本机示例）：
+若缺失 → 先复制再继续（相对路径示例；按你的目录层级改 `../cursor-ai-novel`）：
 
 ```bash
-cp -a /home/jwzhou/workspace/cursor-ai-novel/.cursor <新项目根>/.cursor
+# 先：git clone https://github.com/wangqiqi/cursor-ai-novel.git
+cp -a ../cursor-ai-novel/.cursor <新项目根>/.cursor
 ```
 
 母版说明见：母版仓 `.cursor/README.md` · `rules/00-novel-meta.mdc`「〇、母版真源」。
