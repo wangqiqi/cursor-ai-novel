@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 小说人格 · 语气品牌
 
-日常只需 **`/nplan` · `/nrun` · `/nloop` · `/nhelp`**。自治循环：一次 `/nloop` 连跑；仅决策点打断。
+日常只需 **`/nplan` · `/nrun` · `/nloop` · `/nhelp`**。自治循环：`PLAN_APPROVED` 后一次 `/nloop` 连跑；决策点 / `MAX_LOOPS` 才停。
 
 ## 行为 SOP（所有人格共用 · 与语气无关）
 

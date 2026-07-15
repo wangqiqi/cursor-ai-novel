@@ -1,77 +1,92 @@
 # cursor-ai-novel · 小说编写 `.cursor` 母版
 
-> 本仓库是 **小说创作 Cursor 工具链** 的母版真源。  
-> 新建任何小说项目时，应整目录复制本仓库的 `.cursor/`，再使用 `/nnew` 搭骨架。
+> 在 Cursor 里写长篇中文小说的**通用工具链母版**。  
+> 复制 `.cursor/` 到任意新书项目 → `/nnew` → 即可开写。  
+> **不含任何具体小说正文、角色或本机路径**；复制即用。
 
 ---
 
-## 它是什么
+## 它解决什么
 
-从 Formatted-Paradise 的 `.cursor` **完整吸收**而来的通用框架（不绑定任何一部具体小说）：
-
-| 组件 | 说明 |
-|------|------|
-| Rules | 元规则 / 价值观 / 语言 / 情节 / 人物 / 世界观 / 文风 / 象征 / 人格 / 纪律 / 归档 |
-| Skills | plan · run · plot · chapter · character · world · check · rewrite · … |
-| Agents | 8 个专项（architect / scanner / rewriter / check-master …） |
-| Commands | `/nhelp` `/nplan` `/nrun` `/nloop` `/nwrite` `/ncheck` `/nfix` `/nnew` … |
-| Templates | 章前卡、人物卡、scaffold、节奏窗、plan … |
-
-入口帮助：`.cursor/commands/nhelp.md`  
-母版说明：`.cursor/README.md`
+| 痛点 | 母版做法 |
+|------|----------|
+| AI 八股、翻译腔 | Rules + 扫描/改稿 Agent，改前备份 |
+| 设定写崩、跨章打架 | `/ncheck` 多维自洽 + 伏笔追踪 |
+| 想到哪写到哪 | `/nplan` → `/nrun` / `/nloop` 可执行工作流 |
+| 每本书重造轮子 | **一次复制母版**，书专有内容只进 `主题/` |
 
 ---
 
-## 快速开始 · 开一本新书
+## 快速开始（开箱即用）
 
 ```bash
-# 1. 建空项目目录
-mkdir -p ~/workspace/小说/我的新书 && cd ~/workspace/小说/我的新书
+# 1. 克隆母版（只需一次，可反复复用）
+git clone https://github.com/wangqiqi/cursor-ai-novel.git
+cd cursor-ai-novel   # 仅作「母版源」；不必在此写正文
+
+# 2. 建新书目录，复制工具链
+mkdir -p ../my-novel && cd ../my-novel
 git init
+cp -a ../cursor-ai-novel/.cursor ./
+cp ../cursor-ai-novel/.gitignore ./   # 可选：忽略 .cursorGrowth/ 等
 
-# 2. 复制母版 .cursor
-cp -a /home/jwzhou/workspace/cursor-ai-novel/.cursor ./
-
-# 3. 复制 gitignore 建议（可选）
-cp /home/jwzhou/workspace/cursor-ai-novel/.gitignore ./
-
-# 4. 在 Cursor 打开该目录，执行：
+# 3. 用 Cursor 打开 my-novel，执行：
 #    /nnew 我的新书
 ```
 
-之后用 `/nplan` 想清楚 → `/nwrite` 写章 → `/ncheck` 自洽。
+之后常用：`/nplan` 想清楚 → `/nwrite` 写章 → `/ncheck` 自洽 → `/nfix` 去 AI 味。  
+迷路看：`/nhelp` 或 `.cursor/commands/nhelp.md`。
+
+> **路径约定**：上例假定新书与母版仓为**同级目录**。若母版在别处，把 `../cursor-ai-novel` 换成你本机上的母版仓根即可——**文档中不写死任何绝对路径**。
 
 ---
 
-## 本仓库目录
+## 里面有什么
+
+| 组件 | 说明 |
+|------|------|
+| Rules | 价值观 / 语言 / 情节 / 人物 / 世界观 / 文风 / 象征 / 人格 / 纪律 / 归档 |
+| Skills | plan · run · plot · chapter · character · world · check · rewrite · … |
+| Agents | architect / scanner / rewriter / check-master / continuity … |
+| Commands | `/nhelp` `/nplan` `/nrun` `/nloop` `/nwrite` `/ncheck` `/nfix` `/nnew` … |
+| Templates | 章前卡、人物卡、scaffold、节奏窗、plan … |
+
+母版目录说明：`.cursor/README.md`
+
+---
+
+## 仓库结构
 
 ```
 cursor-ai-novel/
-├── .cursor/              # ⭐ 母版真源（入库）
-├── CHANGELOG.md          # 母版变更（倒序，入库）
-├── README.md             # 本文件（入库）
-├── .gitignore            # 忽略 .cursorGrowth/ 等
-└── .cursorGrowth/        # 本地工作记忆（不入库）
-    ├── plan.md           # plan 真源
-    └── archive/          # 归档说明
+├── .cursor/           # ⭐ 母版真源（入库 · 复制到新书）
+├── CHANGELOG.md       # 母版变更（倒序）
+├── README.md
+├── .gitignore         # 建议一并复制到新书
+└── .cursorGrowth/     # 本地工作记忆（不入库）
 ```
 
-**分层**：`.cursor/` 入库；`.cursorGrowth/` 永不 git 跟踪。  
-**不包含**具体小说的 `主题/`、`章节/` —— 那些属于各书项目。
+| 层 | 进 git？ | 放什么 |
+|----|----------|--------|
+| `.cursor/` | ✅ | 通用框架（禁止写具体书名/角色高潮） |
+| `.cursorGrowth/` | ❌ | plan、归档、会话偏好 |
+| `主题/` · `章节/` | 各书项目 | **本母版仓不含**；由 `/nnew` 在新书生成 |
 
 ---
 
-## 与 Formatted-Paradise 的关系
+## 母版 vs 小说项目
 
-| 仓库 | 角色 |
-|------|------|
-| **cursor-ai-novel** | `.cursor` 母版；以后通用能力只在此演进 |
-| Formatted-Paradise 等小说仓 | 消费母版；项目特化进 `主题/` / `.cursorGrowth/` |
+| | 母版仓（本仓库） | 小说项目（消费方） |
+|--|------------------|-------------------|
+| 职责 | 演进通用 `.cursor/` | 写一本具体的书 |
+| 复制 | 被复制 | 复制 `.cursor/` 后 `/nnew` |
+| 特化 | 禁止 | 只写 `主题/` / `章节/` / `.cursorGrowth/` |
+| 回灌 | 接收经授权的通用技法 | 用 `/nlearn` 记项目偏好，不污染母版 |
 
-从某书回灌通用技法到母版时：先改本仓库 → 再同步到各书的 `.cursor/`。
+**禁止**：从某一本已写小说里拷贝「长满特化内容」的 `.cursor/` 冒充母版。
 
 ---
 
 ## 版本
 
-当前对齐基线：**v0.65.1**（吸收自 Formatted-Paradise `.cursor`，2026-07-15）
+当前：**v0.65.3**（见 `CHANGELOG.md`）

@@ -25,7 +25,8 @@
       "decision_needed",
       "blocker",
       "check_fail_twice",
-      "goal_drift"
+      "goal_drift",
+      "max_loops"
     ]
   },
   "role": {
