@@ -40,7 +40,7 @@ cd my-novel
 ## 母版维护约定
 
 1. **通用性**：不写具体书名、角色、绝对高潮章号；不写本机绝对路径  
-2. **节奏窗**：只给比例公式（`skills/novel-plot/reference/opening-protocol.md`）；绝对章号只在各项目 `主题/_meta/节奏窗.md`  
+2. **节奏窗**：只给比例公式（`skills/novel-plot/reference/opening-protocol.md`）；绝对章号只在各项目 `主题/节奏窗.md`  
 3. **回灌**：某书沉淀出的通用技法，经授权后再合入本母版；项目偏好用 `/nlearn` 进 Growth  
 4. **版本**：母版变更记入仓库根 `CHANGELOG.md`，并打 tag
 
@@ -48,6 +48,6 @@ cd my-novel
 
 ## 铁律（摘要）
 
-- 正文文件只含小说文稿；检测/批注进 `主题/_meta/`  
+- 正文文件只含小说文稿；检测/批注进 `.cursorGrowth/check/`（禁止写入 `主题/` / `章节/`）  
 - plan 真源：`.cursorGrowth/plan.md`（见 `config/workflow.json`）  
 - 中文交流；操作前确认**当前工作区**路径（勿把本机路径写进母版文档）  

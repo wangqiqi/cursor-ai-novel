@@ -17,7 +17,7 @@ disable-model-invocation: false
 | 源 | 取什么 |
 |---|---|
 | `CHANGELOG.md` | 近期创作决策 |
-| `主题/_meta/` · 复盘 | 八股/节奏/读者反应 |
+| `.cursorGrowth/check/` · 复盘 | 八股/节奏/读者反应 |
 | `.cursorGrowth/archive/` | 历史决策摘要 |
 | 用户口头偏好 | 声口、禁忌词、章长 |
 

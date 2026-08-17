@@ -89,4 +89,4 @@ cursor-ai-novel/
 
 ## 版本
 
-当前：**v0.65.3**（见 `CHANGELOG.md`）
+当前：**v0.66.0**（见 `CHANGELOG.md`）

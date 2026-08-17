@@ -178,7 +178,7 @@ options:
 | `主题/人物/.gitkeep` | 总是 |
 | `章节/.gitkeep` | 总是 |
 | `.cursorGrowth/archive/.gitkeep` | 总是 |
-| `主题/_meta/节奏窗.md` | 总是（自 `.cursor/templates/rhythm-window.md` 复制后按 Q2+N 填数） |
+| `主题/节奏窗.md` | 总是（自 `.cursor/templates/rhythm-window.md` 复制后按 Q2+N 填数） |
 
 ---
 
@@ -186,7 +186,7 @@ options:
 
 1. 确定 **N**（与用户确认计划总章数；可用 Q2 章数区间中值作初稿）  
 2. 按 `skills/novel-plot/reference/opening-protocol.md` 选 `r_open`，算出开篇窗 / 中点 / 高潮区  
-3. 写入 `主题/_meta/节奏窗.md`  
+3. 写入 `主题/节奏窗.md`  
 4. **禁止**把算出的绝对章号写回 `.cursor/` 母版  
 
 ---
@@ -206,12 +206,12 @@ philosophy_depth: <Q6 答案>
 planned_chapters: <N>
 date: <日期>
 needs_philosophy_doc: <Q6 == 深度>
-rhythm_window_path: 主题/_meta/节奏窗.md
+rhythm_window_path: 主题/节奏窗.md
 ```
 
 `/nnew` 命令会用这个结构：
 - 写入 `主题/总览.md` 的元信息字段
-- 写入 `主题/_meta/节奏窗.md`
+- 写入 `主题/节奏窗.md`
 - 写入 `CHANGELOG.md` 初始条目
 - 写入 `.cursorGrowth/plan.md` 引导任务
 

@@ -19,6 +19,7 @@ alwaysApply: true
 - 幻觉 API/路径/人物卡字段/未注册设定
 - 因催促跳过 `ncheck` 或缩小扫描范围却仍标 ✅
 - 无 `.cursorGrowth/plan.md` 批准时开大范围跨章改写（≥5 步须先 `/nplan`）
+- 检测报告 / 批注 / 复扫写入 `主题/` 或 `章节/`（只进 `.cursorGrowth/check/`）
 
 ## 最小 diff（改稿）
 

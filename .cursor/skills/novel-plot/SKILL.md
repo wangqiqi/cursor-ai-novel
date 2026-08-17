@@ -26,14 +26,14 @@ disable-model-invocation: false
 
 ### 阶段 3：伏笔与冲突 (Planting & Conflict)
 - **动作**：
-    - 埋设 5-10 个关键伏笔，记录在 `主题/_meta/伏笔板.md`。
+    - 埋设 5-10 个关键伏笔，记录在 `主题/伏笔板.md`（回退 `主题/_meta/伏笔板.md`）。
     - 确保每场戏至少推进一个冲突轴（理念/权力/情感等），且弧内**冲突升级**。
     - 规划关键节点的**钩子 + 爽点**（见 `reference/reader-rewards.md`）。
-    - 按 `reference/opening-protocol.md` 换算并写入/更新 `主题/_meta/节奏窗.md`（开篇窗·中点·高潮区）。
+    - 按 `reference/opening-protocol.md` 换算并写入/更新 `主题/节奏窗.md`（无则回退 `_meta/`；开篇窗·中点·高潮区）。
 
 ## 输出
 - **主输出**：`主题/主线剧情.md`（或更新已有大纲）。
-- **配套**：`主题/_meta/伏笔板.md` · `主题/_meta/节奏窗.md`。
+- **配套**：`主题/伏笔板.md` · `主题/节奏窗.md`（路径见 `00-novel-meta`）。
 
 ## 反模式
 - ❌ 缺少中点反转或至暗时刻。

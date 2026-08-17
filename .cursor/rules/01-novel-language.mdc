@@ -30,7 +30,7 @@ alwaysApply: false
 
 ## 三、项目特化配置 (通用框架)
 
-具体阈值与白名单由项目在 `主题/_meta/通用约束.md` 中定义。`.cursor/` 规则仅负责执行检测逻辑。
+具体阈值与白名单由项目在 `主题/通用约束.md` 中定义（无则回退 `主题/_meta/通用约束.md`）。`.cursor/` 规则仅负责执行检测逻辑。
 
 ## 关联
 - **Agent**: `novel-line-scanner` · `novel-line-rewriter`

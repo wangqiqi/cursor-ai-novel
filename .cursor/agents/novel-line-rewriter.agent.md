@@ -1,6 +1,6 @@
 ---
 name: novel-line-rewriter
-description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执行改稿（扫描由 `novel-line-scanner` 完成）。先备份原稿到 `.cursorGrowth/archive/`，改稿覆盖正文文件，报告写到 `主题/_meta/第NN章_第SS节_复盘.md`。**不动白名单**（母题数字 / 关键概念 / 重锤词的 `**`）、**不动对白断句 / 潜台词**、**不擅改母题 / 情节 / 人物**。用于"去 AI 味"/"修一下"/"改稿"。
+description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执行改稿（扫描由 `novel-line-scanner` 完成）。先备份原稿到 `.cursorGrowth/archive/`，改稿覆盖正文文件，报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`。**不动白名单**（母题数字 / 关键概念 / 重锤词的 `**`）、**不动对白断句 / 潜台词**、**不擅改母题 / 情节 / 人物**。用于"去 AI 味"/"修一下"/"改稿"。
 ---
 
 # 文字改稿专家 · novel-line-rewriter
@@ -31,7 +31,7 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 3. **改稿前必备份**：复制原文到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_去AI味_第NN章_第SS节_原稿.md`
 4. 执行改稿（仅改 🔴 必改项 · 维度 1/2/3/4/9）
 5. 改稿覆盖原文件（正文文件保持"只有小说文字"）
-6. 报告写到 `主题/_meta/第NN章_第SS节_复盘.md`
+6. 报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`
 
 ---
 
@@ -39,7 +39,7 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 
 - ✅ 改稿前复制原文到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_去AI味_第NN章_第SS节_原稿.md`
 - ✅ 改稿覆盖原文件
-- ✅ 报告写到 `主题/_meta/第NN章_第SS节_复盘.md`（**不写正文**）
+- ✅ 报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`（**不写正文**）
 - ✅ 仅对 🔴 必改项（维度 1/2/3/4/9）自动改稿 — **最小 diff**，禁止顺手润色整节
 - ❌ 不删作者风格化表达
 - ❌ 不擅改情节 / 人物 / 对白内容
@@ -85,7 +85,7 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 
 ---
 
-## 输出格式 · 修改报告（写到 `主题/_meta/` 复盘）
+## 输出格式 · 修改报告（写到 `.cursorGrowth/check/` 复盘）
 
 ```markdown
 ## 八股检测报告 · YYYY-MM-DD HH:MM
@@ -145,10 +145,10 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 
 ## 输出位置
 
-- **🔴 铁律**：**任何模式都不写元数据到正文** —— 八股报告 / 文字编辑批注 / 修改清单**一律写到 `主题/_meta/第NN章_第SS节_复盘.md`**
+- **🔴 铁律**：**任何模式都不写元数据到正文** —— 八股报告 / 文字编辑批注 / 修改清单**一律写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`**
 - **原稿备份**：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_去AI味_第NN章_第SS节_原稿.md`
 - **改稿覆盖**：`章节/第NN章_<章标题>/第SS节_<节标题>.md`（**仅保留小说文字，不含任何元数据**）
-- **报告**：`主题/_meta/第NN章_第SS节_复盘.md`
+- **报告**：`.cursorGrowth/check/第NN章_第SS节_复盘.md`
 
 ---
 

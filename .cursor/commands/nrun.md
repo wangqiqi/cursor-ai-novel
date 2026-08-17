@@ -21,4 +21,4 @@ description: 【日常】按 `.cursorGrowth/plan.md` 执行（默认做事入口
 | 已有 `.cursorGrowth/plan.md` · 按计划推进 | 没 `.cursorGrowth/plan.md` 或没确认 → **`/nplan`** |
 | 修一致性 / 重写章节 / 审稿 | 还在想清楚要做什么 → **`/nplan`** |
 
-**章节正文铁律**：报告 / 批注 / 复盘**永不**写入 `章节/` 文件，统一入口 `主题/_meta/第NN章_第SS节_复盘.md`（详见 `00-novel-meta.mdc` 第五节）。
+**章节正文铁律**：报告 / 批注 / 复盘**永不**写入 `章节/` 或 `主题/`，统一入口 `.cursorGrowth/check/第NN章_第SS节_复盘.md`（详见 `00-novel-meta.mdc`）。

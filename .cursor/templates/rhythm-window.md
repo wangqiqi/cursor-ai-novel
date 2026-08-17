@@ -1,7 +1,7 @@
 # 节奏窗 · 项目登记（由公式算出后填写）
 
 > **模板位置**：`.cursor/templates/rhythm-window.md`  
-> **项目副本**：复制为 `主题/_meta/节奏窗.md`  
+> **项目副本**：复制为 `主题/节奏窗.md`（兼容旧路径 `主题/_meta/节奏窗.md`）  
 > **算法**：`.cursor/skills/novel-plot/reference/opening-protocol.md`  
 > **禁止**：把下列数字抄进 `.cursor` rules 当死规则；此处是**本项目**换算结果。
 

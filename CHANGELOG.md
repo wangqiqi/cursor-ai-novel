@@ -5,6 +5,26 @@
 
 ---
 
+## [v0.66.0] · 2026-08-17 · sync · 过程件落点 + 主题扁平路径回灌
+
+### 变更（`.cursor`）
+- **检测/批注/复盘** 只进 `.cursorGrowth/check/`（闭合迁 `archive/`）；**禁止**写入 `主题/` 或 `章节/`
+- **常驻资产优先主题根**：章前卡 `主题/章节卡/` · 伏笔板/节奏窗/通用约束在 `主题/`；`主题/_meta/` 仅旧路径回退
+- 对齐文件：`00-novel-meta` · `01-novel-language` · `02-novel-plot-design` · `08-novel-discipline`
+- skills：`novel-check` · `novel-chapter` · `novel-plot` · `novel-scaffold` · `novel-continuity` · `novel-dialogue` · `novel-learn` · `opening-protocol`
+- commands：`ncheck` · `nwrite` · `nrun` · `nplan`
+- agents：`novel-line-scanner` · `novel-line-rewriter`
+- templates：`chapter-brief` · `section-brief` · `rhythm-window` · `main-file` · `scaffold/主题/总览`
+- `config/workflow.json` · `.cursor/README.md`
+
+### 来源
+- 消费仓通用口径回灌（对应其 CHANGELOG v0.97 过程件卫生）；无书名/角色/本机路径
+
+### 标签
+`sync-consumer-cursor` `docs-meta` `chore-path-hygiene`
+
+---
+
 ## [v0.65.3] · 2026-07-15 · docs · 母版脱敏与开箱即用
 
 ### 修改

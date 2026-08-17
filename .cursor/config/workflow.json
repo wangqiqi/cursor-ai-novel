@@ -10,7 +10,8 @@
       "CHANGELOG.md",
       ".cursorGrowth/archive/",
       ".cursorGrowth/plan.md",
-      "主题/_meta/"
+      "主题/总览.md",
+      "主题/"
     ]
   },
   "autonomous": {

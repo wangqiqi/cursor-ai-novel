@@ -2,7 +2,7 @@
 
 > **定位**：`.cursor` 母版只给**比例与公式**；具体「第几章」由项目登记。  
 > **禁止**：在 rules/skills 里写死「黄金三章 / 前 10 章 / 第 N 章高潮」作为强制项。  
-> **项目登记**：`主题/_meta/节奏窗.md`（模板见 `.cursor/templates/rhythm-window.md`）。  
+> **项目登记**：优先 `主题/节奏窗.md`（回退 `主题/_meta/节奏窗.md`；模板见 `.cursor/templates/rhythm-window.md`）。  
 > **关联**：`02-novel-plot-design.mdc` · `reader-rewards.md` · `novel-scaffold` · `novel-check`
 
 ## 1. 输入（来自最初讨论 / scaffold）
@@ -69,7 +69,7 @@
 
 ## 6. Agent 行为
 
-1. 写章 / check 前：Read `主题/_meta/节奏窗.md`（若无则按总览 Q2+N 生成草稿并请用户确认）  
+1. 写章 / check 前：Read `主题/节奏窗.md`（无则 `_meta/`；若皆无则按总览 Q2+N 生成草稿并请用户确认）  
 2. 章前卡勾选「是否落在开篇窗 / 高潮区」时，用**登记起止章**判断，不用母版死数字  
 3. 禁止把本示例表复制进 rule 当强制清单
 

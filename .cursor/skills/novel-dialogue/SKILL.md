@@ -97,7 +97,7 @@ disable-model-invocation: false
 ## 输出
 
 - 报告写入 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_对话_第NN章_审校.md`
-- 同时写入 `主题/_meta/第NN章_第SS节_复盘.md`
+- 同时写入 `.cursorGrowth/check/第NN章_第SS节_复盘.md`
 - **🔴 铁律**：**任何对白批注 / 修改清单 / 元数据，一概不许写进 `章节/<章>/<节>.md` 正文**——正文永远是小说文稿
 
 ## 反模式（避免）

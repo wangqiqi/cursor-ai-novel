@@ -19,7 +19,7 @@ description: 小说自洽性与完整性检查。调度多维度 agent 对章节
 ## 流程
 1. 调度 `novel-check-master` 启动 8 维度审计。
 2. 生成三档决策（✅ 通过 / 🟡 有条件通过 / 🔴 不通过）。
-3. 报告输出至 `主题/_meta/第NN章_复盘.md`。
+3. 报告输出至 `.cursorGrowth/check/第NN章_ncheck.md`（闭合迁 `archive/`；禁止写入 `主题/`）。
 
 ## 关联
 - **Skill**: `novel-check`
