@@ -29,9 +29,10 @@ description: 【帮助】小说命令路由 — 卡了该走哪
 | 症状 | 去向 |
 |---|---|
 | 不知道写啥 | `/nplan` → brainstorm/plot |
-| 写完不放心 | `/ncheck` |
+| 写完不放心 | `/ncheck`（章级；缺什么开专项，勿无故全书 8 维连打） |
 | AI 味重 | `/nwrite` 4.5 或 `/nfix` 文字轮 |
-| 跨章矛盾 | `novel-continuity` / `/ncheck` |
+| 跨章矛盾 | `novel-continuity` / `/ncheck`（含量纲漏网） |
+| 准备外发 | `novel-publish`（三尺闸；尺未绿不打 v1.0） |
 | 想一口气推 | `/nloop`（须 `PLAN_APPROVED`；设定/生死/转向/`MAX_LOOPS` 仍会停） |
 
 详表：`skills/novel-plan/reference/routes.md`

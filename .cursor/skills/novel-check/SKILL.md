@@ -1,6 +1,6 @@
 ---
 name: novel-check
-description: 自洽性 & 完整性主控检查。聚合 8 大检查维度（角色互动/角色一致性/主线对齐/价值观对齐/时间一致/完整性/伏笔/哲学深度），调用多个 agent 协同作战，输出"通过/有条件通过/不通过"三档结论。适用于用户说"check一下"、"自洽性检查"、"完整性检查"、"是不是符合最初设定"时。这是 novel-continuity 的**升级主控版本**。
+description: 自洽性 & 完整性主控检查。聚合 8 大检查维度（角色互动/角色一致性/主线对齐/价值观对齐/时间·量纲/完整性/伏笔/哲学深度），调用多个 agent 协同作战，输出"通过/有条件通过/不通过"三档结论。适用于用户说"check一下"、"自洽性检查"、"完整性检查"、"是不是符合最初设定"时。这是 novel-continuity 的**升级主控版本**。
 disable-model-invocation: false
 ---
 
@@ -19,12 +19,14 @@ disable-model-invocation: false
 - **任何一章写完后的强制动作**
 - **提交 / 发布前的最后闸门**
 
+**范围**：章级 8 维 = 该章写完；全书 8 维 = 首次完稿闸 / 结构大改 / 用户点名。上一份同范围主报告仍有效且未跨章大改 → **开专项，不重打全书**。漏网与量纲见 `universal-gates.md`。
+
 ## 与 novel-continuity 的关系
 
 | 维度 | `novel-continuity` | `novel-check`（本技能） |
 |------|--------------------|------------------------|
 | **定位** | 底层执行（细节检查） | **顶层主控**（多 agent 调度） |
-| **范围** | 单维度深扫（时间/地理/道具/伏笔） | **8 维度聚合**（互动/角色/主线/价值观/时间/完整/伏笔/哲学） |
+| **范围** | 单维度深扫（时间·量纲/地理/道具/伏笔） | **8 维度聚合**（互动/角色/主线/价值观/时间·量纲/完整/伏笔/哲学） |
 | **深度** | 细致逐条 | **调度其他 agent 深度处理** |
 | **结论** | 冲突清单 | **三档决策：✅ 通过 / 🟡 有条件通过 / 🔴 不通过** |
 | **关系** | 被 check 调用 | 调用 continuity + character-coach + architect + world-keeper + reader-simulator |
@@ -82,9 +84,9 @@ disable-model-invocation: false
 - [ ] 关键意象是否到位？
 - [ ] **特别检查**：是否有"画蛇添足"的母题**（如：硬塞一个明显不属于自己的母题）**
 
-### 维度 5 · 时间一致性
+### 维度 5 · 时间与量纲一致性
 
-**核心问题**：本章的时间标记是否与前后章连贯？
+**核心问题**：时间标记、可核验数字、身份标签是否与前后章及卡面一致？
 
 检查项：
 
@@ -93,6 +95,9 @@ disable-model-invocation: false
 - [ ] 角色年龄/状态变化合理
 - [ ] **本章时间跨度**与叙事密度匹配
 - [ ] **特别检查**：非人类角色（AI / 异族）视角的时间精度（用其视角特有的时间单位或异常描述）
+- [ ] **量纲**：年龄、人数、次数、价格、距离、时长、百分比、编号与卡面/世界观一致
+- [ ] **标签**：派系/亲属/职业口头标签与人物卡一致
+- [ ] **漏网**：字面旧串清零后，须扫同义口语（「这几天」「一年前」「大约…」）——见 `universal-gates.md` §3–4
 
 ### 维度 6 · 完整性（章前卡 vs 正文）
 
@@ -161,7 +166,7 @@ disable-model-invocation: false
 | 2 · 角色 | `novel-character-coach` | 必有 |
 | 3 · 主线 | `novel-architect` | 必有 |
 | 4 · 价值观 | `novel-world-keeper`（哲学层） | 必有 |
-| 5 · 时间 | `novel-continuity-sleuth` | 必有 |
+| 5 · 时间·量纲 | `novel-continuity-sleuth` | 必有 |
 | 6 · 完整 | 内置 checklist | 必有 |
 | 7 · 伏笔 | `novel-continuity-sleuth` | 必有 |
 | 8 · 哲学 | `novel-world-keeper` + `novel-reader-simulator` | 如涉及哲学母题 |
@@ -201,7 +206,7 @@ disable-model-invocation: false
 | 2 | 角色一致性 | 9 | …… |
 | 3 | 主线对齐 | 7 | …… |
 | 4 | 价值观对齐 | 8 | …… |
-| 5 | 时间一致性 | 10 | …… |
+| 5 | 时间与量纲 | 10 | …… |
 | 6 | 完整性 | 6 | 章前卡目标 3 未达成 |
 | 7 | 伏笔追踪 | 7 | 第 X 章伏笔未登记 |
 | 8 | 哲学深度 | 9 | …… |
@@ -265,6 +270,7 @@ disable-model-invocation: false
 | 检查项 | 由谁负责 |
 |--------|---------|
 | 时间标记一致性 | `novel-continuity`（被 check 调用） |
+| 量纲/编号/派系标签 | `novel-continuity`（维度 5，漏网协议） |
 | 地理距离合理性 | `novel-continuity` |
 | 道具归属追踪 | `novel-continuity` |
 | 伏笔板 | `novel-continuity`（被 check 调用） |
@@ -282,11 +288,17 @@ disable-model-invocation: false
 - ❌ 不出三档决策（无法定下一步）
 - ❌ 哲学类作品跳过维度 8
 - ❌ 不归档（无法回溯）
+- ❌ 字面 Grep 0 命中就标 ✅（未做同义漏网）
+- ❌ 同范围全书 8 维连打（上一份主报告仍有效）
+- ❌ 把情节尺 / 出版尺 / 体量尺合成一个「过了」
+
+闸门细则：`novel-plan/reference/universal-gates.md`。
 
 ## 关联
 
 - **下游**：用户决策后调用 `/nfix` 进入修订流水线
 - **上游**：任何写完章节后必触发；用户主动 `/ncheck` 也触发
-- **规则引用**：`.cursor/rules/00-novel-meta.mdc`、`.cursor/rules/03-novel-character.mdc`、`.cursor/rules/04-novel-worldbuilding.mdc`
+- **规则引用**：`.cursor/rules/00-novel-meta.mdc`、`.cursor/rules/03-novel-character.mdc`、`.cursor/rules/04-novel-worldbuilding.mdc`、`.cursor/rules/08-novel-discipline.mdc`
+- **闸门**：`novel-plan/reference/universal-gates.md`
 - **命令**：`.cursor/commands/ncheck.md`（一键触发）
 - **Agent**：`.cursor/agents/novel-check-master.agent.md`（执行专家）

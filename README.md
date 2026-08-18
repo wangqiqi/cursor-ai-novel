@@ -46,7 +46,8 @@ cp ../cursor-ai-novel/.gitignore ./   # 可选：忽略 .cursorGrowth/ 等
 | 组件 | 说明 |
 |------|------|
 | Rules | 价值观 / 语言 / 情节 / 人物 / 世界观 / 文风 / 象征 / 人格 / 纪律 / 归档 |
-| Skills | plan · run · plot · chapter · character · world · check · rewrite · … |
+| Skills | plan · run · plot · chapter · character · world · check · rewrite · publish · … |
+| 闸门 | `skills/novel-plan/reference/universal-gates.md`（任意小说 SOP） |
 | Agents | architect / scanner / rewriter / check-master / continuity … |
 | Commands | `/nhelp` `/nplan` `/nrun` `/nloop` `/nwrite` `/ncheck` `/nfix` `/nnew` … |
 | Templates | 章前卡、人物卡、scaffold、节奏窗、plan … |
@@ -89,4 +90,4 @@ cursor-ai-novel/
 
 ## 版本
 
-当前：**v0.66.0**（见 `CHANGELOG.md`）
+当前：**v0.67.0**（见 `CHANGELOG.md`）

@@ -14,6 +14,8 @@ AskQuestion / 迷路时用。无工具则正文编号选项。
 | 6 | 修订 | `/nfix` · `novel-rewrite` |
 | 7 | 状态 / 帮助 | `/nstatus` · `/nhelp` |
 
+闸门（任意小说）：`novel-plan/reference/universal-gates.md`（三层文档 · 漏网 · 量纲 · 加厚 · 三尺 · CHANGELOG）
+
 ## 扩展
 
 | 关键词 | 去向 |
@@ -26,8 +28,9 @@ AskQuestion / 迷路时用。无工具则正文编号选项。
 | 类型向金手指·反套路（可选） | `commercial-hooks.md` · `novel-brainstorm` |
 | 扫榜拆文 | `craft-intake.md` · `/nlearn` |
 | 对白 | `novel-dialogue` |
-| 伏笔 / 连续 | `novel-continuity` · `novel-continuity-sleuth` |
+| 伏笔 / 连续 / 量纲漏网 | `novel-continuity` · `novel-continuity-sleuth` |
 | 去 AI 味 | `novel-line-scanner` → `novel-line-rewriter` |
+| 外发 / 上架包 | `novel-publish` |
 | 记住约定 | `/nlearn` · `novel-learn` |
 | 呼叫某人设 | `config/roles.json` + `07-novel-persona` |
 

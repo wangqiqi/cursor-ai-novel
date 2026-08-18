@@ -41,7 +41,7 @@ cd my-novel
 
 1. **通用性**：不写具体书名、角色、绝对高潮章号；不写本机绝对路径  
 2. **节奏窗**：只给比例公式（`skills/novel-plot/reference/opening-protocol.md`）；绝对章号只在各项目 `主题/节奏窗.md`  
-3. **回灌**：某书沉淀出的通用技法，经授权后再合入本母版；项目偏好用 `/nlearn` 进 Growth  
+3. **回灌**：某书沉淀出的通用技法，经授权后再合入本母版；项目偏好用 `/nlearn` 进 Growth。跨书 SOP 真源：`skills/novel-plan/reference/universal-gates.md`。  
 4. **版本**：母版变更记入仓库根 `CHANGELOG.md`，并打 tag
 
 ---

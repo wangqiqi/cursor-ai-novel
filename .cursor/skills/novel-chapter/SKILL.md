@@ -20,7 +20,7 @@ disable-model-invocation: false
 | 层级 | 目标约定 | 最小单元 |
 |---|---|---|
 | **单章** | 5–15 节 · 3–6 万字 | 章前卡 |
-| **单节** | 3000–8000 字（硬上限 5000 字，除非特殊） | 节前卡 |
+| **单节** | 先读 `主题/通用约束.md`；无则目标 2000–5000 汉字（硬上限 5000，除非用户特批） | 节前卡 |
 
 ## 7 阶段标准流
 
@@ -36,6 +36,7 @@ disable-model-invocation: false
 ### 阶段 2：节初稿 (Drafting)
 - **动作**：撰写正文至 `章节/第NN章_<章标题>/第SS节_<节标题>.md`。
 - **原则**：先脏后净，一气呵成，**初稿关闭自我评判**；精修走 `/nfix`。章内节奏可参照「起承转爽」。
+- **加厚**（字数不够或高潮欠肉）：补可看见的场面（手、物、天气、位移、一句落地）。禁止灌设定、派系纲领、系统课、开会点名。刚砍过的讲义写入「不补什么」。数字用人话，不宣讲世界观条目。见 `universal-gates.md` §5。
 
 ### 阶段 3：八股检测与瘦身 (De-AI & Slimming)
 - **动作**：先调度 `novel-line-scanner` 扫描，再由 `novel-line-rewriter` 改 🔴 项。
@@ -60,9 +61,12 @@ disable-model-invocation: false
 - ❌ 在章节正文文件中保留检测报告或 AI 批注。
 - ❌ 忽略 `01-novel-language.mdc` 的密度硬约束。
 - ❌ 把「爽点」写成无代价碾压（违反 `00-novel-values`）。
+- ❌ 用开会/讲义/系统课凑字数。
+- ❌ 加厚时把刚删的并行说明变相加回。
 
 ## 关联
 - **规则**：`00-novel-meta.mdc`、`01-novel-language.mdc`、`02-novel-plot-design.mdc`、`00-novel-values.mdc`
 - **参考**：`novel-plot/reference/reader-rewards.md`（爽点六手法，可选）
+- **闸门**：`novel-plan/reference/universal-gates.md`（加厚 / 三层文档）
 - **工具**：`novel-line-scanner` → `novel-line-rewriter`（去 AI 味）
 - **命令**：`/nwrite`

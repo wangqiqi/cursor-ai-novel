@@ -5,6 +5,27 @@
 
 ---
 
+## [v0.67.0] · 2026-08-18 · feat · 通用创作闸门（任意小说 SOP）
+
+### 新增
+- `skills/novel-plan/reference/universal-gates.md` · 跨书闸门真源（三层文档 / 检查范围 / 漏网 / 量纲 / 加厚 / 对白 / 发表三尺 / 外发硬伤 / CHANGELOG 纪律）
+
+### 修改
+- `00-novel-meta` · `08-novel-discipline` · `99-novel-archive`
+- skills：`novel-check` · `novel-continuity` · `novel-chapter` · `novel-rewrite` · `novel-dialogue` · `novel-publish` · `novel-plan` · `routes`
+- agents：`novel-check-master` · `novel-continuity-sleuth` · `agents/README`
+- commands：`ncheck` · `nlog` · `nhelp`
+- templates：`chapter-brief`（节长窗与加厚口径）
+- `.cursor/README.md` 指向闸门真源
+
+### 来源
+- 消费仓通用技法回灌；**无**书名 / 角色 / 母题数字 / 本机路径
+
+### 标签
+`feat-gates` `docs-meta` `universal-gates`
+
+---
+
 ## [v0.66.0] · 2026-08-17 · sync · 过程件落点 + 主题扁平路径回灌
 
 ### 变更（`.cursor`）

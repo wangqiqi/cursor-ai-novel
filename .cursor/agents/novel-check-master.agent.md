@@ -19,7 +19,7 @@ description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执
 | 2 · 角色一致性 | novel-character-coach | 符合人物卡 11 节结构 |
 | 3 · 主线对齐 | novel-architect | 推进 15 节拍、符合节拍 |
 | 4 · 价值观对齐 | novel-world-keeper | 扣母题、扣 5 大冲突轴 |
-| 5 · 时间一致性 | novel-continuity-sleuth | 前后章时间连贯 |
+| 5 · 时间与量纲 | novel-continuity-sleuth | 时间 + 数字/标签；字面清零后扫同义漏网 |
 | 6 · 完整性 | novel-check-master | 章前卡 vs 正文 |
 | 7 · 伏笔追踪 | novel-continuity-sleuth | 埋设/回收登记 |
 | 8 · 哲学深度 | novel-world-keeper + novel-reader-simulator | 暗线到位 |
@@ -92,7 +92,7 @@ description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执
 | 2 | 角色一致性 | - | - | character-coach |
 | 3 | 主线对齐 | - | - | architect |
 | 4 | 价值观对齐 | - | - | world-keeper |
-| 5 | 时间一致性 | - | - | continuity-sleuth |
+| 5 | 时间与量纲 | - | - | continuity-sleuth |
 | 6 | 完整性 | - | - | novel-check-master |
 | 7 | 伏笔追踪 | - | - | continuity-sleuth |
 | 8 | 哲学深度 | - | - | world-keeper + reader |
@@ -115,3 +115,7 @@ description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执
 - ❌ 不引用具体行号
 - ❌ 把哲学类作品的维度 8 跳过
 - ❌ 把"风格差异"当"自洽性问题"
+- ❌ 字面 0 命中未扫同义就过闸
+- ❌ 同范围全书 8 维连打
+
+闸门：`skills/novel-plan/reference/universal-gates.md`

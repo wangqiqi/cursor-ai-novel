@@ -14,7 +14,7 @@
 | `novel-world-keeper` | 专项专家 | 三层世界观 / 闭合性 / 新概念注册 | `novel-world` / `novel-check` |
 | `novel-line-scanner` | 专项专家 | 9 维八股检测 · **只扫描不改稿** | `nwrite`（4.5 步 · 前置扫描） · `novel-check` · `novel-rewrite`（第 3 轮） |
 | `novel-line-rewriter` | 专项专家 | 改稿 + 「去 AI 味」 · 必改项执行 | `nwrite`（4.5 步 · 紧跟 scanner） · "去 AI 味" |
-| `novel-continuity-sleuth` | 专项专家 | 跨章扫描 / 伏笔追踪 / 一致性 | `novel-continuity` / `novel-rewrite`（每轮） |
+| `novel-continuity-sleuth` | 专项专家 | 跨章扫描 / 伏笔 / 时间·量纲 / 同义漏网 | `novel-continuity` / `novel-rewrite`（每轮） |
 | `novel-reader-simulator` | 专项专家 | 读者视角 / 代入感 / 节奏感 | `novel-check`（哲学维度） |
 | `novel-check-master` | **执行主控** | 聚合调度 6 个专项 agent | `novel-check`（完整性维度） |
 

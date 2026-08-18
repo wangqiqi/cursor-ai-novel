@@ -59,3 +59,4 @@ disable-model-invocation: false
 - **下游**：`novel-run`（执行流）
 - **规则**：`00-novel-meta.mdc`（元规则）、`99-novel-archive.mdc`（归档）
 - **命令**：`/nplan`
+- **闸门**：`reference/universal-gates.md`

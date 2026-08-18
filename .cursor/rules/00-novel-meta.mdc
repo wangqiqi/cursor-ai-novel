@@ -30,6 +30,16 @@ alwaysApply: true
 | 通用约束 | `主题/通用约束.md` | `主题/_meta/通用约束.md` |
 | 检查报告 | `.cursorGrowth/check/` | 闭合后迁 `archive/` |
 
+## 一·五、三层文档（任意小说）
+
+| 层 | 目录 | 谁读 | 禁止 |
+|---|---|---|---|
+| **控制层** | `主题/` | 作者 / 工具链 | 当读者读物；写入检测报告 |
+| **正文层** | `章节/` | 读者（唯一故事源） | 批注、清单、作者元叙事 |
+| **外发层** | 推介 / `build/` | 平台与读者 | 剧透核心反转；控制层术语直出 |
+
+判断「读者看到什么」只打开 `章节/`。细则：`skills/novel-plan/reference/universal-gates.md`。
+
 ## 二、章节正文铁律
 - **🔴 铁律**：正文文件永远只包含小说文稿。
 - **检测报告 / 批注 / 修改清单** → `.cursorGrowth/check/`（sprint 闭合迁 `archive/`）。
@@ -54,4 +64,5 @@ alwaysApply: true
 - **归档**: `99-novel-archive.mdc`
 - **人格 / 纪律**: `07-novel-persona.mdc` · `08-novel-discipline.mdc`
 - **命令**: `/nplan` `/nrun` `/nloop` `/nhelp`（完整表见 `skills/novel-plan/reference/routes.md`）
+- **闸门**: `skills/novel-plan/reference/universal-gates.md`（三层文档 · 检查范围 · 漏网 · 发表三尺）
 - **配置**: `config/roles.json` · `config/workflow.json`
