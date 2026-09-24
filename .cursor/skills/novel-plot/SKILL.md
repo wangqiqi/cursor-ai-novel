@@ -23,17 +23,21 @@ disable-model-invocation: false
 ### 阶段 2：15 节拍填充 (Beat Sheet)
 - **动作**：参考 Save the Cat 填充 15 个关键节拍。
 - **要求**：每个节拍标注章节位置、场景摘要、情绪曲线。
+- **落点**：写入 `主题/节拍表.md`（模板 `.cursor/templates/beat-sheet.md`）。`主题/主线剧情.md` §三 可保留精简镜像，但**结构真源是 `主题/节拍表.md`**（章前卡与 `/ncheck` 维度 3 按它定位）。
 
 ### 阶段 3：伏笔与冲突 (Planting & Conflict)
 - **动作**：
-    - 埋设 5-10 个关键伏笔，记录在 `主题/伏笔板.md`（回退 `主题/_meta/伏笔板.md`）。
-    - 确保每场戏至少推进一个冲突轴（理念/权力/情感等），且弧内**冲突升级**。
+    - 埋设 5-10 个关键伏笔，登记到 `主题/伏笔板.md`（模板 `.cursor/templates/foreshadow-board.md`；回退 `主题/_meta/伏笔板.md`），分配 `fs-NNN` 与「预期回收距离」。
+    - 确保每场戏至少推进一个冲突轴（理念/权力/情感等），且弧内**冲突升级**；冲突轴登记在 `主题/主要冲突点.md`（可选；也可并入 `主题/主线剧情.md` §五 冲突轴）。
     - 规划关键节点的**钩子 + 爽点**（见 `reference/reader-rewards.md`）。
     - 按 `reference/opening-protocol.md` 换算并写入/更新 `主题/节奏窗.md`（无则回退 `_meta/`；开篇窗·中点·高潮区）。
 
 ## 输出
 - **主输出**：`主题/主线剧情.md`（或更新已有大纲）。
-- **配套**：`主题/伏笔板.md` · `主题/节奏窗.md`（路径见 `00-novel-meta`）。
+- **配套**：`主题/节拍表.md` · `主题/伏笔板.md` · `主题/节奏窗.md` · `主题/主要冲突点.md`（可选）（路径见 `00-novel-meta.mdc` 资产登记表）。
+- **多卷本**：`主题/分卷/第<VOL>卷_<卷名>.md`（模板 `.cursor/templates/volume-outline.md`）——全书 15 节拍只定一次，各卷做**分派**。
+- **多线 / 群像**（Q4 = 多线 POV 或 Q5 = 多线交叉）：`主题/POV台账.md`（模板 `.cursor/templates/pov-ledger.md`）——线登记 / 视角切换规则 / **信息边界** / 各线微缩节奏窗 / 并轨点。
+- **类型工艺**：按 `主题/总览.md` 的 Q1 调 `novel-genre` skill（推理 / 言情 / 仙侠体系 / 历史考据 / 喜剧五选，最多 3 份）。
 
 ## 反模式
 - ❌ 缺少中点反转或至暗时刻。
@@ -44,6 +48,7 @@ disable-model-invocation: false
 
 ## 关联
 - **上游**：`novel-brainstorm`
-- **下游**：`novel-chapter`、`novel-character`
+- **下游**：`novel-chapter`、`novel-character`、`novel-genre`、`novel-check`（维度 3 主线对齐 / 维度 7 伏笔）
 - **规则**：`02-novel-plot-design.mdc`
+- **模板**：`.cursor/templates/beat-sheet.md` · `.cursor/templates/foreshadow-board.md` · `.cursor/templates/rhythm-window.md` · `.cursor/templates/volume-outline.md` · `.cursor/templates/pov-ledger.md`
 - **参考**：`reference/reader-rewards.md` · `reference/opening-protocol.md` · `reference/emotion-craft.md` · `reference/commercial-hooks.md`（可选）

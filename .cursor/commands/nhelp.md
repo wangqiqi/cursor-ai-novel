@@ -1,4 +1,5 @@
 ---
+name: nhelp
 description: 【帮助】小说命令路由 — 卡了该走哪
 ---
 
@@ -22,17 +23,27 @@ description: 【帮助】小说命令路由 — 卡了该走哪
 | 8 | 看进度 | `/nstatus` |
 | 9 | 新建小说骨架 | `/nnew` |
 | 10 | 沉淀声口/约定到 Growth | `/nlearn` |
-| 11 | 切换沟通语气 | 说「呼叫老周 / 妮妮 / …」（见 `config/roles.json`） |
+| 11 | 外发打包 / 推介材料 | `/npublish` |
+| 12 | 切换沟通语气 | 说「呼叫老周 / 妮妮 / …」（见 `config/roles.json`） |
 
 ## 分流口诀
 
 | 症状 | 去向 |
 |---|---|
-| 不知道写啥 | `/nplan` → brainstorm/plot |
+| 不知道写啥 | `/nplan` → `novel-brainstorm` / `novel-plot` |
 | 写完不放心 | `/ncheck`（章级；缺什么开专项，勿无故全书 8 维连打） |
-| AI 味重 | `/nwrite` 4.5 或 `/nfix` 文字轮 |
+| AI 味重 | `/nwrite` 第 5 步 或 `/nfix` 第 3 轮（文字层） |
+| 字数/密度/敏感词想机械核对 | `python3 .cursor/tools/check_manuscript.py` |
+| 书稿太长一次查不完 | `skills/novel-check/reference/chunked-scan.md`（分批） |
+| 类型工艺（推理公平 / 感情线 / 境界 / 考据 / 笑点） | `novel-genre` |
+| 对白不像人 | `novel-dialogue`（7 项硬指标） |
 | 跨章矛盾 | `novel-continuity` / `/ncheck`（含量纲漏网） |
-| 准备外发 | `novel-publish`（三尺闸；尺未绿不打 v1.0） |
+| 人物不像 | `novel-character` + `novel-character-coach` |
+| 设定有洞 | `novel-world` + `novel-world-keeper` |
+| 多卷 / 多线要规划 | `templates/volume-outline.md` · `templates/pov-ledger.md` |
+| 改稿怕改坏 | `python3 .cursor/tools/snapshot.py snapshot --note <说明>` |
+| 准备外发 | `/npublish`（三尺闸；尺未绿不打 v1.0） |
 | 想一口气推 | `/nloop`（须 `PLAN_APPROVED`；设定/生死/转向/`MAX_LOOPS` 仍会停） |
+| 改完不记得沉淀 | `/nlearn`（写 `.cursorGrowth/learn/`） |
 
 详表：`skills/novel-plan/reference/routes.md`

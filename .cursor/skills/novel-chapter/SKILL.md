@@ -17,10 +17,14 @@ disable-model-invocation: false
 
 ## 规模与节奏
 
+> **字数与节数一律读 `主题/通用约束.md` §1.1 的颗粒度档**（A 网文 / B 出版 / C 大章·卷）；下表「默认」仅在该文件缺失时生效。
+
 | 层级 | 目标约定 | 最小单元 |
 |---|---|---|
-| **单章** | 5–15 节 · 3–6 万字 | 章前卡 |
+| **单章** | 读 `主题/通用约束.md` §1.1；缺省（C 大章档）5–15 节 · 3–6 万字 | 章前卡 |
 | **单节** | 先读 `主题/通用约束.md`；无则目标 2000–5000 汉字（硬上限 5000，除非用户特批） | 节前卡 |
+
+> **机械校验**：写完随时 `python3 .cursor/tools/check_manuscript.py` 核对实际字数/密度（阈值自动读 `主题/通用约束.md`）。
 
 ## 7 阶段标准流
 
@@ -28,15 +32,17 @@ disable-model-invocation: false
 - **动作**：生成 `主题/章节卡/第NN章_<标题>_章前卡.md`（无 `章节卡/` 则回退 `主题/_meta/第NN章_章前卡.md`）。
 - **核心**：确定本章「主运动」、节表、情绪曲线、**本章爽点（≥1）**、**章末钩子类型+钩子句**、对照节奏窗（优先 `主题/节奏窗.md`）标注是否开篇窗/高潮区。
 - **规则**：遵循 `02-novel-plot-design.mdc`（钩子≠爽点；冲突相对上章升级；**无死章号**）。
-- **参考**：`opening-protocol.md` · `reader-rewards.md` · `emotion-craft.md`（本章调性可选）
+- **参考**：`skills/novel-plot/reference/opening-protocol.md` · `skills/novel-plot/reference/reader-rewards.md` · `skills/novel-plot/reference/emotion-craft.md`（本章调性可选）
+- **模板**：`.cursor/templates/chapter-brief.md`
 ### 阶段 1：节前卡 (Section Brief)
 - **动作**：生成 `主题/章节卡/第NN章_第SS节_节前卡.md`（回退 `_meta/`）。
 - **核心**：确定本节目标、场景拆解、**本节爽点**、节末钩子（含类型）。
+- **场景拆解可选模板**：`.cursor/templates/scene-card.md`（每场景一张；写在 `主题/章节卡/`，**不写正文**）。
 
 ### 阶段 2：节初稿 (Drafting)
 - **动作**：撰写正文至 `章节/第NN章_<章标题>/第SS节_<节标题>.md`。
 - **原则**：先脏后净，一气呵成，**初稿关闭自我评判**；精修走 `/nfix`。章内节奏可参照「起承转爽」。
-- **加厚**（字数不够或高潮欠肉）：补可看见的场面（手、物、天气、位移、一句落地）。禁止灌设定、派系纲领、系统课、开会点名。刚砍过的讲义写入「不补什么」。数字用人话，不宣讲世界观条目。见 `universal-gates.md` §5。
+- **加厚**（字数不够或高潮欠肉）：补可看见的场面（手、物、天气、位移、一句落地）。禁止灌设定、派系纲领、系统课、开会点名。刚砍过的讲义写入「不补什么」。数字用人话，不宣讲世界观条目。见 `skills/novel-plan/reference/universal-gates.md` §5。
 
 ### 阶段 3：八股检测与瘦身 (De-AI & Slimming)
 - **动作**：先调度 `novel-line-scanner` 扫描，再由 `novel-line-rewriter` 改 🔴 项。
@@ -53,6 +59,12 @@ disable-model-invocation: false
 ### 阶段 6：归档 (Archive)
 - **动作**：更新 `CHANGELOG.md` 并执行 `novel-run` 的收尾流。
 
+### 阶段 7：交接闸门 (Handoff · 强制)
+- **动作**：对该章运行 `/ncheck 第NN章`（章级 8 维）。
+- **🔴 铁律**：`🔴 不通过` 未清零**不得开下一章**；`🟡 有条件通过` 须先修 🔴 项再续写。
+- **报告落点**：`.cursorGrowth/check/`（阶段 3 的复盘文件可并入主报告，勿另建 `主题/` 文件）。
+- **例外**：用户明确要求「先连写数章再统一 check」时，记录在 `plan.md` 偏差区，仍须在本 Sprint 结束前补跑。
+
 ## 反模式
 
 - ❌ 不写章前卡/节前卡直接动笔。
@@ -66,7 +78,8 @@ disable-model-invocation: false
 
 ## 关联
 - **规则**：`00-novel-meta.mdc`、`01-novel-language.mdc`、`02-novel-plot-design.mdc`、`00-novel-values.mdc`
-- **参考**：`novel-plot/reference/reader-rewards.md`（爽点六手法，可选）
-- **闸门**：`novel-plan/reference/universal-gates.md`（加厚 / 三层文档）
+- **参考**：`skills/novel-plot/reference/reader-rewards.md`（爽点六手法，可选）
+- **闸门**：`skills/novel-plan/reference/universal-gates.md`（加厚 / 三层文档）
 - **工具**：`novel-line-scanner` → `novel-line-rewriter`（去 AI 味）
-- **命令**：`/nwrite`
+- **下游**：`novel-check`（阶段 7 强制交接）
+- **命令**：`/nwrite` · `/ncheck`

@@ -19,7 +19,10 @@ disable-model-invocation: false
 - **任何一章写完后的强制动作**
 - **提交 / 发布前的最后闸门**
 
-**范围**：章级 8 维 = 该章写完；全书 8 维 = 首次完稿闸 / 结构大改 / 用户点名。上一份同范围主报告仍有效且未跨章大改 → **开专项，不重打全书**。漏网与量纲见 `universal-gates.md`。
+**范围**：章级 8 维 = 该章写完；全书 8 维 = 首次完稿闸 / 结构大改 / 用户点名。上一份同范围主报告仍有效且未跨章大改 → **开专项，不重打全书**。漏网与量纲见 `novel-plan/reference/universal-gates.md`。
+**超长篇（约 > 30 万字）走分批协议**：`reference/chunked-scan.md`（分批 → 中间检查点 → 汇总），不要试图一次把全书读进上下文。
+**文字层不在本技能 8 维内**：去 AI 味 / 八股 / 密度由 `novel-line-scanner` → `novel-line-rewriter` 负责（`01-novel-language.mdc`）；需要时在阶段 2 一并调度，勿用「维度评分」冒充文字层结论。
+**机械项先跑**：`python3 .cursor/tools/check_manuscript.py`（字数/密度/`##` 标题/元叙事/标点/敏感词）——机械 🔴 清零后再做 8 维判断。
 
 ## 与 novel-continuity 的关系
 
@@ -42,7 +45,7 @@ disable-model-invocation: false
 检查项：
 
 - [ ] 互动是否推动了情节？**（不是为互动而互动）**
-- [ ] 互动是否反映了人物关系？**（参考 `主题/人物关系矩阵.md`）**
+- [ ] 互动是否反映了人物关系？**（参考 `主题/人物关系矩阵.md`；缺该资产时从人物卡就地归纳，并按 `00-novel-meta.mdc` 降级协议在报告标注）**
 - [ ] 是否有"沉默的互动"被错过？**（如：隔墙有耳、擦肩而过）**
 - [ ] 互动权力关系是否清晰？**（谁主导、谁配合、谁对抗）**
 - [ ] 是否每个登场角色都有"出场目的"？**（路人甲也要有功能）**
@@ -78,8 +81,8 @@ disable-model-invocation: false
 
 检查项：
 
-- [ ] 对应 `主题/哲学母题.md` 中哪个母题？
-- [ ] 推进了哪个冲突轴？**（参考 `主题/主要冲突点.md`）**
+- [ ] 对应 `主题/哲学母题.md` 中哪个母题？（无独立母题文档时，看 `主题/世界观.md` 哲学层）
+- [ ] 推进了哪个冲突轴？**（参考 `主题/主要冲突点.md`；无该文件时看 `主题/主线剧情.md` §五 冲突轴）**
 - [ ] 是否在说教？**（Show, don't tell）**
 - [ ] 关键意象是否到位？
 - [ ] **特别检查**：是否有"画蛇添足"的母题**（如：硬塞一个明显不属于自己的母题）**
@@ -97,7 +100,7 @@ disable-model-invocation: false
 - [ ] **特别检查**：非人类角色（AI / 异族）视角的时间精度（用其视角特有的时间单位或异常描述）
 - [ ] **量纲**：年龄、人数、次数、价格、距离、时长、百分比、编号与卡面/世界观一致
 - [ ] **标签**：派系/亲属/职业口头标签与人物卡一致
-- [ ] **漏网**：字面旧串清零后，须扫同义口语（「这几天」「一年前」「大约…」）——见 `universal-gates.md` §3–4
+- [ ] **漏网**：字面旧串清零后，须扫同义口语（「这几天」「一年前」「大约…」）——见 `novel-plan/reference/universal-gates.md` §3–4
 
 ### 维度 6 · 完整性（章前卡 vs 正文）
 
@@ -124,7 +127,7 @@ disable-model-invocation: false
 - [ ] **本章回收**：哪些伏笔在伏笔板中标记为回收？（优先 `主题/伏笔板.md`）
 - [ ] **本章埋设**：哪些新伏笔已登记？
 - [ ] **凭空回收**：是否有"前文未埋"的回收？
-- [ ] **超期未收**：是否有 > 10 章未回收的伏笔？
+- [ ] **超期未收**：是否有伏笔 `当前章号 − 埋设章号 > 预期回收距离`？（距离真源：`主题/通用约束.md` §四 ＞ 母版默认；**不要**用固定「10 章」）
 - [ ] **新概念注册**：引入的新概念是否在 `主题/世界观.md` 注册？
 
 ### 维度 8 · 哲学深度（针对严肃文学/哲思类）
@@ -143,17 +146,20 @@ disable-model-invocation: false
 ### 阶段 1：准备（Prepare）
 
 ```markdown
-1. 读取目标章节（`章节/第NN章_*.md`）
+1. 读取目标章节（`章节/第NN章_<章标题>/第SS节_<节标题>.md`；无章目录的旧项目回退 `章节/第NN章_*.md`）
 2. 读取章前卡（优先 `主题/章节卡/`，回退 `主题/_meta/第NN章_章前卡.md`）
-3. 扫描项目已有资产：
+3. 扫描项目已有资产（按 `00-novel-meta.mdc` 资产登记表；缺则该资产按降级协议处理）：
    - `主题/世界观.md`
-   - `主题/<核心大纲>.md`（如 `主线剧情.md`）
-   - `主题/哲学母题.md`
-   - `主题/主要冲突点.md`
-   - `主题/人物关系矩阵.md`
+   - `主题/主线剧情.md`（或旧名 `主题/故事大纲.md`）
+   - `主题/哲学母题.md`（Q6=深度时）
+   - `主题/节拍表.md`
+   - `主题/主要冲突点.md`（可选；缺则用主线剧情 §五）
+   - `主题/人物关系矩阵.md`（可选；缺则从人物卡归纳）
    - `主题/人物/*.md`（涉及的所有人物）
-   - `主题/<设定相关>.md`（涉及的所有设定，如 `<概念>.md`、`<地点>.md` 等）
+   - `主题/<设定相关>.md`（涉及的所有设定，如 `<概念>.md`、`<地点>.md`）
    - `主题/伏笔板.md`（回退 `主题/_meta/伏笔板.md`）
+   - `主题/通用约束.md`（阈值/白名单）
+   - `主题/节奏窗.md`
 ```
 
 ### 阶段 2：调度（Dispatch）
@@ -170,20 +176,23 @@ disable-model-invocation: false
 | 6 · 完整 | 内置 checklist | 必有 |
 | 7 · 伏笔 | `novel-continuity-sleuth` | 必有 |
 | 8 · 哲学 | `novel-world-keeper` + `novel-reader-simulator` | 如涉及哲学母题 |
+| 附 · 文字层 | `novel-line-scanner`（→ `novel-line-rewriter` 改稿） | 用户点名「去 AI 味 / 八股 / 密度」时；**不计入 8 维评分** |
 
-每个 agent 单独生成报告：
+> 调度 5 个专项 agent（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator）；维度 6 由本技能内置，`novel-check-master` 为执行主控。
+
+每个 agent 单独生成**子报告**（**先落 check/，Sprint 闭合再迁 archive/**）：
 
 ```
-.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_<维度>_<agent>.md
+.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_<维度>_<agent>.md
 ```
 
 ### 阶段 3：聚合（Aggregate）
 
-聚合所有 agent 报告，生成**主报告**（当前活跃）：
+聚合所有 agent 子报告，生成**主报告**（当前活跃，留在 `check/`）：
 
 `.cursorGrowth/check/第NN章_ncheck.md`
 
-闭合 sprint 后迁：
+**Sprint 闭合后**再整体迁移（`00-novel-meta.mdc` §一 资产登记表）：
 
 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md`
 
@@ -237,23 +246,29 @@ disable-model-invocation: false
 
 ### 阶段 5：归档（Archive）
 
-- 主报告归档：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md`
-- 子报告归档：每个 agent 一份
+- **Sprint 闭合时**才迁移（活跃期报告留在 `check/`，便于迭代与复扫）：
+  - 主报告：`.cursorGrowth/check/第NN章_ncheck.md` → `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md`
+  - 子报告：`.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_*.md` 一并迁入 `archive/`
 - CHANGELOG 追加（如果决策为 🔴 或 🟡）
 
 ## 输出位置
 
-### 主输出
+### 主输出（活跃期 → 闭合后）
 
-`.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md`
+| 阶段 | 路径 |
+|------|------|
+| **活跃（本 Sprint）** | `.cursorGrowth/check/第NN章_ncheck.md` |
+| **闭合归档** | `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md` |
 
 ### 子输出
 
-- `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_互动_<角色>.md`
-- `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_角色一致性_<角色>.md`
-- `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主线_<节点>.md`
-- `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_伏笔_<伏笔名>.md`
-- `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_哲学_<母题名>.md`
+活跃期（闭合后连同主报告一起迁 `archive/`）：
+
+- `.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_互动_<角色>.md`
+- `.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_角色一致性_<角色>.md`
+- `.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_主线_<节点>.md`
+- `.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_伏笔_<伏笔名>.md`
+- `.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_哲学_<母题名>.md`
 
 ### 在 CHANGELOG 中
 

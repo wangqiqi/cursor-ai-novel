@@ -1,6 +1,7 @@
 ---
 name: novel-scaffold
 description: 新项目骨架搭建。基于 `.cursor/templates/scaffold/` 基座模板，用 AskQuestion 出 6 个关键选择题（主题/字数/文体/视角/结构/哲学深度），复制模板到新项目根，生成骨架。被 `/nnew` 命令调用。也可独立调用用于"重新生成项目元信息"。
+disable-model-invocation: false
 ---
 
 # 新项目骨架 · novel-scaffold
@@ -24,21 +25,32 @@ description: 新项目骨架搭建。基于 `.cursor/templates/scaffold/` 基座
 
 ## 输出
 
-- 项目根目录下的骨架：
+- 项目根目录下的骨架（**新建项目**的情形）：
   ```
   <项目根>/
   ├── 主题/
   │   ├── 人物/                    # .gitkeep 占位
+  │   ├── 章节卡/                  # .gitkeep 占位（章前卡/节前卡）
+  │   ├── 总览.md                   # 来自 scaffold（含元信息）
   │   ├── 世界观.md                 # 来自 scaffold
   │   ├── 主线剧情.md               # 来自 scaffold
   │   ├── 哲学母题.md               # ⭐ 仅当 Q6=深度时复制
-  │   └── 总览.md                   # 来自 scaffold（含元信息）
+  │   ├── 通用约束.md               # 项目阈值真源（templates/constraints.md）
+  │   ├── 节奏窗.md                 # 按 Q2+N 换算（templates/rhythm-window.md）
+  │   ├── 伏笔板.md                 # 空板（templates/foreshadow-board.md）
+  │   └── 敏感词表.md               # 占位（tools/data/sensitive-words.example.txt）
   ├── 章节/                         # 空目录
-  ├── .cursorGrowth/archive/                      # 空目录
+  ├── .cursorGrowth/
+  │   ├── archive/                  # 闭合归档
+  │   ├── check/                    # 当前检测报告（所有检查 skill 的写入口）
+  │   ├── learn/                    # /nlearn 项目约定
+  │   └── plan.md                   # 工作板（复制 templates/plan.md，含头部闸门字段）
   ├── .cursor/                      # 来自母版仓 cursor-ai-novel（先复制再 /nnew）
   └── (其他由 /nnew 写入)
   ```
 - **元信息表**（被 `/nnew` 用于填充 `总览.md` 与 `CHANGELOG.md`）
+
+> **目录先建**：`.cursorGrowth/{archive,check,learn}/`、`主题/人物/`、`主题/章节卡/`、`章节/` 若不存在，先 `mkdir -p` 再写文件。**禁止**因目录缺失而跳过报告落点（所有报告只进 `.cursorGrowth/check/`）。
 
 ---
 
@@ -47,6 +59,7 @@ description: 新项目骨架搭建。基于 `.cursor/templates/scaffold/` 基座
 ### 阶段 1 · 6 个关键选择题（并行 `AskQuestion`）
 
 > **6 个问题全部并行**（同一 `AskQuestion` 调用中提交），用户一次性选完。
+> **无 AskQuestion 工具时**：改为在正文用编号选项列表提问，一次性列全 6 题，收到答复后再继续（勿逐题串行）。
 
 #### Q1 · 主题 / 类型
 
@@ -148,46 +161,80 @@ options:
 
 > **所有选项都带"推荐"标签**，用户可一键选默认（科幻 / 中篇 / 类型 / 紧贴第三人称 / 三幕标准 / 不需要）。
 
+#### Q2 追问 · 计划总章数 N 与颗粒度档
+
+Q2 只给字数档，节奏窗还需要 **N** 与**颗粒度档**（见阶段 3b）。取值顺序：用户明确说过的章数 ＞ Q2 章数区间中值 ＞ 由「目标字数 ÷ 预估章均字数」取整。**不要为此再开一轮提问**，直接采用中值并在元信息表标注 `planned_chapters_source`，把档位写入 `主题/通用约束.md` §1.1。
+
 ---
 
 ### 阶段 2 · 模板变量替换
 
-| 占位符 | 替换为 |
-|---|---|
-| `<项目名>` | 用户提供的项目名 |
-| `<Q1>` | Q1 答案 |
-| `<Q2>` | Q2 答案 |
-| `<Q3>` | Q3 答案 |
-| `<Q4>` | Q4 答案 |
-| `<Q5>` | Q5 答案 |
-| `<Q6>` | Q6 答案 |
-| `<日期>` | 当前日期（YYYY-MM-DD） |
+> **模板里的 `<Qn>` 占位符就是替换目标**。替换后不得残留 `<…>` 选项清单。
+
+| 占位符 | 替换为 | 出现在 |
+|---|---|---|
+| `<项目名>` | 用户提供的项目名 | **6 份**：4 份 scaffold 文档（总览/世界观/主线剧情/哲学母题）＋ `主题/通用约束.md` ＋ `主题/伏笔板.md` |
+| `<Q1>` | Q1 答案（只留选中项，如「科幻」） | `主题/总览.md` |
+| `<Q2>` | Q2 答案（如「中篇（5-15 万字）」） | `主题/总览.md` |
+| `<Q3>` | Q3 答案 | `主题/总览.md` |
+| `<Q4>` | Q4 答案 | `主题/总览.md` |
+| `<Q5>` | Q5 答案 | `主题/总览.md` |
+| `<Q6>` | Q6 答案 | `主题/总览.md` |
+| `<N>` | 计划总章数 N | `主题/总览.md`、`主题/节奏窗.md` |
+| `<日期>` | 当前日期（`YYYY-MM-DD`） | `主题/总览.md`、`主题/通用约束.md` |
+| `<YYYY-MM-DD>` | 同 `<日期>`（表单行内写法） | `主题/节奏窗.md`、`主题/通用约束.md` |
+
+> **替换范围涵盖所有已复制文件**（含 `主题/通用约束.md`、`主题/伏笔板.md`），不只 `总览.md`。
+> **交付前自检**：`grep -rnE '<(项目名|Q[1-6]|N|日期|YYYY-MM-DD)>' 主题/` 应 **0 命中**；再 `grep -n '<[^>]*>' 主题/` 确认只剩有意保留的正文占位（如「<待写>」）。
 
 ---
 
-### 阶段 3 · 复制模板
+### 阶段 3 · 复制模板（新建 / 重跑两种模式）
 
-从 `.cursor/templates/scaffold/` 复制到新项目根：
+**模式判定**：项目根是否已有 `主题/总览.md`。
 
-| 模板 | 条件 |
-|---|---|
-| `主题/总览.md` | 总是 |
-| `主题/世界观.md` | 总是 |
-| `主题/主线剧情.md` | 总是 |
-| `主题/哲学母题.md` | **仅 Q6 = 深度** |
-| `主题/人物/.gitkeep` | 总是 |
-| `章节/.gitkeep` | 总是 |
-| `.cursorGrowth/archive/.gitkeep` | 总是 |
-| `主题/节奏窗.md` | 总是（自 `.cursor/templates/rhythm-window.md` 复制后按 Q2+N 填数） |
+| 情形 | 模式 | 要求 |
+|---|---|---|
+| 无 `主题/总览.md` | **新建** | 直接复制下表「总是」项 |
+| 已有 `主题/总览.md` | **重跑** | **先备份**：把将被覆盖的文件复制到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_骨架重跑_<文件名>.md`；**已存在且非空的项目文档只补缺、不覆盖**（世界观/主线剧情/总览保留原文，仅补缺失章节） |
+
+| 模板源 | 目标 | 条件 |
+|---|---|---|
+| `scaffold/主题/总览.md` | `主题/总览.md` | 总是 |
+| `scaffold/主题/世界观.md` | `主题/世界观.md` | 总是 |
+| `scaffold/主题/主线剧情.md` | `主题/主线剧情.md` | 总是 |
+| `scaffold/主题/哲学母题.md` | `主题/哲学母题.md` | **仅 Q6 = 深度**（轻量 → 母题并入 `世界观.md`；不要先复制再删） |
+| `scaffold/主题/人物/.gitkeep` | `主题/人物/` | 总是 |
+| `scaffold/主题/章节卡/.gitkeep` | `主题/章节卡/` | 总是 |
+| `scaffold/章节/.gitkeep` | `章节/` | 总是 |
+| `templates/logline.md` | `主题/logline.md` | 总是（空白待填） |
+| `templates/constraints.md` | `主题/通用约束.md` | 总是（阈值真源） |
+| `templates/foreshadow-board.md` | `主题/伏笔板.md` | 总是（空板；`novel-plot` 后续填） |
+| `templates/rhythm-window.md` | `主题/节奏窗.md` | 总是（自阶段 3b 填数） |
+| `tools/data/sensitive-words.example.txt` | `主题/敏感词表.md` | 总是（占位，待按平台替换） |
+| `templates/plan.md` | `.cursorGrowth/plan.md` | 总是（**保留头部闸门注释块**，勿自创格式） |
+| `scaffold/.cursorGrowth/*/.gitkeep` | `.cursorGrowth/{archive,check,learn}/` | 总是（模板缺失时用 `mkdir -p` 兜底） |
+
+> **禁止**在项目根写第二份 `plan.md`（真源只有 `.cursorGrowth/plan.md`）。
 
 ---
 
 ### 阶段 3b · 换算节奏窗（强制）
 
-1. 确定 **N**（与用户确认计划总章数；可用 Q2 章数区间中值作初稿）  
-2. 按 `skills/novel-plot/reference/opening-protocol.md` 选 `r_open`，算出开篇窗 / 中点 / 高潮区  
-3. 写入 `主题/节奏窗.md`  
-4. **禁止**把算出的绝对章号写回 `.cursor/` 母版  
+1. **先定颗粒度档**（写入 `主题/通用约束.md` §1.1）——按上架形态推荐：
+
+   | Q2 / 用途 | 推荐档 | 含义 |
+   |---|---|---|
+   | 平台日更 / 追读制 | **A · 网文连载** | 2000–4000 汉字/章，1 章 ≈ 1 话 |
+   | 实体出版 / 单本长篇 | **B · 出版长篇** | 6000–12000 汉字/章 |
+   | 大章制 / 单章多场景（母版默认） | **C · 大章 / 卷** | 30000–60000 汉字/章 |
+
+2. 确定 **N**（与用户确认计划总章数；**按所选档的"章"计数**，可用 Q2 章数区间中值作初稿）
+3. 按 `skills/novel-plot/reference/opening-protocol.md` 选 `r_open`，算出开篇窗 / 中点 / 高潮区
+4. 写入 `主题/节奏窗.md`
+5. **禁止**把算出的绝对章号写回 `.cursor/` 母版
+
+> `主题/总览.md`、`主题/节奏窗.md`、`主题/通用约束.md` 三处的 **N 与颗粒度档必须一致**；改档等于改全书标尺，须走 `/nplan`。
 
 ---
 
@@ -204,33 +251,43 @@ pov: <Q4 答案>
 structure: <Q5 答案>
 philosophy_depth: <Q6 答案>
 planned_chapters: <N>
+planned_chapters_source: <user | q2_midpoint | derived>
 date: <日期>
 needs_philosophy_doc: <Q6 == 深度>
+granularity: <A | B | C>
 rhythm_window_path: 主题/节奏窗.md
+constraints_path: 主题/通用约束.md
+foreshadow_board_path: 主题/伏笔板.md
+logline_path: 主题/logline.md
+sensitive_words_path: 主题/敏感词表.md
+plan_path: .cursorGrowth/plan.md
 ```
 
 `/nnew` 命令会用这个结构：
 - 写入 `主题/总览.md` 的元信息字段
 - 写入 `主题/节奏窗.md`
 - 写入 `CHANGELOG.md` 初始条目
-- 写入 `.cursorGrowth/plan.md` 引导任务
+- 校验 `.cursorGrowth/plan.md` 已按 `templates/plan.md` 生成引导任务
 
 ---
 
 ## 反模式
 
 - ❌ 串行调用 6 个问题（必须并行，10 秒内完成）
-- ❌ 用 free-form 文本提问（应全部用 AskQuestion 选项）
+- ❌ 用 free-form 文本提问（应全部用 AskQuestion 选项；无工具时才退回编号选项）
 - ❌ 在交互中再次问项目名
 - ❌ 复制本项目特定内容到新项目（违反通用性）
-- ❌ 不替换 `<项目名>` 占位符就交付
+- ❌ 不替换 `<项目名>` / `<Q1>`–`<Q6>` / `<N>` / `<日期>` 占位符就交付（会留下选项清单）
 - ❌ Q6 = 轻量时仍复制 `哲学母题.md`（应合并到 `世界观.md`）
+- ❌ 重跑骨架时覆盖已有 `主题/` 文档而不备份
+- ❌ 只复制模板却不建 `.cursorGrowth/{archive,check,learn}/` 与 `主题/章节卡/`（后续报告无处落）
 - ❌ 在母版 rules 写死「前 N 章」；节奏窗只进项目 `主题/`
 
 ## 关联
 
 - **母版真源**：仓库 `cursor-ai-novel` 的 `.cursor/`
 - **调用方**：`/nnew` 命令
-- **基座模板**：`.cursor/templates/scaffold/` · `rhythm-window.md`
+- **基座模板**：`.cursor/templates/scaffold/`
+- **卡片模板**：`.cursor/templates/`（`constraints.md` · `foreshadow-board.md` · `rhythm-window.md` · `logline.md` · `plan.md`）
 - **开篇协议**：`skills/novel-plot/reference/opening-protocol.md`
-- **元规则**：`.cursor/rules/00-novel-meta.mdc`
+- **元规则**：`.cursor/rules/00-novel-meta.mdc`（资产登记表 + 缺失资产降级协议）

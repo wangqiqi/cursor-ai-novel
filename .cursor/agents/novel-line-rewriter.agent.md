@@ -20,25 +20,32 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 | 触发场景 | 调用方 |
 |---|---|
 | "去 AI 味" / "修一下" / "改掉 AI 味" | 直接对话 |
-| `/nwrite <章> <节>` 第 4.5 步（八股检测 · **强制**） | nwrite 内嵌 |
-| `novel-rewrite` 第 3 轮后 | skill 调度 |
+| `/nwrite <章> <节>` 第 5 步（八股检测 · **强制**） | nwrite 内嵌 |
+| `novel-rewrite` 第 3 轮（文字层，scanner 扫完紧跟改） | skill 调度 |
 
 **前置**：扫描结果必须由 `novel-line-scanner` 提供（本 agent 不重新做完整扫描，只针对 🔴 项执行改稿）
 
 **行为**：
 1. 接收 scanner 给出的 🔴 必改项清单
 2. **改稿前必查**：从 `主题/世界观.md` 母题表加载项目白名单
-3. **改稿前必备份**：复制原文到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_去AI味_第NN章_第SS节_原稿.md`
-4. 执行改稿（仅改 🔴 必改项 · 维度 1/2/3/4/9）
-5. 改稿覆盖原文件（正文文件保持"只有小说文字"）
-6. 报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`
+3. **改稿前必备份（推荐用快照工具）**：
+   ```bash
+   python3 .cursor/tools/snapshot.py snapshot --note 去AI味-第NN章-第SS节
+   ```
+   改坏了一键回滚：`python3 .cursor/tools/snapshot.py restore latest --yes`（先给当前状态补安全快照）。
+   手工方式（等价）：复制原文到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_去AI味_第NN章_第SS节_原稿.md`
+4. **机械复扫**：改完跑 `python3 .cursor/tools/check_manuscript.py <该节文件>` 确认 🔴 清零
+5. 执行改稿（仅改 🔴 必改项 · 维度 1/2/3/4/9）
+6. 改稿覆盖原文件（正文文件保持"只有小说文字"）
+7. 报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`
 
 ---
 
 ## 改稿守则
 
-- ✅ 改稿前复制原文到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_去AI味_第NN章_第SS节_原稿.md`
+- ✅ 改稿前留快照：`python3 .cursor/tools/snapshot.py snapshot --note 去AI味-第NN章-第SS节`
 - ✅ 改稿覆盖原文件
+- ✅ 改完机械复扫：`python3 .cursor/tools/check_manuscript.py <节文件>`（🔴 需清零）
 - ✅ 报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`（**不写正文**）
 - ✅ 仅对 🔴 必改项（维度 1/2/3/4/9）自动改稿 — **最小 diff**，禁止顺手润色整节
 - ❌ 不删作者风格化表达
@@ -159,7 +166,7 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 | `/nwrite <章> <节>` 节初稿完成后 | ✅ 先扫 | ✅ 紧跟改 | nwrite 内嵌 |
 | "去 AI 味" / "修一下" | ✅ 先扫 | ✅ 改 | 直接对话 |
 | "扫一下" / "看一下" | ✅ 扫 | ❌ 不动 | 直接对话 |
-| `novel-rewrite` 第 3 轮 | ✅ 扫 | ❌ 不动（rewriter 在第 4 轮） | skill 调度 |
+| `novel-rewrite` 第 3 轮（文字层） | ✅ 扫 | ✅ 紧跟改（同一轮内先扫后改） | skill 调度 |
 | `novel-check` 一致性 | ✅ 扫 | ❌ 不动 | skill 调度 |
 
 ---
@@ -178,6 +185,6 @@ description: 文字改稿 + 「去 AI 味」专家。专长对 🔴 必改项执
 ## 关联
 
 - **协作 agent**：`novel-line-scanner`（前置扫描）
-- **调度方**：`/nwrite` 第 4.5 步 · `novel-rewrite` 第 4 轮
+- **调度方**：`/nwrite` 第 5 步 · `novel-rewrite` 第 3 轮（文字层）
 - **规则**：`01-novel-language.mdc`
 - **skill**：`novel-chapter`

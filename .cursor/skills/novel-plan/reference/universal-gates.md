@@ -1,9 +1,8 @@
 # 通用创作闸门（任意小说）
 
 > 本文件是**跨书 SOP**。禁止写入具体书名、角色、母题数字、渠道名。  
-> 项目特化只进该项目的 `主题/` 与 `.cursorGrowth/learn/`。
-
-被 `novel-check` · `novel-continuity` · `novel-chapter` · `novel-rewrite` · `novel-dialogue` · `novel-publish` · `/nlog` 引用。
+> 项目资产/内容只进该项目的 `主题/`；项目偏好/约定（声口、黑名单、阈值拍板）只进 `.cursorGrowth/`（`learn/`）。**二者都不许回写 `.cursor/`**。  
+> 被 `novel-check` · `novel-continuity` · `novel-chapter` · `novel-rewrite` · `novel-dialogue` · `novel-publish` · `/nlog` · `/npublish` 引用。
 
 ---
 
@@ -26,8 +25,12 @@
 | **全书 8 维** | 首次完稿闸；结构/终局大改后；用户点名 | 上一份同范围主报告仍有效，且未跨章大改 |
 | **章级 8 维** | 该章写完或该章大改后 | 只改了几句却重开全书 |
 | **专项** | 时间漏网 / 量纲 / 对白 / 外发硬伤 | 用专项冒充「全书已过」 |
+| **分批扫描** | 书稿约 > 30 万字、单次读不完时 | 用它替代章级闸（章级仍逐章） |
 
 缺什么开什么。不要把「发表距离」和「章级自洽」混成一次打分。
+
+> **分批协议**：`skills/novel-check/reference/chunked-scan.md`（分批 → `check/` 中间检查点 → 只读检查点汇总）。
+> **机械先行**：`python3 .cursor/tools/check_manuscript.py` 先把排版级 🔴 清零，再做 8 维判断。
 
 ---
 

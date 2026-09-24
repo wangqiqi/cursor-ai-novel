@@ -5,6 +5,56 @@
 
 ---
 
+## [v0.69.0] · 2026-09-24 · feat · 能力补强：写作侧机械校验 · 分批检查 · 类型工艺 · 导出与回滚 · 颗粒度预设
+
+> 主题：回答「**足够写任意小说吗**」中"不够"的四块——P0 机械校验与规模化、P1 类型特化与多卷多线、P2 外发落地与安全回滚、P3 章节颗粒度。
+
+### 新增
+
+- `tools/check_manuscript.py` · **正文机械校验**（写作侧，只读）：字数（节/章/全书）· 加粗密度（双档 🟡/🔴）· 长句 · 连续短句 · `##` 标题白名单 · 作者元叙事 · AI 套词 · 半角标点/引号 · 元数据残留 · 敏感词；阈值自动读 `主题/通用约束.md`，`--json` 可机器消费
+- `tools/data/sensitive-words.example.txt` · 敏感词表**格式示例**（占位；真实词表按平台放 `主题/敏感词表.md`）
+- `tools/snapshot.py` · **快照 / diff / verify / restore**（`manifest.json` 存逐文件 sha256 + 字数；`restore` 前自动补安全快照）
+- `tools/build_export.py` · **外发打包**：合并 Markdown · 分章 TXT · **手写 EPUB3**（`mimetype` STORED · container · opf · nav · 样式表）· 统计报告；仅标准库
+- `skills/novel-check/reference/chunked-scan.md` · **分批检查协议**（分批 → `check/` 中间检查点 + 跨批状态 → 只读检查点汇总），解决 30 万字以上一次读不完
+- `skills/novel-genre/SKILL.md` + 5 份类型工艺参考：`mystery-fairplay.md`（公平线索/诡计）· `romance-arc.md`（关系推进/甜虐/同意红线）· `power-system.md`（层级/代价/通胀防治）· `historical-accuracy.md`（考据分级/防穿越）· `comedy-craft.md`（笑点机制/避雷）
+- `templates/volume-outline.md` · **分卷/分部大纲**（卷功能 · 节拍分派 · 冲突升级链 · 卷末不可逆）
+- `templates/pov-ledger.md` · **POV 台账**（线登记 · 切换规则 · **信息边界防越界知情** · 各线微缩节奏窗 · 并轨点）
+- `templates/constraints.md` §1.1 · **颗粒度三档预设**（A 网文 / B 出版 / C 大章·卷），把「章是什么」变成显式约定
+
+### 修改
+
+- `rules/00-novel-meta.mdc` · 资产登记表增 `分卷/` · `POV台账.md` · `敏感词表.md`；「章」的颗粒度指向 `通用约束` §1.1
+- `rules/99-novel-archive.mdc` · 新增 §六·五 **快照与回滚（强制）**：覆盖正文前必须留快照；检查清单同步
+- `skills/novel-plot` · 输出增 分卷大纲 / POV 台账 / 类型工艺；模板与下游接线
+- `skills/novel-chapter` · 字数与节数改为**读颗粒度档**；补机械校验入口
+- `skills/novel-check` · 超长篇走分批协议；机械项先行（文字层仍不入 8 维）
+- `skills/novel-plan/reference/universal-gates.md` · §2 增「分批扫描」闸与机械先行
+- `skills/novel-plot/reference/opening-protocol.md` · §1 增**颗粒度档**，明确 N 的含义随档变化
+- `skills/novel-publish` · 阶段 2 改为 `build_export.py` 一键打包（EPUB/TXT/MD + 统计）；DOCX 标注为需 pandoc 的可选路径
+- `skills/novel-rewrite` · 工作流加**机械先行**与快照回滚
+- `skills/novel-scaffold` · Q2 追问增颗粒度档；复制表增 `主题/敏感词表.md`；阶段 3b 按档推荐并强调 N 一致性
+- `skills/novel-plan/reference/routes.md` · `commands/nhelp.md` · 扩展路由增 类型工艺 / 分批 / 机械校验 / 快照 / 导出
+- `agents/novel-line-rewriter.agent.md` · 备份步骤改为快照工具 + 改完机械复扫
+- `templates/constraints.md` · §一 拆为「颗粒度档 + 篇幅结构」并加三处 N 一致性红线
+- `tools/check_integrity.py` · 新增 tools 语法检查、reference 体例检查、`novel-genre` 派发表完整性；修复 `.cursor/` 前缀解析与警告重复触发
+- `.cursor/README.md` · 新增 Tools 表、扩展入口表、铁律补快照/颗粒度/类型；根 `README.md` 同步
+
+### 校验
+
+- `python3 .cursor/tools/check_integrity.py` → **✓ 无错误，0 警告**（11 规则 / 15 skill / 12 command / 8 agent / 4 tool）
+- 四项能力逐一冒烟（临时项目，全部通过）：
+  - **骨架**：复制表落地；无残留占位符；颗粒度档 A 正确写入
+  - **机械校验**：脏节被拦下（`## 场景二` / 镜头术语 / 眼中闪过 → 退出码 1）；干净节 ✓
+  - **快照**：snapshot → 改坏 → diff（+1/−7）→ restore 复原成功
+  - **导出**：EPUB 结构自检通过（`mimetype` STORED、6 条目、`testzip` 干净）；分章 TXT 与合并 MD 章标题正确、无重复 H1
+- 新书视角自检同样通过（仅 1 条"根尚无 CHANGELOG.md"提示，属预期）
+
+### 标签
+
+`feat-tooling` `feat-genre` `feat-chunked-scan` `feat-export` `feat-granularity` `docs-meta`
+
+---
+
 ## [v0.68.0] · 2026-09-24 · fix · 工作流打通：入口可跑通、路径归一、报告落点唯一、母版可自检
 
 > 主题：**让 `/nnew → /nplan → /nrun|/nloop → /nwrite → /ncheck → /nfix → /nlog → /npublish` 全链不断链、不互斥、不因缺资产停摆。**
