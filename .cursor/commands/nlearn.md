@@ -1,4 +1,5 @@
 ---
+name: nlearn
 description: 【学习】沉淀本小说约定到 .cursorGrowth/learn/
 ---
 

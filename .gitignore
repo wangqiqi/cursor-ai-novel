@@ -6,7 +6,10 @@
 *.ipr
 .cline/
 .trae/
-.cursorGrowth/
+# 仅忽略项目根的 Growth（本地工作记忆）。
+# 锚定 "/" 是刻意的：scaffold 基座里的 .cursor/templates/scaffold/.cursorGrowth/
+# 是必须入库的占位模板，不能被这条规则一并吞掉。
+/.cursorGrowth/
 .cursorindexerignore
 .cursorworktrees
 

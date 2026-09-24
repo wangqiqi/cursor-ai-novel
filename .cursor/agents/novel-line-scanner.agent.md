@@ -20,16 +20,16 @@ description: 文字扫描 + 八股检测专家。只扫描不改稿。专长 9 �
 | 触发场景 | 调用方 |
 |---|---|
 | "扫一下" / "看一下" / "查一下" / "八股检测" | 直接对话 |
-| `novel-rewrite` 第 3 轮 | skill 调度 |
+| `novel-rewrite` 第 3 轮（文字层） | skill 调度 |
 | `novel-check` 一致性检查 | skill 调度 |
-| `nwrite` 第 4.5 步 | skill 调度（仅扫描前移到本 agent，再由 rewriter 处理） |
+| `/nwrite` 第 5 步（八股检测） | skill 调度（仅扫描前移到本 agent，再由 rewriter 处理） |
 
 **行为**：
 1. 读取目标文件（节 / 章）
 2. 执行 9 维检测（见下）
 3. 输出三档批注（🔴 必改 / 🟡 建议改 / 🟢 可选改 / 作者风格）
 4. **不改原文件**
-5. 报告写到 `.cursorGrowth/check/第NN章_第SS节_复盘.md`
+5. 报告写到 `.cursorGrowth/check/`（命名见 `novel-plan/reference/universal-gates.md` 与本文件「输出格式」）
 
 ---
 
@@ -111,14 +111,15 @@ description: 文字扫描 + 八股检测专家。只扫描不改稿。专长 9 �
 
 **检测命令**（项目侧路径可替换）：
 ```bash
-grep -n '^## ' <章节目录> | grep -v -E '本节完|本章完|八股检测报告'
+grep -n '^## ' <章节目录> | grep -v -E '本节完|本章完'
 # 0 行输出 → 0 处违规
 ```
 
-**合法 `##` 标题白名单**（跨项目恒定 · 仅 3 类）：
+**合法 `##` 标题白名单**（跨项目恒定 · 仅 2 类）：
 - ✅ `## 本节完`
 - ✅ `## 本章完`
-- ✅ `## 八股检测报告`
+
+> 检测报告**不进正文**（只落 `.cursorGrowth/check/`），因此 `## 八股检测报告` **不属于**正文合法标题。
 
 **违规示例**（用 `<...>` 占位 · 跨项目通用）：
 ```markdown
@@ -127,7 +128,7 @@ grep -n '^## ' <章节目录> | grep -v -E '本节完|本章完|八股检测报�
 ## 【<人物名>段 · <地点> · <时间>】         ← ❌ 同名二级标题重复
 ```
 
-**规则依据**：`.cursor/rules/05-novel-style.mdc` 5.4 节 · `.cursor/skills/novel-chapter/SKILL.md` 八股 9 维
+**规则依据**：`.cursor/rules/05-novel-style.mdc` §四（去脚本化硬约束）· `.cursor/skills/novel-chapter/SKILL.md`（阶段 3 八股检测）
 
 ---
 
@@ -184,6 +185,6 @@ grep -n '^## ' <章节目录> | grep -v -E '本节完|本章完|八股检测报�
 ## 关联
 
 - **协作 agent**：`novel-line-rewriter`（执行改稿）
-- **调度方**：`/nwrite` 第 4.5 步 · `novel-check` · `novel-rewrite` 第 3 轮
+- **调度方**：`/nwrite` 第 5 步 · `novel-check` · `novel-rewrite` 第 3 轮（文字层）
 - **规则**：`01-novel-language.mdc`（九维检测完整规范）
 - **skill**：`novel-chapter`（八股 9 维）

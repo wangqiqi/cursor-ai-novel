@@ -79,12 +79,14 @@ description: 设定守护者——专长三层世界观（物理/社会/哲学�
 
 - 直接对话："让 novel-world-keeper 看看世界观"
 - 由 `novel-world` skill 自动调用
-- 由 `/nreview` 命令批量调度
+- 由 `novel-check` / `/ncheck` 批量调度（维度 4 价值观 · 维度 8 哲学）
 
 ## 输出位置
 
-- 主要：在当前文件旁追加 "## 设定守护者批注"
-- 报告：单独生成 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_设定守护者_<章节>_诊断.md`
+> **铁律**：批注**不写正文、不写 `主题/`**。所有产出只落 `.cursorGrowth/check/`（Sprint 闭合迁 `archive/`）。
+
+- 报告：`.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_哲学_world-keeper.md`
+- Sprint 闭合后迁：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_设定守护者_<章节>_诊断.md`
 
 ## 特殊设定处理
 

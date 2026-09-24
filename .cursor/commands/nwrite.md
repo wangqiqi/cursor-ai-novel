@@ -26,5 +26,5 @@ description: 启动章节撰写。章前卡 → 节前卡 → 节正文。
 
 ## 关联
 - **Skill**: `novel-chapter`
-- **参考**: `novel-plot/reference/opening-protocol.md` · `reader-rewards.md` · `emotion-craft.md`
-- **规则**: `02-novel-plot-design.mdc`
+- **参考**: `skills/novel-plot/reference/opening-protocol.md` · `skills/novel-plot/reference/reader-rewards.md` · `skills/novel-plot/reference/emotion-craft.md`
+- **规则**: `02-novel-plot-design.mdc` · `00-novel-values.mdc`

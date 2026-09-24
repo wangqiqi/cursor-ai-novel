@@ -114,13 +114,16 @@ description: 读者模拟器——模拟目标读者群的代入感、共情度�
 ## 调用方式
 
 - 直接对话："让 novel-reader-simulator 看看第二章"
-- 由 `novel-pitch` skill 在生成推介包前调用
-- 由 `/nreview` 命令批量调度
+- 由 `novel-publish` skill 在生成推介包前调用
+- 由 `novel-check` / `/ncheck` 调度（维度 8 哲学深度 · 读者接受度）
 - 出版前最后一轮审校
 
 ## 输出位置
 
-- 主报告：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_读者模拟器_第NN章_报告.md`
+> **铁律**：批注**不写正文、不写 `主题/`**。产出只落 `.cursorGrowth/check/`（Sprint 闭合迁 `archive/`）。
+
+- 主报告：`.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_读者接受度_reader-simulator.md`
+- Sprint 闭合后迁：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_读者模拟器_第NN章_报告.md`
 
 ## 反模式（避免）
 

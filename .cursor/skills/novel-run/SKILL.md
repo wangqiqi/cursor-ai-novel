@@ -7,7 +7,8 @@ disable-model-invocation: false
 # 小说创作执行 · novel-run
 
 > **"计划定下，执行必严；每步必验，偏差必录。"**
-> 本技能负责将 `.cursorGrowth/plan.md` 中的 `[ ]` 变为 `[x]`。
+> 本技能负责把 `.cursorGrowth/plan.md` 的任务表从 `⬜` 推到 `✅`。
+> **schema 真源**：`.cursor/templates/plan.md`（头部 9 个字段 + `Active sprint` + `下一 Sprint 候选`）；勿自创格式。
 
 ## 触发场景
 
@@ -30,15 +31,16 @@ disable-model-invocation: false
 1. **执行**：调用相关工具完成操作。
 2. **自检**：对比「完成定义」进行验证。
 3. **同步**：
-    - 更新 `.cursorGrowth/plan.md` 状态（`[ ]` → `[x]`）。
+    - 更新 `.cursorGrowth/plan.md` 状态（`⬜` → `🔄` → `✅`）与头部 `ACTIVE` / `NEXT`。
     - 重大变更（文件增删、章节完稿）同步至 `CHANGELOG.md`。
 
 ### 阶段 3：收尾与归档
 - **动作**：
     1. 更新 `.cursorGrowth/plan.md` 头部 `LAST_DONE`。
-    2. 若 Sprint 全面达成，将任务块移入 `历史 Sprint 索引`。
-    3. **标准化提交**：更新 `CHANGELOG.md` -> `git commit` -> `git tag` -> `git push`。
-    4. 总结报告：列出完成项、产出文件及 CHANGELOG 版本。
+    2. 若 Sprint 全面达成：**整段移除** `Active sprint` 区块，笔记写入 `.cursorGrowth/archive/`，并刷新 `下一 Sprint 候选`；`SPRINT_STATUS: closed`。
+    3. **提交纪律（分级）**：更新 `CHANGELOG.md` → `git add <具体文件>` → `git commit`。
+       `git tag` / `git push` **仅当** plan 的完成定义要求、且用户未禁止时执行；无 remote 时只 commit，**禁止**默认 push。
+    4. 总结报告：列出完成项、产出文件、偏差及 CHANGELOG 版本。
 
 ## 执行约束
 
@@ -59,6 +61,7 @@ disable-model-invocation: false
 
 ## 关联
 - **上游**：`novel-plan`（提供计划）
+- **模板**：`.cursor/templates/plan.md`（schema 真源）
 - **规则**：`00-novel-meta.mdc`、`00-novel-values.mdc`、`08-novel-discipline.mdc`
 - **命令**：`/nrun` · `/nloop`
-- **路由**：`reference/routes.md` · `/nhelp`
+- **路由**：`../novel-plan/reference/routes.md` · `/nhelp`

@@ -73,9 +73,10 @@ description: 人物教练——专长核心命题闭环（关键台词/瞬间回
 
 ## 调用与输出
 
-- 由 `novel-character` skill / `/nreview` / `novel-check` 调度
-- 在当前章节/人物卡旁追加 "## 人物教练批注"
-- 单独报告：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_人物教练_<角色名>_诊断.md`
+- 由 `novel-character` skill / `novel-check`（维度 1·2）/ `/ncheck` 调度
+- **铁律**：批注不写正文、不写 `主题/`；只落 `.cursorGrowth/check/`（Sprint 闭合迁 `archive/`）
+- 报告：`.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_角色一致性_人物教练.md`
+- Sprint 闭合后迁：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_人物教练_<角色名>_诊断.md`
 
 ## 反模式
 

@@ -33,7 +33,7 @@ description: 生成 / 更新 CHANGELOG.md。统一版本号、Tag、归档条目
    - `[unreleased]` 必须并入下一正式版后删除
    - 新条目时间戳不得早于下一条
 
-详见 `99-novel-archive.mdc` · `universal-gates.md` §9。
+详见 `.cursor/rules/99-novel-archive.mdc` · `skills/novel-plan/reference/universal-gates.md` §9。
 
 4. **写入 CHANGELOG.md**（倒序顶部）
 
@@ -66,9 +66,15 @@ description: 生成 / 更新 CHANGELOG.md。统一版本号、Tag、归档条目
 `tag1` `tag2` `tag3`
 ```
 
-## 强制约束（按用户规则 #6、#7）
+## 强制约束
 
 - 倒序写入
 - 每次实质性修改 → 更新
 - Tag 与 CHANGELOG 中的标签一致
 - git 提交前先 CHANGELOG
+- 版本号纪律见 `99-novel-archive.mdc` §五；`git tag` / `push` 仅在用户同意时执行
+
+## 关联
+
+- **规则**: `.cursor/rules/99-novel-archive.mdc`（归档命名 / CHANGELOG 模板 / Tag / 版本号）
+- **闸门**: `skills/novel-plan/reference/universal-gates.md` §9

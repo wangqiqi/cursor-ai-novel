@@ -67,14 +67,18 @@ disable-model-invocation: false
 
 ≥ 3 条关键台词的风格必须可区分，让读者“用耳朵听见这个人”（不要只是重复口癖，要有信息粒度差异）。
 
+> **边界**：此处只做「人物卡级」的风格定型。**逐句对白打磨**（目标冲突 / 潜台词 / 断句 / 动作穿插）走 `novel-dialogue`。
+
 ### 6. 与已有角色的关系矩阵
 
-- 复用：`主题/人物关系矩阵.md`
-- 至少标注：盟友、对手、镜像、师承
+- **≥3 个具名人物时，必须创建 / 更新** `主题/人物关系矩阵.md`（首次由本技能建立；这是 `novel-check` 维度 1 的输入）
+- 矩阵至少标注：盟友、对手、镜像、师承；每人一行 × 每人一列的关系类型
+- 已有矩阵则**补行补列**，不覆盖他人条目
 
 ## 输出
 
-写入 `主题/人物/<姓名>.md`（或 `人物/<姓名>.md`，按项目目录约定），格式套用 `.cursor/templates/character-card.md`。
+- 人物卡：写入 `主题/人物/<姓名>.md`，格式套用 `.cursor/templates/character-card.md`
+- 关系矩阵（≥3 人物时）：`主题/人物关系矩阵.md`
 
 ## 特殊角色处理
 
@@ -88,6 +92,7 @@ disable-model-invocation: false
 
 - 用"典型代表 + 群体行为模式"双轨
 - 必须有内部分歧
+- **归属边界**：**组织/派系本身**作为设定条目 → `novel-world`（`主题/<组织>.md`，`templates/faction-card.md`）；**群体作为角色弧光**（代理人物、群体心理转变）→ 本技能。
 
 ## 反模式（避免）
 
@@ -100,7 +105,8 @@ disable-model-invocation: false
 
 ## 关联
 
-- 上游：`novel-logline`、`novel-plot`
-- 下游：`novel-chapter`、`novel-dialogue`
+- 上游：`novel-brainstorm`（logline）、`novel-plot`
+- 下游：`novel-chapter`、`novel-dialogue`（逐句对白）、`novel-check`（维度 1/2）
+- **归属**：组织/派系设定条目 → `novel-world`；本技能只管角色与群体弧光
 - 规则引用：`.cursor/rules/03-novel-character.mdc`、`.cursor/rules/06-novel-symbolism.mdc`
 - 模板：`.cursor/templates/character-card.md`

@@ -1,6 +1,6 @@
 {
-  "persona_id": "professional",
+  "persona_id": "dashu",
   "resolved_via": "default",
   "updated_at": "",
-  "note": "Agent 在「呼叫/切换」成功后更新 persona_id。勿 commit（.cursorGrowth gitignore）。空 updated_at 表示尚未呼叫过。"
+  "note": "persona_id 取 .cursor/config/roles.json 的 personas[].id（当前默认 dashu，与 workflow.json → role.default 一致）。Agent 在「呼叫/切换」成功后更新本文件，并把 resolved_via 置为 explicit。勿 commit（.cursorGrowth gitignore）。空 updated_at 表示尚未呼叫过。"
 }

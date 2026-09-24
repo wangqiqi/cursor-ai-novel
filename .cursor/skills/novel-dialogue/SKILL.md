@@ -15,8 +15,8 @@ disable-model-invocation: false
 
 ## 输入
 
-- 目标章节（`章节/第NN章_*.md`）
-- 复用：人物卡 `主题/人物/*.md`（或 `人物/*.md`，按项目目录约定）
+- 目标章节（`章节/第NN章_<章标题>/第SS节_<节标题>.md`；旧项目回退 `章节/第NN章_*.md`）
+- 复用：人物卡 `主题/人物/*.md`、`主题/人物关系矩阵.md`
 
 ## 7 项硬性检查
 
@@ -67,7 +67,7 @@ disable-model-invocation: false
 - 禁止「开会感」：多人轮流表态、点名发言、并列讲义。
 - 立场用动作、拒绝、一句落地，不写成立场说明书。
 
-见 `universal-gates.md` §6。
+见 `skills/novel-plan/reference/universal-gates.md` §6。
 
 ## 工作流
 
@@ -105,8 +105,9 @@ disable-model-invocation: false
 
 ## 输出
 
-- 报告写入 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_对话_第NN章_审校.md`
-- 同时写入 `.cursorGrowth/check/第NN章_第SS节_复盘.md`
+- 报告（活跃期）：`.cursorGrowth/check/第NN章_第SS节_对话审校.md`
+- Sprint 闭合后迁：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_对话_第NN章_审校.md`
+- **只落一处**（check/ 为活跃报告唯一入口）；不要同时写两份
 - **🔴 铁律**：**任何对白批注 / 修改清单 / 元数据，一概不许写进 `章节/<章>/<节>.md` 正文**——正文永远是小说文稿
 
 ## 反模式（避免）
@@ -116,10 +117,12 @@ disable-model-invocation: false
 - ❌ 不引用人物卡
 - ❌ 把作者风格当"问题"全盘否定
 - ❌ 对白变成档案宣读或开会点名
+- ❌ 报告同时写两份（只进 `.cursorGrowth/check/`）
 
 ## 关联
 
-- 上游：`novel-chapter`
+- 上游：`novel-chapter`、`novel-character`（人物卡语音定型）
 - 下游：`novel-rewrite`
-- 规则引用：`.cursor/rules/05-novel-style.mdc`
+- **协调**：逐句对白归本技能；章级 8 维自洽走 `novel-check`
+- 规则引用：`.cursor/rules/05-novel-style.mdc`、`.cursor/rules/01-novel-language.mdc`
 - 模板：人物卡 `.cursor/templates/character-card.md`

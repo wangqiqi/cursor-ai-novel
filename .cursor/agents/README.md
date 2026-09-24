@@ -12,13 +12,14 @@
 | `novel-architect` | 专项专家 | 三幕结构 / 节拍表 / 节奏控制 | `novel-plot` / `novel-plan` |
 | `novel-character-coach` | 专项专家 | 人物弧光 / 核心命题闭环 / 关键台词与瞬间 | `novel-character` / `novel-check` |
 | `novel-world-keeper` | 专项专家 | 三层世界观 / 闭合性 / 新概念注册 | `novel-world` / `novel-check` |
-| `novel-line-scanner` | 专项专家 | 9 维八股检测 · **只扫描不改稿** | `nwrite`（4.5 步 · 前置扫描） · `novel-check` · `novel-rewrite`（第 3 轮） |
-| `novel-line-rewriter` | 专项专家 | 改稿 + 「去 AI 味」 · 必改项执行 | `nwrite`（4.5 步 · 紧跟 scanner） · "去 AI 味" |
-| `novel-continuity-sleuth` | 专项专家 | 跨章扫描 / 伏笔 / 时间·量纲 / 同义漏网 | `novel-continuity` / `novel-rewrite`（每轮） |
-| `novel-reader-simulator` | 专项专家 | 读者视角 / 代入感 / 节奏感 | `novel-check`（哲学维度） |
-| `novel-check-master` | **执行主控** | 聚合调度 6 个专项 agent | `novel-check`（完整性维度） |
+| `novel-line-scanner` | 专项专家 | 9 维八股检测 · **只扫描不改稿** | `/nwrite`（第 5 步 · 前置扫描） · `novel-check` · `novel-rewrite`（第 3 轮） |
+| `novel-line-rewriter` | 专项专家 | 改稿 + 「去 AI 味」 · 必改项执行 | `/nwrite`（第 5 步 · 紧跟 scanner） · `novel-rewrite`（第 3 轮） · "去 AI 味" |
+| `novel-continuity-sleuth` | 专项专家 | 跨章扫描 / 伏笔 / 时间·量纲 / 同义漏网 | `novel-continuity` / `novel-check` / `novel-rewrite`（每轮） |
+| `novel-reader-simulator` | 专项专家 | 读者视角 / 代入感 / 节奏感 | `novel-check`（维度 8） · `novel-publish` |
+| `novel-check-master` | **执行主控** | 聚合调度 **5 个专项 agent**（维度 6 内置） | `novel-check`（`/ncheck`） |
 
 > `novel-line-editor` 已于 v0.49.0 拆分；**v0.63.1 删除 stub**，现行仅 `scanner` + `rewriter`。
+> **计数口径**：本目录共 **8 个 agent** = 7 个专项专家 + 1 个执行主控；`novel-check-master` 去重后实际调度 **5 个**（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator，其中 1·2 与 5·7 各复用同一 agent）。
 
 ---
 
@@ -47,8 +48,8 @@ novel-check-master            ← 完整性检查主控
 ```
 
 - **特殊位置**：唯一主控型 agent
-- **职责**：聚合调度 6 个专项 agent
-- **被调度**：`novel-check` skill（完整性维度）
+- **职责**：聚合调度 **5 个专项 agent**（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator）
+- **被调度**：`novel-check` skill（8 维度主控 · `/ncheck`）
 
 ### 2.3 层级图
 
@@ -62,13 +63,13 @@ novel-check-master            ← 完整性检查主控
                   │  novel-check-      │ ← agent（执行主控）
                   │  master            │
                   └─────────┬──────────┘
-                            ↓ 调度
-        ┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
-        ↓          ↓          ↓          ↓          ↓          ↓          ↓
-  architect  character  world-keeper  line-      line-      continuity  reader
-                                      scanner    rewriter
-                                      ↑          ↑
-                                      └──协作────┘
+                            ↓ 调度 5 个专项
+        ┌──────────┬──────────┬──────────┬──────────┬──────────┐
+        ↓          ↓          ↓          ↓          ↓
+  architect  character  world-keeper  continuity  reader
+                                （维度 1·2/5·7 各复用同一 agent）
+  ※ line-scanner / line-rewriter 不在 8 维内：由 /nwrite 第 5 步与
+    novel-rewrite 第 3 轮（文字层）调度
 ```
 
 ---
@@ -84,7 +85,7 @@ novel-check-master            ← 完整性检查主控
 | "检查设定 / 补充世界观 / 设定有漏洞" | `novel-world-keeper` | - |
 | "扫一下 / 看一下 / 八股检测" | `novel-line-scanner` | 扫描 |
 | **"去 AI 味" / "修一下"** | **`novel-line-scanner` → `novel-line-rewriter`** | 扫描+改稿 |
-| **`/nwrite` 第 4.5 步（自动）** | **`novel-line-scanner` → `novel-line-rewriter`** | 扫描+改稿（强制） |
+| **`/nwrite` 第 5 步（自动）** | **`novel-line-scanner` → `novel-line-rewriter`** | 扫描+改稿（强制） |
 | "检查冲突 / 看伏笔 / 有没有矛盾" | `novel-continuity-sleuth` | - |
 | "看读者反应 / 能不能打动 / 节奏拖" | `novel-reader-simulator` | - |
 | "check / 自洽性 / 完整性" | `novel-check-master` | 主控 |
@@ -92,7 +93,7 @@ novel-check-master            ← 完整性检查主控
 ### 3.2 专项 ↔ 主控的反模式
 
 - ❌ 直接调用 `novel-check-master` 做局部检查（应用专项专家）
-- ❌ 手动一个个调度 7 个专项 agent 做完整检查（应用 `novel-check-master`）
+- ❌ 手动一个个调度 5 个专项 agent 做完整检查（应用 `novel-check-master`）
 - ❌ 在不该调 agent 的场景（如查文档、生成模板）硬调 agent
 
 ---
@@ -104,16 +105,18 @@ novel-check-master            ← 完整性检查主控
 | `novel-plot` | ✅ | - | - | - | - | - | - |
 | `novel-character` | - | ✅ | - | - | - | - | - |
 | `novel-world` | - | - | ✅ | - | - | - | - |
-| `novel-chapter`（阶段 3.5） | - | - | - | **✅ 强制** | **✅ 强制** | - | - |
-| `/nwrite`（第 4.5 步） | - | - | - | **✅ 强制** | **✅ 强制** | - | - |
-| `novel-rewrite`（3 轮） | - | - | - | ✅（3 轮） | ✅（4 轮） | ✅（每轮） | - |
+| `novel-chapter`（阶段 3） | - | - | - | **✅ 强制** | **✅ 强制** | - | - |
+| `/nwrite`（第 5 步） | - | - | - | **✅ 强制** | **✅ 强制** | - | - |
+| `novel-rewrite`（5 轮中的第 3 轮 = 文字层） | - | - | - | ✅（第 3 轮） | ✅（第 3 轮） | ✅（每轮） | - |
+| `novel-publish` | - | - | - | - | - | - | ✅ |
 | `novel-continuity` | - | - | - | - | - | ✅ | - |
-| `novel-check` | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ |
-| `novel-check-master`（主控） | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ |
+| `novel-check`（8 维） | ✅ | ✅ | ✅ | - | - | ✅ | ✅ |
+| `novel-check-master`（主控） | ✅ | ✅ | ✅ | - | - | ✅ | ✅ |
 
 > - ✅ 表示该 skill 调度此 agent
 > - **加粗** = 强制调度（每节初稿完成后自动跑）
-> - `line-scanner` 与 `line-rewriter` 是 v0.49.0 拆分后的新协作链路（先扫后改）
+> - `line-scanner` 与 `line-rewriter` 是 v0.49.0 拆分后的新协作链路（同一轮内**先扫后改**）
+> - **文字层不在 8 维内**：`novel-check` 不调度 scanner/rewriter；去 AI 味走 `/nwrite` 第 5 步或 `novel-rewrite` 第 3 轮
 
 ---
 

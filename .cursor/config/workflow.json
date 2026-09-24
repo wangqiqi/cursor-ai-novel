@@ -8,6 +8,7 @@
     "learn_dir": "learn",
     "learn_sources": [
       "CHANGELOG.md",
+      ".cursorGrowth/check/",
       ".cursorGrowth/archive/",
       ".cursorGrowth/plan.md",
       "主题/总览.md",

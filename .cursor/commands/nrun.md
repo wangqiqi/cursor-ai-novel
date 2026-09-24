@@ -1,4 +1,5 @@
 ---
+name: nrun
 description: 【日常】按 `.cursorGrowth/plan.md` 执行（默认做事入口）。每步同步 `.cursorGrowth/plan.md` + CHANGELOG.md + 归档。
 ---
 
@@ -6,8 +7,9 @@ description: 【日常】按 `.cursorGrowth/plan.md` 执行（默认做事入口
 
 ```bash
 # 前置检查（任一失败 → 停下来询问用户）
-# 1. `.cursorGrowth/plan.md` 存在且「用户确认」已勾选
-# 2. 当前在项目根目录
+# 1. `.cursorGrowth/plan.md` 存在，且头部 PLAN_APPROVED: true（=「用户已确认」）
+# 2. plan.md 是 templates/plan.md 的 schema（头部 9 字段），否则先按模板补齐
+# 3. 当前在项目根目录
 # 3. git 状态干净或明确
 ```
 

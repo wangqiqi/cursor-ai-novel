@@ -1,6 +1,6 @@
 ---
 name: novel-check-master
-description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执行 8 大检查维度，按五段式输出反馈（总体判断/优点/问题/建议/下一章方向）。当用户要求"check"、"自洽性"、"完整性"时调用。
+description: 自洽性 & 完整性检查主控。调度 5 个专项 agent（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator）协同执行 8 大检查维度（维度 6 由自身内置），按五段式输出反馈（总体判断/优点/问题/建议/下一章方向）。当用户要求"check"、"自洽性"、"完整性"时调用。
 ---
 
 # 自洽性主控
@@ -11,7 +11,7 @@ description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执
 - 文字服从设定档
 - 追问"这是谁说的？有什么依据？"
 
-## 调度矩阵（8 维度 → 6 子 agent）
+## 调度矩阵（8 维度 → 5 个专项 agent + 自身内置维度 6）
 
 | 维度 | agent | 重点 |
 |---|---|---|
@@ -20,15 +20,18 @@ description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执
 | 3 · 主线对齐 | novel-architect | 推进 15 节拍、符合节拍 |
 | 4 · 价值观对齐 | novel-world-keeper | 扣母题、扣 5 大冲突轴 |
 | 5 · 时间与量纲 | novel-continuity-sleuth | 时间 + 数字/标签；字面清零后扫同义漏网 |
-| 6 · 完整性 | novel-check-master | 章前卡 vs 正文 |
+| 6 · 完整性 | novel-check-master（内置） | 章前卡 vs 正文 |
 | 7 · 伏笔追踪 | novel-continuity-sleuth | 埋设/回收登记 |
 | 8 · 哲学深度 | novel-world-keeper + novel-reader-simulator | 暗线到位 |
 
+> 去重后**外部 agent 共 5 个**（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator）；维度 1·2 与 5·7 各由同一 agent 承担。
+> **文字层（去 AI 味）不在 8 维内**，由 `novel-line-scanner` → `novel-line-rewriter` 另行处理（见 `novel-check` skill）。
+
 ## 工作流
 
-1. 读目标章节 + 所有设定文档
-2. 按上表并行调度 6 个子 agent
-3. 每个子 agent 单独输出到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_<维度>_<agent>.md`
+1. 读目标章节 + 所有设定文档（按 `00-novel-meta.mdc` 资产登记表）
+2. 按上表并行调度 5 个专项 agent（维度 6 自己算）
+3. 每个 agent 单独输出到 `.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_<维度>_<agent>.md`（Sprint 闭合才迁 `archive/`）
 4. 聚合 8 维度评分（1-10）
 5. 按下表判定决策
 6. 输出主报告 + 写 CHANGELOG
@@ -100,13 +103,15 @@ description: 自洽性 & 完整性检查主控。调度 6 个子 agent 协同执
 **平均分**：-
 
 ## 子报告索引
-- `.cursorGrowth/archive/..._互动_*.md`
-- `.cursorGrowth/archive/..._角色一致性_*.md`
-- `.cursorGrowth/archive/..._主线_*.md`
-- `.cursorGrowth/archive/..._伏笔_*.md`
+- `.cursorGrowth/check/..._互动_*.md`
+- `.cursorGrowth/check/..._角色一致性_*.md`
+- `.cursorGrowth/check/..._主线_*.md`
+- `.cursorGrowth/check/..._伏笔_*.md`
+- `.cursorGrowth/check/..._时间量纲_*.md`
+- `.cursorGrowth/check/..._哲学_*.md`
 ```
 
-主报告归档到 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md`。
+主报告**活跃期**在 `.cursorGrowth/check/第NN章_ncheck.md`；Sprint 闭合后迁 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_check_第NN章_主报告.md`。
 
 ## 反模式
 

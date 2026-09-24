@@ -9,13 +9,16 @@ disable-model-invocation: false
 ## 触发场景
 
 - "检查设定冲突" / "前后矛盾" / "做一致性审校"
-- 写完一章后自动调用
-- 提交前的最后审查
+- 被 `novel-check`（维度 5 / 7）调度
+- 写作前的伏笔与量纲预检
+
+> **边界**：本技能是**单维工具**（时间·量纲·地理·道具·伏笔），不是章级/外发闸门。
+> 「一章写完」「提交/发布前」的强制闸门一律走 **`novel-check`**（8 维主控）；`novel-check` 调用本技能，反向不调用。勿用本技能结论冒充「整章已过」。
 
 ## 输入
 
 - 章节范围（默认：所有已完成章节）
-- 复用：`主题/世界观.md`、`主题/人物/*.md`、`主题/<核心大纲>.md`
+- 复用：`主题/世界观.md`、`主题/人物/*.md`、`主题/主线剧情.md`、`主题/伏笔板.md`、`主题/通用约束.md`
 
 ## 检查维度
 
@@ -134,7 +137,9 @@ disable-model-invocation: false
 
 ## 输出
 
-- 主输出：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_一致性_第X-Y章_审校.md`
+- 主输出（活跃期）：`.cursorGrowth/check/第X-Y章_一致性_审校.md`
+- Sprint 闭合后迁：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_一致性_第X-Y章_审校.md`
+- **禁止**写入 `主题/` 或 `章节/`
 - 在 `CHANGELOG.md` 追加审校条目
 
 ## 反模式
@@ -144,9 +149,12 @@ disable-model-invocation: false
 - ❌ 把"风格差异"误判为"逻辑冲突"
 - ❌ 不分严重程度（全标红）
 - ❌ 只扫字面旧串、不扫同义漏网
+- ❌ 拿本技能的冲突清单冒充「章级 8 维已过」（应走 `novel-check`）
 
 ## 关联
 
 - 上游：`novel-chapter`
 - 下游：`novel-rewrite`
+- **闸门**：`novel-check`（本技能被其调用；章级/外发闸门以它为准）
+- **闸门细则**：`novel-plan/reference/universal-gates.md`
 - 规则：`.cursor/rules/00-novel-meta.mdc`、`.cursor/rules/04-novel-worldbuilding.mdc`

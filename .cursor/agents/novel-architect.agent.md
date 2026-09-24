@@ -73,12 +73,14 @@ description: 小说架构师——专长三幕结构、节拍表、节奏控制�
 
 - 直接对话："让 novel-architect 看看第二章结构"
 - 由 `novel-plan` / `novel-plot` 自动调用
-- 由 `/nreview` 命令批量调度
+- 由 `novel-check` / `/ncheck` 批量调度（维度 3 主线对齐）
 
 ## 输出位置
 
-- 主要：在当前工作文件旁追加 "## 架构师批注" 小节
-- 报告：单独生成 `.cursorGrowth/archive/YYYYMMDD_HHMMSS_架构师_第X-Y章_诊断.md`
+> **铁律**：批注**不写正文、不写 `主题/`**。所有产出只落 `.cursorGrowth/check/`（Sprint 闭合迁 `archive/`）。
+
+- 报告：`.cursorGrowth/check/YYYYMMDD_HHMMSS_check_第NN章_主线_架构师.md`
+- Sprint 闭合后迁：`.cursorGrowth/archive/YYYYMMDD_HHMMSS_架构师_第X-Y章_诊断.md`
 
 ## 反模式（避免）
 

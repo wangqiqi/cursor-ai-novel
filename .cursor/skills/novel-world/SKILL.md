@@ -16,7 +16,7 @@ disable-model-invocation: false
 ## 输入
 
 - 1-2 句话的世界观雏形 / 类型（科幻/奇幻/现实/混合）
-- 复用：现有 `主题/世界观.md`、`主题/哲学母题.md`（或项目自选母题文档，如 `主题/<哲学母题>.md`）
+- 复用：现有 `主题/世界观.md`、`主题/哲学母题.md`（仅 Q6=深度；**文件名固定**，不支持改名）
 
 ## 三层结构（强制）
 
@@ -97,10 +97,13 @@ disable-model-invocation: false
 
 ### 子输出
 
-- `主题/<哲学母题>.md`（如涉及哲学母题：东方哲学 / 存在主义 / 佛学 / 基督教 等）
+- `主题/哲学母题.md`（仅 Q6=深度；**文件名固定**，不支持改名）
 - `主题/<概念>.md`（每个独立概念一条）
 - `主题/<地点>.md`（地点卡，模板见 `.cursor/templates/location-card.md`）
 - `主题/<组织>.md`（组织卡，模板见 `.cursor/templates/faction-card.md`）
+
+> **归属边界**：组织/派系/地点作为**设定条目**由本技能维护；其中的人物代理与群体弧光归 `novel-character`。
+> 所有新概念按 `04-novel-worldbuilding.mdc` §四 注册（定义 / 命名寓意 / 来源原理 / 作用代价 / 感官特征 / 与已有概念的关系 / 首次出现章节）。
 
 ## 闭合性自查
 
@@ -114,12 +117,13 @@ disable-model-invocation: false
 - ❌ 哲学层被解释为物理层
 - ❌ 资源稀缺不明确
 - ❌ 系统的"善意"缺失
-- ❌ 反抗无限制（无代价、无约束的碾压式「爽」；允许有代价的情绪兑现，见 `02-novel-plot-design` · `reader-rewards.md`）
+- ❌ 反抗无限制（无代价、无约束的碾压式「爽」；允许有代价的情绪兑现，见 `02-novel-plot-design.mdc` · `skills/novel-plot/reference/reader-rewards.md`）
 - ❌ 设定内有未使用的概念
 
 ## 关联
 
-- 上游：`novel-brainstorm`、`novel-logline`
+- 上游：`novel-brainstorm`（logline / 内核）、`novel-plot`
 - 下游：`novel-character`、`novel-chapter`
+- **归属**：组织/派系/地点设定条目归本技能；人物与群体弧光归 `novel-character`
 - 规则引用：`.cursor/rules/04-novel-worldbuilding.mdc`
 - 模板：`.cursor/templates/location-card.md`、`.cursor/templates/faction-card.md`
