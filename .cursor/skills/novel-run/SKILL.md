@@ -20,6 +20,8 @@ disable-model-invocation: false
 
 ### 阶段 1：启动与路由
 - **动作**：读取 `.cursorGrowth/plan.md`，定位第一个未完成任务。
+- **读约定**：读 `.cursorGrowth/learn/`（存在时）——`.cursorGrowth/learn/acceptance.md` 是**「完成定义」的项目级真源**，`.cursorGrowth/learn/decisions.md` 是已拍板决策（不得改口径），`.cursorGrowth/learn/writing-voice.md` / `.cursorGrowth/learn/rhythm.md` 约束产出质量。
+- **完成定义取值顺序**：plan 任务的 `Acceptance` 列 ＞ `.cursorGrowth/learn/acceptance.md` ＞ 该 skill 的默认验收。**前者存在时不得跳过**。
 - **闸**（`/nloop` 或用户说「开始」时）：`PLAN_APPROVED` 须为 `true`；否则停问，勿执行。`/nloop` 另须遵守 `MAX_LOOPS`（见 `commands/nloop.md`）。
 - **路由**：根据任务类型自动加载上下文：
     - **写作类**：加载 `主题/` 核心文件 + `章节/` 前文。

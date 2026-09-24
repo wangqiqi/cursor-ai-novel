@@ -25,6 +25,7 @@ description: 自洽性 & 完整性检查主控。调度 5 个专项 agent（char
 | 8 · 哲学深度 | novel-world-keeper + novel-reader-simulator | 暗线到位 |
 
 > 去重后**外部 agent 共 5 个**（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator）；维度 1·2 与 5·7 各由同一 agent 承担。
+> **类型工艺另调 `novel-genre`**（按 `主题/总览.md` 的 Q1）：类型清单挂进上表对应维度核验，不新增维度；Q1 命中类型而未加载 → 本次 check **未完成**。
 > **文字层（去 AI 味）不在 8 维内**，由 `novel-line-scanner` → `novel-line-rewriter` 另行处理（见 `novel-check` skill）。
 
 ## 工作流

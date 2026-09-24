@@ -27,8 +27,14 @@ import html
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
 import zipfile
-from datetime import date
+from datetime import date, datetime, timezone
+
+
+def strip_illegal_xml(s):
+    """去掉 XML 1.0 不允许的控制字符（保留 \\t \\n \\r）。"""
+    return re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", s)
 
 CHAP_RE = re.compile(r"第\s*0*(\d+)\s*章")
 SEC_RE = re.compile(r"第\s*0*(\d+)\s*节")
@@ -241,6 +247,7 @@ def build_epub(title, author, lang, chapters, out_path, cleaner):
 """
 
     uid = f"urn:uuid:{re.sub(r'[^a-zA-Z0-9]', '-', title)}-{date.today().isoformat()}"
+    mod = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     manifest = "\n".join(f'    <item id="c{i:03d}" href="{fn}" media-type="application/xhtml+xml"/>'
                          for i, (fn, _h) in enumerate(names, 1))
     spine = "\n".join(f'    <itemref idref="c{i:03d}"/>' for i in range(1, len(names) + 1))
@@ -248,6 +255,7 @@ def build_epub(title, author, lang, chapters, out_path, cleaner):
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid" xml:lang="{lang}">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
     <dc:identifier id="bookid">{html.escape(uid)}</dc:identifier>
+    <meta property="dcterms:modified">{mod}</meta>
     <dc:title>{html.escape(title)}</dc:title>
     <dc:language>{lang}</dc:language>
     <dc:creator>{html.escape(author)}</dc:creator>
@@ -263,6 +271,11 @@ def build_epub(title, author, lang, chapters, out_path, cleaner):
 </package>
 """
 
+    # XML 1.0 不允许 C0 控制字符（\x00-\x08\x0b\x0c\x0e-\x1f）：写入前剥除
+    opf = strip_illegal_xml(opf)
+    nav = strip_illegal_xml(nav)
+    chapters_html = [(fn, strip_illegal_xml(body)) for fn, body in chapters_html]
+
     with zipfile.ZipFile(out_path, "w") as z:
         # mimetype 必须是第一个条目且不压缩
         zi = zipfile.ZipInfo("mimetype")
@@ -275,13 +288,19 @@ def build_epub(title, author, lang, chapters, out_path, cleaner):
         for fn, body in chapters_html:
             z.writestr(zipfile.ZipInfo(f"OEBPS/{fn}"), body, zipfile.ZIP_DEFLATED)
 
-    # 自检：结构可读
+    # 自检：结构可读 **且每个 XML 部件真的良构**（testzip 看不出格式错误）
     with zipfile.ZipFile(out_path) as z:
         bad = z.testzip()
         names_in = set(z.namelist())
+        problems = []
+        for nm in sorted(n for n in names_in if n.endswith((".xhtml", ".opf", ".xml"))):
+            try:
+                ET.fromstring(z.read(nm))
+            except ET.ParseError as exc:
+                problems.append(f"{nm}: {exc}")
     need = {"mimetype", "META-INF/container.xml", "OEBPS/content.opf", "OEBPS/nav.xhtml"}
     missing = need - names_in
-    return bad is None and not missing, sorted(missing)
+    return (bad is None and not missing and not problems), sorted(missing) + problems
 
 
 def main():
@@ -308,12 +327,20 @@ def main():
         return 1
 
     title = args.title or discover_meta(root)
+    safe_title = re.sub(r'[\\/:*?"<>|]', "_", title).strip() or "未命名"
+    if safe_title != title:
+        print(f"  ⚠ 书名含路径非法字符，文件名改用：{safe_title}", file=sys.stderr)
     author = args.author
     out_dir = os.path.join(root, args.out)
     fmts = [f.strip() for f in args.format.split(",") if f.strip()]
+    known = {"md", "txt", "epub"}
+    unknown = [f for f in fmts if f not in known]
+    if unknown or not fmts:
+        print(f"✗ 未知/空的 --format：{unknown or fmts}（可选 md, txt, epub，逗号分隔）", file=sys.stderr)
+        return 2
 
     def cleaner(t):
-        return clean_prose(t, True, args.strip_viewpoint)
+        return clean_prose(t, args.strip_structural, args.strip_viewpoint)
 
     print(f"外发打包 · 《{title}》· {len(chapters)} 章 · 署名 {author}")
     print(f"源：{os.path.relpath(os.path.join(root, '章节'), root)}"
@@ -322,17 +349,17 @@ def main():
     made = []
     stats = []
     if "md" in fmts:
-        p = os.path.join(out_dir, f"{title}_全文.md")
+        p = os.path.join(out_dir, f"{safe_title}_全文.md")
         s = build_markdown(title, chapters, p, cleaner, args.keep_section_titles)
         stats = s
         made.append(p)
     if "txt" in fmts:
-        p = os.path.join(out_dir, f"{title}_分章")
+        p = os.path.join(out_dir, f"{safe_title}_分章")
         s = build_txt(title, chapters, p, cleaner)
         stats = stats or [(h, n) for h, n, _ in s]
         made.append(p)
     if "epub" in fmts:
-        p = os.path.join(out_dir, f"{title}.epub")
+        p = os.path.join(out_dir, f"{safe_title}.epub")
         ok, missing = build_epub(title, author, args.lang, chapters, p, cleaner)
         if not ok:
             print(f"  ✗ EPUB 结构自检未过，缺：{missing}", file=sys.stderr)
@@ -340,7 +367,7 @@ def main():
         made.append(p)
 
     total = sum(n for _h, n in stats)
-    rep = os.path.join(out_dir, f"{title}_统计报告.md")
+    rep = os.path.join(out_dir, f"{safe_title}_统计报告.md")
     os.makedirs(out_dir, exist_ok=True)
     with open(rep, "w", encoding="utf-8") as fh:
         fh.write(f"# 外发统计 · {title}\n\n")

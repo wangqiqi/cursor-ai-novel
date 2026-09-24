@@ -39,16 +39,26 @@ disable-model-invocation: false
 - **焦点**：错字、标点、格式、引号统一。
 
 ## 工作流
-1. **备份**：覆盖正文前先留快照（**唯一推荐方式**）：
+1. **读约定**：先读 `.cursorGrowth/learn/`（`.cursorGrowth/learn/writing-voice.md` 声口 · `.cursorGrowth/learn/rhythm.md` 密度偏好 · `.cursorGrowth/learn/decisions.md` 已拍板决策 · `.cursorGrowth/learn/acceptance.md` 何为"过了"）与 `主题/通用约束.md`（§3.1 白名单 · §3.2 黑名单 · §八 类型阈值）。**改稿标准以这些为准，不以你的个人偏好为准。**
+
+> **改动必须分级**（每一处修改都要能说出它属于哪一级）：
+> - 🩹 **surgical**：保持原义的收紧——删冗词、弱动词换强动词、被动改主动、合并同义堆叠。可直接执行。
+> - ⚠️ **substantive**：改变"说了什么"或段落形状——删一个信息点、并段、删掉带独立意思的句子。
+>   **必须先列出并说明理由，得到确认后才动手**。
+>
+> **风格保护条款**：若某处改动会**压平情绪**或**破坏 `主题/风格档.md` §三 声明过的节奏**
+> （如把冷峻极简的短句并列改成顺畅长句），**不执行，只记录在报告里**并注明原因。
+> 风格档声明的偏离不是"待修的错"，是本书的签名。 风格层另读 `主题/风格档.md`（8 轴目标 + 合法偏离声明）与 **`skills/novel-style/reference/<主原型>.md`**（技法层：怎么做/最容易做砸/自检）——按风格档与原型改，不按通用审美改。
+2. **备份**：覆盖正文前先留快照（**唯一推荐方式**）：
    ```bash
    python3 .cursor/tools/snapshot.py snapshot --note 修订-<章节>
    ```
    改坏了一键回滚：`python3 .cursor/tools/snapshot.py restore latest --yes`（会先给当前状态补安全快照）。归档命名见 `99-novel-archive.mdc` §六·五。
-2. **机械先行**：`python3 .cursor/tools/check_manuscript.py` 先看字数/密度/长句/元数据/敏感词，避免把排版级问题当创作问题。
-3. **专项修订**：按 5 轮顺序执行，每轮聚焦单一维度。
-4. **验证**：调用 `novel-check`（章级闸门）或 `novel-continuity`（单维）验证修改效果。
-5. **同步（独立调用时必做）**：更新 `CHANGELOG.md`；若属某个 `plan.md` 任务，同步勾 `✅` 与 `LAST_DONE`（`/nfix` 可脱离 `/nrun` 单跑，不能因此漏记）。
-6. **报告落点**：修订报告只进 `.cursorGrowth/check/`（闭合迁 `archive/`）。
+3. **机械先行**：`python3 .cursor/tools/check_manuscript.py` 先看字数/密度/长句/元数据/敏感词，避免把排版级问题当创作问题。
+4. **专项修订**：按 5 轮顺序执行，每轮聚焦单一维度。
+5. **验证**：调用 `novel-check`（章级闸门）或 `novel-continuity`（单维）验证修改效果。
+6. **同步（独立调用时必做）**：更新 `CHANGELOG.md`；若属某个 `plan.md` 任务，同步勾 `✅` 与 `LAST_DONE`（`/nfix` 可脱离 `/nrun` 单跑，不能因此漏记）。
+7. **报告落点**：修订报告只进 `.cursorGrowth/check/`（闭合迁 `archive/`）。
 
 ## 最小 diff
 - 每轮只动该轮焦点；文字轮只改 🔴（用户点名的 🟡 除外）。

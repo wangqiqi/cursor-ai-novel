@@ -22,7 +22,9 @@ AskQuestion / 迷路时用。无工具则正文编号选项。
 | 关键词 | 去向 |
 |---|---|
 | 新建项目 | `/nnew` · `novel-scaffold` |
-| 类型工艺（推理公平 / 感情线 / 境界体系 / 考据 / 笑点） | `novel-genre`（按 Q1 派发 5 份 reference） |
+| 类型工艺（推理公平 / 感情线 / 境界体系 / 考据 / 笑点） | `novel-genre`（5 类可选，按 Q1 最多同载 3 份） |
+| 文风 / 像某类作家 | `novel-style`（10 原型）· `tools/analyze_style.py --list-proto` |
+| 风格是否有偏差 | `tools/analyze_style.py` · `tools/check_manuscript.py --style` |
 | 世界观 / 设定洞 | `novel-world` · `novel-world-keeper` |
 | 人物不像 | `novel-character` · `novel-character-coach` |
 | 结构 / 节拍 / 爽点钩子 / 节奏窗 | `novel-plot` · `skills/novel-plot/reference/opening-protocol.md` · `skills/novel-plot/reference/reader-rewards.md` · `novel-architect` |

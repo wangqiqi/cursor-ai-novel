@@ -18,12 +18,13 @@ disable-model-invocation: false
 ## 工作流
 
 ### 阶段 1：三幕骨架 (Three-Act)
+- **前置**：读 `主题/logline.md`（无则回退 `主题/主线剧情.md` §一）——本技能的上游产物必须落地回读，否则 logline 是死文件。
 - **动作**：划分三幕占比（25% / 50% / 25%），确定中点反转与至暗时刻。
 
 ### 阶段 2：15 节拍填充 (Beat Sheet)
 - **动作**：参考 Save the Cat 填充 15 个关键节拍。
 - **要求**：每个节拍标注章节位置、场景摘要、情绪曲线。
-- **落点**：写入 `主题/节拍表.md`（模板 `.cursor/templates/beat-sheet.md`）。`主题/主线剧情.md` §三 可保留精简镜像，但**结构真源是 `主题/节拍表.md`**（章前卡与 `/ncheck` 维度 3 按它定位）。
+- **落点**：写入 `主题/节拍表.md`（模板 `.cursor/templates/beat-sheet.md`）。`主题/主线剧情.md` §三 **只保留幕级分派与编号索引**（不再复制全表）；**结构真源是 `主题/节拍表.md`**（章前卡与 `/ncheck` 维度 3 按它定位）。
 
 ### 阶段 3：伏笔与冲突 (Planting & Conflict)
 - **动作**：
@@ -38,6 +39,11 @@ disable-model-invocation: false
 - **多卷本**：`主题/分卷/第<VOL>卷_<卷名>.md`（模板 `.cursor/templates/volume-outline.md`）——全书 15 节拍只定一次，各卷做**分派**。
 - **多线 / 群像**（Q4 = 多线 POV 或 Q5 = 多线交叉）：`主题/POV台账.md`（模板 `.cursor/templates/pov-ledger.md`）——线登记 / 视角切换规则 / **信息边界** / 各线微缩节奏窗 / 并轨点。
 - **类型工艺**：按 `主题/总览.md` 的 Q1 调 `novel-genre` skill（推理 / 言情 / 仙侠体系 / 历史考据 / 喜剧五选，最多 3 份）。
+
+## 调度
+
+- 三幕占比、节拍密度、节奏曲线由 **`novel-architect`** 复核（尤其"卡在中段"时）。
+- 类型工艺由 `novel-genre` 加载；文风原型由 `novel-style` 决定，本技能不替它们做审美。
 
 ## 反模式
 - ❌ 缺少中点反转或至暗时刻。

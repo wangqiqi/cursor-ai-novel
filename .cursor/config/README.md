@@ -19,8 +19,8 @@ plan 模板：`.cursor/templates/plan.md` → 复制到 Growth 真源（schema �
 | 字段 | 值 | 谁消费 |
 |------|-----|--------|
 | `profile` | `novel` | 母版标识（人类可读；无程序消费） |
-| `plan_file` | `.cursorGrowth/plan.md` | `00-novel-meta.mdc` §三 · `novel-plan` · `novel-run` · `/nrun` · `/nloop` |
-| `archive_dir` | `.cursorGrowth/archive` | `99-novel-archive.mdc` · `novel-check` 阶段 5 · 各改稿 skill 的备份 |
+| `plan_file` | `.cursorGrowth/plan.md` | **仅 `00-novel-meta.mdc` §三 引用该键**；`novel-plan` / `novel-run` / `/nrun` / `/nloop` 直接用字面路径 `.cursorGrowth/plan.md`（改此键对其**无效**） |
+| `archive_dir` | `.cursorGrowth/archive` | **无程序消费**：`99-novel-archive.mdc`、`novel-check` 阶段 5、各改稿 skill 均写字面路径 `.cursorGrowth/archive`（改此键**无任何效果**） |
 | `growth.enabled` | `true` | 说明 Growth 机制是否启用（人类可读） |
 | `growth.dir` | `.cursorGrowth` | `00-novel-meta.mdc` 目录约定 |
 | `growth.learn_dir` | `learn` | `novel-learn` 输出目录（`.cursorGrowth/learn/`） |
@@ -30,7 +30,7 @@ plan 模板：`.cursor/templates/plan.md` → 复制到 Growth 真源（schema �
 | `autonomous.confirm_before` | 3 项 | `commands/nloop.md` 必须暂停问人的情形 |
 | `autonomous.interrupt_on` | 5 项 | `commands/nloop.md` 打断表 |
 | `role.default` | `dashu` | `07-novel-persona.mdc` · `config/roles.json` 的 `default` |
-| `role.config` | `.cursor/config/roles.json` | 人格数据真源指针 |
+| `role.config` | `.cursor/config/roles.json` | **无程序消费**：`07-novel-persona.mdc` 写字面路径 `config/roles.json`（改此键**无任何效果**） |
 
 ### 一致性红线
 

@@ -36,6 +36,8 @@ description: 【帮助】小说命令路由 — 卡了该走哪
 | 字数/密度/敏感词想机械核对 | `python3 .cursor/tools/check_manuscript.py` |
 | 书稿太长一次查不完 | `skills/novel-check/reference/chunked-scan.md`（分批） |
 | 类型工艺（推理公平 / 感情线 / 境界 / 考据 / 笑点） | `novel-genre` |
+| 文风太平 / 想要某类作家的味道 | `novel-style`（`tools/analyze_style.py --list-proto` 看 10 原型） |
+| 风格/节奏有偏差 | `python3 .cursor/tools/check_manuscript.py --style` |
 | 对白不像人 | `novel-dialogue`（7 项硬指标） |
 | 跨章矛盾 | `novel-continuity` / `/ncheck`（含量纲漏网） |
 | 人物不像 | `novel-character` + `novel-character-coach` |

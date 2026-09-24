@@ -17,6 +17,9 @@ disable-model-invocation: false
 
 - 目标章节（`章节/第NN章_<章标题>/第SS节_<节标题>.md`；旧项目回退 `章节/第NN章_*.md`）
 - 复用：人物卡 `主题/人物/*.md`、`主题/人物关系矩阵.md`
+- **项目声口**：`.cursorGrowth/learn/writing-voice.md`（`/nlearn` 沉淀的称呼、禁套词、语音偏好——对白改稿必须服从它，而非通用审美）
+- **类型约束**：若 Q1 命中言情/推理等，调 `novel-genre` 取对应参考（如 `skills/novel-genre/reference/romance-arc.md` 的张力工艺）
+- **文风约束**：`主题/风格档.md` —— 对白句长/口语密度/省略习惯需服从本档（如市井口语原型要求对话占比 45–68%）
 
 ## 7 项硬性检查
 

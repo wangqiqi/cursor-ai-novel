@@ -1,0 +1,1054 @@
+{
+  "_note": "风格原型的 8 轴目标值。★ 重要：这些数字是**技法校准的起点估计**，不是语料统计结果。精确值应来自 `tools/analyze_style.py` 从你自己的参照样本文本反推。区间为 [下限, 上限]，单位见 _axes。",
+  "_usage": {
+    "工具": "tools/analyze_style.py --proto <id> 会用本文件的目标值做对比；--sample <文件> 反推真实指纹",
+    "项目落点": "选定后写入 `主题/风格档.md`（模板 templates/style-profile.md）",
+    "reference": "每份 skills/novel-style/reference/<file>.md 讲解该原型的**技法**，数值一律引用本文件，不要另抄一份"
+  },
+  "_axes": {
+    "avg_sentence_len": {
+      "name": "平均句长",
+      "unit": "汉字/句",
+      "axis": "1 句法节拍"
+    },
+    "sentence_len_sd": {
+      "name": "句长标准差",
+      "unit": "汉字",
+      "axis": "1 句法节拍",
+      "note": "越大=长短句错落"
+    },
+    "comma_per_kchar": {
+      "name": "逗号密度",
+      "unit": "个/千字",
+      "axis": "1 句法节拍"
+    },
+    "dash_per_kchar": {
+      "name": "破折号密度",
+      "unit": "个/千字",
+      "axis": "1 句法节拍"
+    },
+    "avg_para_len": {
+      "name": "平均段长",
+      "unit": "汉字/段",
+      "axis": "1 句法节拍"
+    },
+    "simile_per_100": {
+      "name": "比喻标记密度",
+      "unit": "次/百字",
+      "axis": "3 修辞密度",
+      "note": "像/如/仿佛/似/如同/宛如/犹如"
+    },
+    "synesthesia_ratio": {
+      "name": "通感句占比",
+      "unit": "%",
+      "axis": "3 修辞密度",
+      "note": "同句含 ≥2 个感官通道"
+    },
+    "psych_ratio": {
+      "name": "心理句占比",
+      "unit": "%",
+      "axis": "4 心理距离"
+    },
+    "internal_external": {
+      "name": "内耗:外化",
+      "unit": "比值",
+      "axis": "4 心理距离",
+      "note": "直接心理 ÷ 动作外化暗示"
+    },
+    "dialogue_ratio": {
+      "name": "对话句占比",
+      "unit": "%",
+      "axis": "5 节奏呼吸"
+    },
+    "exclaim_per_kchar": {
+      "name": "感叹号密度",
+      "unit": "个/千字",
+      "axis": "5 节奏呼吸"
+    },
+    "explicit_time_per_kchar": {
+      "name": "显性时间标记密度",
+      "unit": "个/千字",
+      "axis": "6 叙事时间"
+    },
+    "first_person_ratio": {
+      "name": "第一人称句占比",
+      "unit": "%",
+      "axis": "7 叙述者态度"
+    },
+    "essay_ratio": {
+      "name": "议论句占比",
+      "unit": "%",
+      "axis": "7 叙述者态度",
+      "note": "叙述者出面判断/总结"
+    },
+    "sense_priority": {
+      "name": "感官优先通道",
+      "unit": "通道名",
+      "axis": "8 感官与留白"
+    },
+    "explain_per_kchar": {
+      "name": "解释性连接词密度",
+      "unit": "个/千字",
+      "axis": "8 感官与留白",
+      "note": "因为/所以/原来/其实/也就是 —— 越高=留白越少"
+    },
+    "ellipsis_per_kchar": {
+      "name": "省略号密度",
+      "unit": "个/千字",
+      "axis": "8 感官与留白"
+    },
+    "colloquial_per_kchar": {
+      "name": "口语标记密度",
+      "unit": "个/千字",
+      "axis": "2 词汇指纹",
+      "note": "语气词/儿化/俗语 —— 市井类关键"
+    },
+    "jargon_per_kchar": {
+      "name": "专名术语密度",
+      "unit": "个/千字",
+      "axis": "2 词汇指纹",
+      "note": "拉丁字母串 + 中文构词后缀启发式（系统/协议/常数/方程/模型/机制/阈值…）；纯中文术语文本才算得出，属代理指标"
+    },
+    "meta_per_kchar": {
+      "name": "元叙事标记密度",
+      "unit": "个/千字",
+      "axis": "2 词汇指纹",
+      "note": "书中书/档案/注释 —— 智性类关键"
+    }
+  },
+  "archetypes": {
+    "cold-minimal": {
+      "code": "冷峻极简",
+      "authors": [
+        "海明威",
+        "卡佛",
+        "余华"
+      ],
+      "signature": "短句并列、零度外化、冰山留白、对白省略；情绪靠动作与物件，不靠形容词",
+      "reference": "skills/novel-style/reference/cold-minimal.md",
+      "targets": {
+        "avg_sentence_len": [
+          10,
+          16
+        ],
+        "sentence_len_sd": [
+          6,
+          12
+        ],
+        "comma_per_kchar": [
+          30,
+          55
+        ],
+        "dash_per_kchar": [
+          0,
+          2
+        ],
+        "avg_para_len": [
+          40,
+          110
+        ],
+        "simile_per_100": [
+          0.3,
+          1.0
+        ],
+        "synesthesia_ratio": [
+          0,
+          3
+        ],
+        "psych_ratio": [
+          2,
+          8
+        ],
+        "internal_external": [
+          0.15,
+          0.35
+        ],
+        "dialogue_ratio": [
+          35,
+          55
+        ],
+        "exclaim_per_kchar": [
+          0,
+          2
+        ],
+        "explicit_time_per_kchar": [
+          3,
+          8
+        ],
+        "first_person_ratio": [
+          0,
+          60
+        ],
+        "essay_ratio": [
+          0,
+          3
+        ],
+        "sense_priority": "触觉/体感",
+        "explain_per_kchar": [
+          0,
+          3
+        ],
+        "ellipsis_per_kchar": [
+          1,
+          5
+        ],
+        "colloquial_per_kchar": [
+          2,
+          8
+        ],
+        "jargon_per_kchar": [
+          0,
+          3
+        ],
+        "meta_per_kchar": [
+          0,
+          1
+        ]
+      },
+      "exemptions": [
+        "01 §二.3「严禁连续 3 个以上短句」→ 放宽到允许连续 6 个（本原型的签名手法）",
+        "01 §二.3「不超过 30 字长句」→ 收紧为 ≤ 25 字（本原型几乎不写长句）"
+      ]
+    },
+    "dense-interwoven": {
+      "code": "绵密缠绕",
+      "authors": [
+        "福克纳",
+        "普鲁斯特",
+        "金宇澄"
+      ],
+      "signature": "长句缠绕、时间折叠、从句套嵌、内心戏稠密；一句话可以装下一段回忆",
+      "reference": "skills/novel-style/reference/dense-interwoven.md",
+      "targets": {
+        "avg_sentence_len": [
+          30,
+          48
+        ],
+        "sentence_len_sd": [
+          14,
+          26
+        ],
+        "comma_per_kchar": [
+          90,
+          145
+        ],
+        "dash_per_kchar": [
+          2,
+          7
+        ],
+        "avg_para_len": [
+          150,
+          420
+        ],
+        "simile_per_100": [
+          1.5,
+          3.0
+        ],
+        "synesthesia_ratio": [
+          5,
+          12
+        ],
+        "psych_ratio": [
+          20,
+          35
+        ],
+        "internal_external": [
+          2.5,
+          6.0
+        ],
+        "dialogue_ratio": [
+          12,
+          30
+        ],
+        "exclaim_per_kchar": [
+          0,
+          3
+        ],
+        "explicit_time_per_kchar": [
+          8,
+          20
+        ],
+        "first_person_ratio": [
+          0,
+          80
+        ],
+        "essay_ratio": [
+          3,
+          10
+        ],
+        "sense_priority": "嗅觉/听觉",
+        "explain_per_kchar": [
+          4,
+          9
+        ],
+        "ellipsis_per_kchar": [
+          1,
+          5
+        ],
+        "colloquial_per_kchar": [
+          2,
+          10
+        ],
+        "jargon_per_kchar": [
+          0,
+          5
+        ],
+        "meta_per_kchar": [
+          0,
+          2
+        ]
+      },
+      "exemptions": [
+        "01 §二.3「不超过 30 字长句」→ 放宽到 60 字（本原型签名）",
+        "01 §二.3「严禁连续 3 个以上短句」→ 维持不变（本原型不靠短句）"
+      ]
+    },
+    "strange-metaphor": {
+      "code": "奇喻感官",
+      "authors": [
+        "张爱玲",
+        "莫言",
+        "苏童"
+      ],
+      "signature": "通感式奇喻、高修辞密度、感官总动员；比喻是主要叙事手段而非装饰",
+      "reference": "skills/novel-style/reference/strange-metaphor.md",
+      "targets": {
+        "avg_sentence_len": [
+          18,
+          28
+        ],
+        "sentence_len_sd": [
+          11,
+          20
+        ],
+        "comma_per_kchar": [
+          60,
+          105
+        ],
+        "dash_per_kchar": [
+          3,
+          10
+        ],
+        "avg_para_len": [
+          90,
+          220
+        ],
+        "simile_per_100": [
+          3.0,
+          5.5
+        ],
+        "synesthesia_ratio": [
+          10,
+          22
+        ],
+        "psych_ratio": [
+          12,
+          25
+        ],
+        "internal_external": [
+          0.8,
+          1.8
+        ],
+        "dialogue_ratio": [
+          22,
+          40
+        ],
+        "exclaim_per_kchar": [
+          1,
+          5
+        ],
+        "explicit_time_per_kchar": [
+          3,
+          9
+        ],
+        "first_person_ratio": [
+          0,
+          70
+        ],
+        "essay_ratio": [
+          2,
+          8
+        ],
+        "sense_priority": "全通道（嗅/触/色）",
+        "explain_per_kchar": [
+          2,
+          6
+        ],
+        "ellipsis_per_kchar": [
+          1,
+          6
+        ],
+        "colloquial_per_kchar": [
+          3,
+          12
+        ],
+        "jargon_per_kchar": [
+          0,
+          3
+        ],
+        "meta_per_kchar": [
+          0,
+          2
+        ]
+      },
+      "exemptions": [
+        "01 §一（八股检测维度表）「形容词堆砌 🔴」→ 修辞密度阈值上移到 5 次/百字；仍禁**空洞**形容词（必须具象可感）",
+        "scanner 维度 3 的 🔴 判定改为「无具象支撑的形容词堆积」才判红"
+      ]
+    },
+    "cold-irony": {
+      "code": "冷眼反讽",
+      "authors": [
+        "鲁迅",
+        "卡夫卡",
+        "简·奥斯汀"
+      ],
+      "signature": "反讽叙述者、自由间接引语、冷峻克制、偶尔出面议论收束；不煽情",
+      "reference": "skills/novel-style/reference/cold-irony.md",
+      "targets": {
+        "avg_sentence_len": [
+          16,
+          26
+        ],
+        "sentence_len_sd": [
+          9,
+          17
+        ],
+        "comma_per_kchar": [
+          50,
+          85
+        ],
+        "dash_per_kchar": [
+          1,
+          4
+        ],
+        "avg_para_len": [
+          80,
+          200
+        ],
+        "simile_per_100": [
+          0.8,
+          2.0
+        ],
+        "synesthesia_ratio": [
+          2,
+          8
+        ],
+        "psych_ratio": [
+          8,
+          18
+        ],
+        "internal_external": [
+          0.4,
+          1.2
+        ],
+        "dialogue_ratio": [
+          30,
+          48
+        ],
+        "exclaim_per_kchar": [
+          0,
+          3
+        ],
+        "explicit_time_per_kchar": [
+          3,
+          9
+        ],
+        "first_person_ratio": [
+          0,
+          70
+        ],
+        "essay_ratio": [
+          5,
+          13
+        ],
+        "sense_priority": "视觉/听觉",
+        "explain_per_kchar": [
+          2,
+          6
+        ],
+        "ellipsis_per_kchar": [
+          0,
+          3
+        ],
+        "colloquial_per_kchar": [
+          2,
+          8
+        ],
+        "jargon_per_kchar": [
+          0,
+          4
+        ],
+        "meta_per_kchar": [
+          0,
+          2
+        ]
+      },
+      "exemptions": [
+        "05 §五「严禁大段内心独白」→ 维持；本原型心理占比本就低，不需豁免",
+        "01 §二.3 短句/长句阈值 → 维持不变"
+      ]
+    },
+    "lyric-whitespace": {
+      "code": "散文化留白",
+      "authors": [
+        "沈从文",
+        "汪曾祺",
+        "萧红"
+      ],
+      "signature": "淡情节、感官抒情、风俗画质感、大留白；不解释、不推进、只呈现",
+      "reference": "skills/novel-style/reference/lyric-whitespace.md",
+      "targets": {
+        "avg_sentence_len": [
+          18,
+          32
+        ],
+        "sentence_len_sd": [
+          10,
+          19
+        ],
+        "comma_per_kchar": [
+          60,
+          100
+        ],
+        "dash_per_kchar": [
+          1,
+          4
+        ],
+        "avg_para_len": [
+          90,
+          240
+        ],
+        "simile_per_100": [
+          1.0,
+          2.4
+        ],
+        "synesthesia_ratio": [
+          6,
+          14
+        ],
+        "psych_ratio": [
+          8,
+          20
+        ],
+        "internal_external": [
+          0.6,
+          1.6
+        ],
+        "dialogue_ratio": [
+          18,
+          36
+        ],
+        "exclaim_per_kchar": [
+          0,
+          2
+        ],
+        "explicit_time_per_kchar": [
+          1,
+          5
+        ],
+        "first_person_ratio": [
+          0,
+          100
+        ],
+        "essay_ratio": [
+          0,
+          4
+        ],
+        "sense_priority": "嗅觉/听觉/味觉",
+        "explain_per_kchar": [
+          0,
+          3
+        ],
+        "ellipsis_per_kchar": [
+          2,
+          8
+        ],
+        "colloquial_per_kchar": [
+          4,
+          14
+        ],
+        "jargon_per_kchar": [
+          0,
+          3
+        ],
+        "meta_per_kchar": [
+          0,
+          1
+        ]
+      },
+      "exemptions": [
+        "02「每章 ≥1 小爽点（强制）」→ 降级为**每 Sprint/每卷**级兑现；本项目声明后章前卡可填「零兑现·抒情节」并写理由",
+        "02「冲突必须升级」→ 允许存在「静止节」，但不得连续 3 章",
+        "01 §二.3「不超过 30 字长句」→ 放宽到 44 字（本原型平均句长上界 32 字，超通用上限属签名）"
+      ]
+    },
+    "vernacular-folksy": {
+      "code": "市井口语",
+      "authors": [
+        "老舍",
+        "王朔",
+        "刘震云"
+      ],
+      "signature": "京味/市井口语、对话驱动、短句节奏、幽默来自语言本身而非事件",
+      "reference": "skills/novel-style/reference/vernacular-folksy.md",
+      "targets": {
+        "avg_sentence_len": [
+          12,
+          20
+        ],
+        "sentence_len_sd": [
+          8,
+          15
+        ],
+        "comma_per_kchar": [
+          40,
+          75
+        ],
+        "dash_per_kchar": [
+          1,
+          4
+        ],
+        "avg_para_len": [
+          60,
+          160
+        ],
+        "simile_per_100": [
+          0.8,
+          2.2
+        ],
+        "synesthesia_ratio": [
+          1,
+          6
+        ],
+        "psych_ratio": [
+          8,
+          20
+        ],
+        "internal_external": [
+          0.5,
+          1.5
+        ],
+        "dialogue_ratio": [
+          45,
+          68
+        ],
+        "exclaim_per_kchar": [
+          2,
+          9
+        ],
+        "explicit_time_per_kchar": [
+          3,
+          9
+        ],
+        "first_person_ratio": [
+          0,
+          100
+        ],
+        "essay_ratio": [
+          2,
+          10
+        ],
+        "sense_priority": "听觉/视觉",
+        "explain_per_kchar": [
+          1,
+          4
+        ],
+        "ellipsis_per_kchar": [
+          0,
+          4
+        ],
+        "colloquial_per_kchar": [
+          15,
+          45
+        ],
+        "jargon_per_kchar": [
+          0,
+          2
+        ],
+        "meta_per_kchar": [
+          0,
+          1
+        ]
+      },
+      "exemptions": [
+        "01 §一（八股检测维度表）「翻译腔/学术腔」→ 本就要求口语，维持；补一条：允许方言词但需在 `主题/通用约束.md` §六 登记「可接受方言层」",
+        "01 §二.3「严禁连续 3 个以上短句」→ 放宽到允许连续 5 个（对话节奏）"
+      ]
+    },
+    "intellectual-labyrinth": {
+      "code": "智性迷宫",
+      "authors": [
+        "博尔赫斯",
+        "卡尔维诺",
+        "纳博科夫"
+      ],
+      "signature": "元叙事、伪文献、结构游戏、智性双关；读者被邀请解谜而非共情",
+      "reference": "skills/novel-style/reference/intellectual-labyrinth.md",
+      "targets": {
+        "avg_sentence_len": [
+          22,
+          40
+        ],
+        "sentence_len_sd": [
+          12,
+          22
+        ],
+        "comma_per_kchar": [
+          70,
+          115
+        ],
+        "dash_per_kchar": [
+          3,
+          9
+        ],
+        "avg_para_len": [
+          120,
+          320
+        ],
+        "simile_per_100": [
+          1.5,
+          3.5
+        ],
+        "synesthesia_ratio": [
+          2,
+          9
+        ],
+        "psych_ratio": [
+          6,
+          18
+        ],
+        "internal_external": [
+          0.5,
+          1.8
+        ],
+        "dialogue_ratio": [
+          22,
+          42
+        ],
+        "exclaim_per_kchar": [
+          0,
+          3
+        ],
+        "explicit_time_per_kchar": [
+          5,
+          14
+        ],
+        "first_person_ratio": [
+          0,
+          100
+        ],
+        "essay_ratio": [
+          6,
+          16
+        ],
+        "sense_priority": "视觉（抽象转具象）",
+        "explain_per_kchar": [
+          4,
+          10
+        ],
+        "ellipsis_per_kchar": [
+          1,
+          6
+        ],
+        "colloquial_per_kchar": [
+          1,
+          6
+        ],
+        "jargon_per_kchar": [
+          4,
+          14
+        ],
+        "meta_per_kchar": [
+          5,
+          20
+        ]
+      },
+      "exemptions": [
+        "05 §二.2「严禁元叙事发散」→ **局部放宽**：允许虚构的档案/注释/书中书，但**仍严禁「第 N 章/前文」这类作品自身元叙事**（那是制作痕迹，不是叙事手法）",
+        "01 §二.3「不超过 30 字长句」→ 放宽到 52 字（偶发推演句/嵌套从句；常规仍守 40 字目标上限）（本原型平均句长上界 40 字，超通用上限属签名）"
+      ]
+    },
+    "conceptual-grand": {
+      "code": "概念宏大",
+      "authors": [
+        "刘慈欣",
+        "阿西莫夫",
+        "勒古恩"
+      ],
+      "signature": "概念驱动、宏大尺度、观念辩论式对话、弱心理强逻辑；冷热对置产生震荡",
+      "reference": "skills/novel-style/reference/conceptual-grand.md",
+      "targets": {
+        "avg_sentence_len": [
+          16,
+          28
+        ],
+        "sentence_len_sd": [
+          9,
+          18
+        ],
+        "comma_per_kchar": [
+          50,
+          90
+        ],
+        "dash_per_kchar": [
+          1,
+          5
+        ],
+        "avg_para_len": [
+          80,
+          240
+        ],
+        "simile_per_100": [
+          0.6,
+          1.8
+        ],
+        "synesthesia_ratio": [
+          1,
+          6
+        ],
+        "psych_ratio": [
+          5,
+          14
+        ],
+        "internal_external": [
+          0.3,
+          1.0
+        ],
+        "dialogue_ratio": [
+          30,
+          52
+        ],
+        "exclaim_per_kchar": [
+          1,
+          5
+        ],
+        "explicit_time_per_kchar": [
+          5,
+          14
+        ],
+        "first_person_ratio": [
+          0,
+          70
+        ],
+        "essay_ratio": [
+          4,
+          12
+        ],
+        "sense_priority": "视觉（尺度感）",
+        "explain_per_kchar": [
+          5,
+          12
+        ],
+        "ellipsis_per_kchar": [
+          0,
+          4
+        ],
+        "colloquial_per_kchar": [
+          1,
+          5
+        ],
+        "jargon_per_kchar": [
+          8,
+          30
+        ],
+        "meta_per_kchar": [
+          0,
+          3
+        ]
+      },
+      "exemptions": [
+        "06/04「新概念先注册」→ 维持强制（本原型术语最多，注册是刚需）",
+        "02「冲突必须升级」→ 允许「观念冲突」替代「烈度升级」，但须在章前卡标冲突轴"
+      ]
+    },
+    "gothic-oppression": {
+      "code": "哥特压迫",
+      "authors": [
+        "爱伦·坡",
+        "洛夫克拉夫特",
+        "雪莉·杰克逊"
+      ],
+      "signature": "第一人称压迫感、感官堆叠（暗/湿/腐）、氛围即主角；恐惧来自不可名状而非血腥",
+      "reference": "skills/novel-style/reference/gothic-oppression.md",
+      "targets": {
+        "avg_sentence_len": [
+          20,
+          36
+        ],
+        "sentence_len_sd": [
+          11,
+          20
+        ],
+        "comma_per_kchar": [
+          70,
+          115
+        ],
+        "dash_per_kchar": [
+          3,
+          9
+        ],
+        "avg_para_len": [
+          110,
+          300
+        ],
+        "simile_per_100": [
+          2.0,
+          4.0
+        ],
+        "synesthesia_ratio": [
+          8,
+          18
+        ],
+        "psych_ratio": [
+          20,
+          36
+        ],
+        "internal_external": [
+          1.5,
+          4.0
+        ],
+        "dialogue_ratio": [
+          12,
+          32
+        ],
+        "exclaim_per_kchar": [
+          1,
+          6
+        ],
+        "explicit_time_per_kchar": [
+          3,
+          9
+        ],
+        "first_person_ratio": [
+          40,
+          100
+        ],
+        "essay_ratio": [
+          2,
+          8
+        ],
+        "sense_priority": "听觉/嗅觉/触觉",
+        "explain_per_kchar": [
+          3,
+          8
+        ],
+        "ellipsis_per_kchar": [
+          2,
+          8
+        ],
+        "colloquial_per_kchar": [
+          1,
+          6
+        ],
+        "jargon_per_kchar": [
+          0,
+          6
+        ],
+        "meta_per_kchar": [
+          0,
+          3
+        ]
+      },
+      "exemptions": [
+        "00-novel-values「不美化暴力」→ 维持强制（本原型用氛围而非血腥，天然合规）",
+        "01 §一（八股检测维度表）「形容词堆砌 🔴」→ 允许**感官通道具体的**堆叠，仍禁空洞形容词",
+        "01 §二.3「不超过 30 字长句」→ 放宽到 48 字（本原型平均句长上界 36 字，超通用上限属签名）"
+      ]
+    },
+    "magic-daily": {
+      "code": "魔幻日常",
+      "authors": [
+        "马尔克斯",
+        "鲁尔福",
+        "富恩特斯"
+      ],
+      "signature": "魔幻被当作日常陈述、循环时间、夸张的平静口气；不解释奇迹",
+      "reference": "skills/novel-style/reference/magic-daily.md",
+      "targets": {
+        "avg_sentence_len": [
+          25,
+          42
+        ],
+        "sentence_len_sd": [
+          12,
+          22
+        ],
+        "comma_per_kchar": [
+          80,
+          125
+        ],
+        "dash_per_kchar": [
+          2,
+          7
+        ],
+        "avg_para_len": [
+          130,
+          340
+        ],
+        "simile_per_100": [
+          1.8,
+          3.5
+        ],
+        "synesthesia_ratio": [
+          6,
+          15
+        ],
+        "psych_ratio": [
+          8,
+          20
+        ],
+        "internal_external": [
+          0.6,
+          1.8
+        ],
+        "dialogue_ratio": [
+          22,
+          42
+        ],
+        "exclaim_per_kchar": [
+          1,
+          5
+        ],
+        "explicit_time_per_kchar": [
+          6,
+          16
+        ],
+        "first_person_ratio": [
+          0,
+          80
+        ],
+        "essay_ratio": [
+          2,
+          8
+        ],
+        "sense_priority": "嗅觉/触觉/热感",
+        "explain_per_kchar": [
+          3,
+          8
+        ],
+        "ellipsis_per_kchar": [
+          1,
+          6
+        ],
+        "colloquial_per_kchar": [
+          4,
+          16
+        ],
+        "jargon_per_kchar": [
+          0,
+          4
+        ],
+        "meta_per_kchar": [
+          0,
+          3
+        ]
+      },
+      "exemptions": [
+        "04 §二「设定闭合性」→ 奇迹本身**不解释**属本原型签名；但须在 `主题/世界观.md` 登记其「规则边界」（读者不需要解释，作者必须知道）",
+        "04 §四「新概念先注册」→ 维持强制",
+        "01 §二.3「不超过 30 字长句」→ 放宽到 55 字（本原型平均句长上界 42 字，超通用上限属签名）"
+      ]
+    }
+  }
+}

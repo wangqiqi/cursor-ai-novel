@@ -20,6 +20,9 @@
 
 笔记路径建议：`.cursorGrowth/learn/craft-notes/<书名或平台简称>.md`
 
+> **收尾必做**：拆文结论里**可复用**的部分，由 `/nlearn` 并入 `.cursorGrowth/learn/writing-voice.md`（声口/禁忌）或 `rhythm.md`（节奏阈值）。
+> `craft-notes/` 只是过程笔记，不会被写作步读取；不并入就会成为死文件。
+
 ## 3. 吸收纪律
 
 - ✅ 抽象成口诀，对照本仓 `reader-rewards` / `emotion-craft` / `opening-protocol` 检验

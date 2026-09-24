@@ -13,7 +13,7 @@ alwaysApply: true
 - **脱敏**：`.cursor/` 内不得出现本机用户名、绝对路径、具体书名/角色高潮等非通用信息。
 
 ## 一、目录约定 (Flat Structure)
-- `主题/`：**常驻**核心资产（世界观、主线、人物、母题、节奏、约束、伏笔、章前卡）。可含子目录 `人物/`、`章节卡/`。章末后记 / 元数据一律进 `.cursorGrowth/check/`（闭合迁 `archive/`），**不新增 `主题/` 子目录**。
+- `主题/`：**常驻**核心资产（世界观、主线、人物、母题、节奏、约束、伏笔、章前卡）。可含子目录 `人物/`、`章节卡/`、`分卷/`（多卷本时）。章末后记 / 元数据一律进 `.cursorGrowth/check/`（闭合迁 `archive/`），**不新增 `主题/` 子目录**。
 - `章节/`：小说正文（一章一目录，一节一文件）。**「章」的颗粒度由 `主题/通用约束.md` §1.1 决定**（网文连载 / 出版长篇 / 大章·卷三档）——节拍表、节奏窗、章前卡的"章"一律按该档解释。
 - `.cursorGrowth/check/`：当前 sprint 检测报告、批注、修改清单（git 忽略）。
 - `.cursorGrowth/archive/`：闭合 sprint 归档（git 忽略）。
@@ -34,6 +34,7 @@ alwaysApply: true
 | 哲学母题 | `主题/哲学母题.md` | — | `/nnew`（仅 Q6=深度） | `templates/scaffold/主题/哲学母题.md` |
 | Logline | `主题/logline.md` | — | `novel-brainstorm` | `templates/logline.md` |
 | 通用约束 | `主题/通用约束.md` | `主题/_meta/通用约束.md` | `/nnew` scaffold | `templates/constraints.md` |
+| 风格档 | `主题/风格档.md` | — | `/nnew` scaffold（空板）· `novel-style` 填定 | `templates/style-profile.md` |
 | 节奏窗 | `主题/节奏窗.md` | `主题/_meta/节奏窗.md` | `/nnew` scaffold | `templates/rhythm-window.md` |
 | 伏笔板 | `主题/伏笔板.md` | `主题/_meta/伏笔板.md` | `/nnew` scaffold（空板） | `templates/foreshadow-board.md` |
 | 人物卡 | `主题/人物/<姓名>.md` | — | `novel-character` | `templates/character-card.md` |
@@ -44,6 +45,8 @@ alwaysApply: true
 | 分卷 / 分部大纲 | `主题/分卷/第<VOL>卷_<卷名>.md` | — | `novel-plot`（多卷时） | `templates/volume-outline.md` |
 | POV 台账 | `主题/POV台账.md` | — | `novel-plot`（多线/群像时） | `templates/pov-ledger.md` |
 | 敏感词表 | `主题/敏感词表.md` | — | 用户（按平台） | `tools/data/sensitive-words.example.txt` |
+| 连续性台账 | `主题/连续性台账.md` | — | `novel-chapter` | `templates/continuity-ledger.md` |
+| 推介包 | `主题/推介包.md` | — | `novel-publish` | —（人读交付物；终局外发，无工具读取） |
 | 章前卡 | `主题/章节卡/第NN章_<标题>_章前卡.md` | `主题/_meta/第NN章_章前卡.md` | `novel-chapter` 阶段 0 | `templates/chapter-brief.md` |
 | 节前卡 | `主题/章节卡/第NN章_第SS节_节前卡.md` | `主题/_meta/第NN章_第SS节_节前卡.md` | `novel-chapter` 阶段 1 | `templates/section-brief.md` |
 | 场景卡 | `主题/章节卡/第NN章_场景M_场景卡.md` | — | `novel-chapter`（可选） | `templates/scene-card.md` |
@@ -53,6 +56,9 @@ alwaysApply: true
 | 项目约定沉淀 | `.cursorGrowth/learn/` | — | `/nlearn` | — |
 | 会话人格覆盖 | `.cursorGrowth/session/persona.json` | — | 呼叫人设后 | `templates/session/persona.json` |
 | 工作板 | `.cursorGrowth/plan.md` | — | `/nnew` scaffold | `templates/plan.md` |
+
+> **写—读配对**：每个资产都要有读取方，否则等于没写。
+> `.cursorGrowth/learn/`（`writing-voice` / `rhythm` / `decisions` / `acceptance`）由 `novel-learn` 写，由 **`novel-chapter` 动笔前 · `novel-rewrite` 第 1 步 · `novel-check` 阶段 1 · `novel-dialogue` 输入 · `novel-run` 阶段 1** 读；`acceptance.md` 是「完成定义」的项目级真源。
 
 ### 缺失资产降级协议（禁止因缺文件停摆）
 

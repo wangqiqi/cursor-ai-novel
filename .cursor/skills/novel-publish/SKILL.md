@@ -80,6 +80,10 @@ disable-model-invocation: false
 - `build/<书名>.epub`（EPUB3，gitignore）
 - `build/<书名>_统计报告.md`（外发产物，gitignore）
 
+## 调度
+
+- 生成推介材料前，调度 **`novel-reader-simulator`** 做一轮读者视角检验：开篇抓力、弃读点、简介的钩子强度。
+
 ## 反模式
 - ❌ 简介剧透核心反转。
 - ❌ 直接发布不扫描敏感词。

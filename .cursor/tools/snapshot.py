@@ -178,6 +178,11 @@ def cmd_diff(root, args):
             continue
         if sha256(cur) == item["sha256"]:
             continue
+        if not os.path.isfile(old):
+            # 快照内缺该文件：不能凭空白比对，明确报错
+            print(f"  ✗ 快照内缺文件，无法逐行比对：{rel}")
+            changed += 1
+            continue
         changed += 1
         a = open(old, encoding="utf-8").read().splitlines()
         b = open(cur, encoding="utf-8").read().splitlines()
@@ -190,19 +195,22 @@ def cmd_diff(root, args):
         if args.verbose:
             for l in d:
                 print("      " + l)
-    # 新增文件
-    if args.paths:
-        for f in iter_files(root, args.paths):
-            rel = os.path.relpath(f, root)
-            if not any(x["path"] == rel for x in man["files"]):
-                print(f"  + 新增：{rel}")
-                added += 1
+    # 新增文件：始终检查（不只 --paths 时），否则 diff 无法当门禁
+    known = {x["path"] for x in man["files"]}
+    scope = args.paths or list(DEFAULT_PATHS)
+    for f in iter_files(root, scope):
+        rel = os.path.relpath(f, root)
+        if rel not in known:
+            print(f"  + 新增：{rel}")
+            added += 1
 
-    print(f"\n{'✓ 无差异' if not (changed or removed or added) else ''}"
-          f"改动 {changed} · 删除 {removed} · 新增 {added} · 行 +{plus}/-{minus}")
+    total = changed or removed or added
+    print(f"\n{'✓ 无差异' if not total else '✗ 有差异'}"
+          f" 改动 {changed} · 删除 {removed} · 新增 {added} · 行 +{plus}/-{minus}")
     if not args.verbose and changed:
         print("提示：加 --verbose 看逐行 diff。")
-    return 0
+    # 与 diff(1) 同语义：有差异退出 1，可作为 CI 门禁
+    return 1 if total else 0
 
 
 def cmd_verify(root, args):
@@ -241,8 +249,10 @@ def cmd_restore(root, args):
         return 1
     targets = man["files"]
     if args.paths:
-        keep = tuple(args.paths)
-        targets = [x for x in targets if x["path"].startswith(keep)]
+        # 前缀匹配必须带路径分隔符：`章节/第1章` 不得吞掉 `章节/第1章续/`
+        pres = [p.rstrip("/") for p in args.paths]
+        targets = [x for x in targets
+                   if any(x["path"] == p or x["path"].startswith(p + "/") for p in pres)]
     if not targets:
         print("✗ 没有匹配的文件可恢复", file=sys.stderr)
         return 1
@@ -256,21 +266,29 @@ def cmd_restore(root, args):
         print("\n这是破坏性操作。确认后请加 --yes 重跑。")
         return 0
 
-    # 先给"当前状态"留安全快照
+    # 先给"当前状态"留安全快照；**失败则中止回滚**（否则没有回头路）
     safe = argparse.Namespace(paths=sorted({os.path.dirname(x["path"]) or "." for x in targets}),
                               note=f"回滚前-{name}")
-    cmd_snapshot(root, safe)
+    if cmd_snapshot(root, safe) != 0:
+        print("✗ 回滚前安全快照失败，已中止（不留退路的破坏性操作不允许执行）", file=sys.stderr)
+        return 1
 
-    n = 0
+    n, skipped = 0, []
     for x in targets:
         src = os.path.join(spath, x["path"])
         dst = os.path.join(root, x["path"])
         if not os.path.isfile(src):
             print(f"  ✗ 快照内缺文件：{x['path']}")
+            skipped.append(x["path"])
             continue
         os.makedirs(os.path.dirname(dst) or root, exist_ok=True)
         shutil.copy2(src, dst)
         n += 1
+    if skipped:
+        print(f"✗ 已回滚 {n} 个文件，但有 {len(skipped)} 个被跳过（快照不完整）：{skipped[:5]}",
+              file=sys.stderr)
+        print("  回滚未完全成功 —— 请用 `snapshot verify` 检查该快照。", file=sys.stderr)
+        return 1
     print(f"✓ 已回滚 {n} 个文件到 {name}")
     print("  改动未提交前，可用 git diff 复核。")
     return 0

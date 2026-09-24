@@ -50,7 +50,7 @@ disable-model-invocation: false
   ```
 - **元信息表**（被 `/nnew` 用于填充 `总览.md` 与 `CHANGELOG.md`）
 
-> **目录先建**：`.cursorGrowth/{archive,check,learn}/`、`主题/人物/`、`主题/章节卡/`、`章节/` 若不存在，先 `mkdir -p` 再写文件。**禁止**因目录缺失而跳过报告落点（所有报告只进 `.cursorGrowth/check/`）。
+> **目录先建**：`.cursorGrowth/{archive,check,learn,session}/`、`主题/人物/`、`主题/章节卡/`、`主题/分卷/`（多卷本）、`章节/` 若不存在，先 `mkdir -p` 再写文件。**禁止**因目录缺失而跳过报告落点（所有报告只进 `.cursorGrowth/check/`）。
 
 ---
 
@@ -209,11 +209,14 @@ Q2 只给字数档，节奏窗还需要 **N** 与**颗粒度档**（见阶段 3b
 | `scaffold/章节/.gitkeep` | `章节/` | 总是 |
 | `templates/logline.md` | `主题/logline.md` | 总是（空白待填） |
 | `templates/constraints.md` | `主题/通用约束.md` | 总是（阈值真源） |
+| `templates/continuity-ledger.md` | `主题/连续性台账.md` | 总是（空板；连续性机械核对的数据源） |
+| `templates/style-profile.md` | `主题/风格档.md` | 总是（**空板**；由 `novel-style` 或 `analyze_style.py --emit-profile` 填定） |
 | `templates/foreshadow-board.md` | `主题/伏笔板.md` | 总是（空板；`novel-plot` 后续填） |
 | `templates/rhythm-window.md` | `主题/节奏窗.md` | 总是（自阶段 3b 填数） |
 | `tools/data/sensitive-words.example.txt` | `主题/敏感词表.md` | 总是（占位，待按平台替换） |
 | `templates/plan.md` | `.cursorGrowth/plan.md` | 总是（**保留头部闸门注释块**，勿自创格式） |
 | `scaffold/.cursorGrowth/*/.gitkeep` | `.cursorGrowth/{archive,check,learn}/` | 总是（模板缺失时用 `mkdir -p` 兜底） |
+| `templates/session/persona.json` | `.cursorGrowth/session/persona.json` | 总是（会话人格覆盖层；不复制则「呼叫」永不生效） |
 
 > **禁止**在项目根写第二份 `plan.md`（真源只有 `.cursorGrowth/plan.md`）。
 

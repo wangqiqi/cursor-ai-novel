@@ -1,6 +1,6 @@
 ---
 description: 剧情设计规则——三幕结构、节拍表、伏笔、奖励节奏与冲突升级
-globs: 主题/主线剧情.md, 主题/主要冲突点.md, 主题/故事大纲.md, 主题/节拍表.md, 主题/伏笔板.md, 主题/节奏窗.md, 主题/logline.md, 主题/章节卡/**/*.md, 主题/_meta/伏笔板.md, 主题/_meta/节奏窗.md, 主题/_meta/*章前卡.md, 主题/_meta/*节前卡.md
+globs: 主题/主线剧情.md, 主题/主要冲突点.md, 主题/故事大纲.md, 主题/节拍表.md, 主题/伏笔板.md, 主题/节奏窗.md, 主题/logline.md, 主题/POV台账.md, 主题/连续性台账.md, 主题/分卷/*.md, 主题/分卷/**/*.md, 主题/章节卡/*.md, 主题/章节卡/**/*.md, 主题/_meta/伏笔板.md, 主题/_meta/节奏窗.md, 主题/_meta/*章前卡.md, 主题/_meta/*节前卡.md
 alwaysApply: false
 ---
 

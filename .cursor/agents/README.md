@@ -110,13 +110,13 @@ novel-check-master            ← 完整性检查主控
 | `novel-rewrite`（5 轮中的第 3 轮 = 文字层） | - | - | - | ✅（第 3 轮） | ✅（第 3 轮） | ✅（每轮） | - |
 | `novel-publish` | - | - | - | - | - | - | ✅ |
 | `novel-continuity` | - | - | - | - | - | ✅ | - |
-| `novel-check`（8 维） | ✅ | ✅ | ✅ | - | - | ✅ | ✅ |
+| `novel-check`（8 维） | ✅ | ✅ | ✅ | ✅（点名时·不计分） | - | ✅ | ✅ |
 | `novel-check-master`（主控） | ✅ | ✅ | ✅ | - | - | ✅ | ✅ |
 
 > - ✅ 表示该 skill 调度此 agent
 > - **加粗** = 强制调度（每节初稿完成后自动跑）
 > - `line-scanner` 与 `line-rewriter` 是 v0.49.0 拆分后的新协作链路（同一轮内**先扫后改**）
-> - **文字层不在 8 维内**：`novel-check` 不调度 scanner/rewriter；去 AI 味走 `/nwrite` 第 5 步或 `novel-rewrite` 第 3 轮
+> - **文字层不在 8 维内**：`novel-check` 默认不调度 scanner/rewriter；**仅当用户点名「去 AI 味 / 八股 / 密度」时**才调度，且**不计入 8 维评分**。常规去 AI 味走 `/nwrite` 第 5 步或 `novel-rewrite` 第 3 轮。
 
 ---
 

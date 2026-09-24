@@ -135,6 +135,11 @@ disable-model-invocation: false
 - 凭空调用：N 个
 ```
 
+## 调度
+
+- 本技能的执行方是 **`novel-continuity-sleuth`**（跨章扫描 / 伏笔 / 时间·量纲 / 同义漏网）；本技能负责范围、口径与报告落点。
+- 被 `novel-check` 调用时，结论以维度 5 / 7 的形式并入其主报告。
+
 ## 输出
 
 - 主输出（活跃期）：`.cursorGrowth/check/第X-Y章_一致性_审校.md`

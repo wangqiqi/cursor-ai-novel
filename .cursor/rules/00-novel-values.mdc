@@ -6,7 +6,8 @@ alwaysApply: true
 # 小说项目 · 价值观宪法（最高优先级）
 
 > **本规则是 `.cursor/` 内的最高优先级规则**。  
-> 与 `00-novel-meta.mdc` 同级，所有 skills / agents / commands / templates 创作时**必须遵守**。  
+> 与 `00-novel-meta.mdc` 同属**宪法层**（均 `alwaysApply: true`），所有 skills / agents / commands / templates 创作时**必须遵守**。
+> **冲突裁决**：与其它规则冲突时以本规则为准；本规则与 `00-novel-meta.mdc` 之间，价值取向以本规则为准、目录与流程约定以 meta 为准。  
 > 价值观是**红线/禁区**，不是建议 —— 违反者视为作品级问题。
 
 ---

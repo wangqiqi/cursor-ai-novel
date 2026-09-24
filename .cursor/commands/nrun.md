@@ -10,7 +10,7 @@ description: 【日常】按 `.cursorGrowth/plan.md` 执行（默认做事入口
 # 1. `.cursorGrowth/plan.md` 存在，且头部 PLAN_APPROVED: true（=「用户已确认」）
 # 2. plan.md 是 templates/plan.md 的 schema（头部 9 字段），否则先按模板补齐
 # 3. 当前在项目根目录
-# 3. git 状态干净或明确
+# 4. git 状态干净或明确
 ```
 
 1. **模式识别** —— 关键词/路径/sprint 名字 → 自动选模式（🌐 世界观 / ✍️ 写作 / 🔍 检查 / 📦 工程）

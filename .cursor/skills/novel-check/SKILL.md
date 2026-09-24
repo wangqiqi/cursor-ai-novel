@@ -114,6 +114,8 @@ disable-model-invocation: false
 - [ ] **本章爽点**已在章前卡登记且正文有兑现？（≥ 1；类型轮换优先）
 - [ ] **章末钩子**已设置？（类型 + 钩子句；禁止平收）
 - [ ] 相对上章：冲突有升级或转化？（非同强度复读）
+- [ ] **节前卡 vs 该节正文**：节前卡登记的目标 / 场景拆解 / **本节爽点** / 节末钩子是否全部兑现？（只比章前卡会漏掉节级承诺）
+- [ ] **POV台账 vs 正文**（多线时）：本节视角归属与**信息边界**是否被违反？（越界知情 = 🔴）
 - [ ] **节奏窗**：若存在 `主题/节奏窗.md`（或 `_meta/` 回退），本章是否标注开篇窗/高潮区？开篇窗内是否已有设定+冲突+主角+兑现？（用项目登记章号，**禁止**用母版死章号判断）
 - [ ] 主题推进到位？
 - [ ] 无「无代价碾压式爽感」踩 `00-novel-values`？
@@ -158,8 +160,17 @@ disable-model-invocation: false
    - `主题/人物/*.md`（涉及的所有人物）
    - `主题/<设定相关>.md`（涉及的所有设定，如 `<概念>.md`、`<地点>.md`）
    - `主题/伏笔板.md`（回退 `主题/_meta/伏笔板.md`）
-   - `主题/通用约束.md`（阈值/白名单）
+   - `主题/通用约束.md`（§1.1 颗粒度 · §二 密度 · §三 白/黑名单 · §四 回收距离 · §八 类型阈值 · §九 风格登记）
    - `主题/节奏窗.md`
+   - **`.cursorGrowth/learn/`**（`.cursorGrowth/learn/writing-voice.md` · `.cursorGrowth/learn/rhythm.md` · `.cursorGrowth/learn/decisions.md` · `.cursorGrowth/learn/acceptance.md`；`/nlearn` 沉淀的项目约定在此生效）
+   - **类型工艺**：读 `主题/总览.md` 的 Q1 → 调 `novel-genre` 加载对应参考，按它的检查清单核验（挂在既有维度下，**不新增第 9 维**）
+   - `主题/连续性台账.md`（**机械核对先行**：`python3 .cursor/tools/check_continuity.py`；
+     死亡角色再出场 / 资源再现 / 层级回退 / 伏笔超期 / 配额超限都是 🔴，结论并入 8 维评审输入，
+     **不要花 token 让语义评审去重新发现这些**）
+   - `主题/POV台账.md`（多线/群像时**必读**：各线推进、**信息边界**、并轨点——否则维度 1/6 的多线项无法核验）
+   - `主题/分卷/第<VOL>卷_*.md`（多卷本时读**当前卷**大纲：卷内节拍分派与卷末交付）
+   - `主题/章节卡/`（章前卡 + **节前卡** + 场景卡；维度 6 要同时比章前卡与节前卡）
+   - **风格指纹**：`主题/风格档.md`（8 轴目标 + 豁免声明）→ 由 `python3 .cursor/tools/check_manuscript.py --style` 机械复核；**未声明的偏离一律 🔴**，已声明豁免判 🟡
 ```
 
 ### 阶段 2：调度（Dispatch）
@@ -176,9 +187,11 @@ disable-model-invocation: false
 | 6 · 完整 | 内置 checklist | 必有 |
 | 7 · 伏笔 | `novel-continuity-sleuth` | 必有 |
 | 8 · 哲学 | `novel-world-keeper` + `novel-reader-simulator` | 如涉及哲学母题 |
+| 附 · 类型 | `novel-genre`（按 Q1 加载参考） | Q1 命中 5 类之一时；其清单**挂进对应维度**核验 |
 | 附 · 文字层 | `novel-line-scanner`（→ `novel-line-rewriter` 改稿） | 用户点名「去 AI 味 / 八股 / 密度」时；**不计入 8 维评分** |
 
 > 调度 5 个专项 agent（character-coach / architect / world-keeper / continuity-sleuth / reader-simulator）；维度 6 由本技能内置，`novel-check-master` 为执行主控。
+> **类型工艺必须过闸**：Q1 命中类型而未加载对应参考 → 本次 check 视为**未完成**（类型硬约束如推理公平性、多线信息边界、体系代价无人核验）。核验结果记入 `主题/通用约束.md` §八。
 
 每个 agent 单独生成**子报告**（**先落 check/，Sprint 闭合再迁 archive/**）：
 

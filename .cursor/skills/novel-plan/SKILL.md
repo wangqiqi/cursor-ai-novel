@@ -53,6 +53,10 @@ disable-model-invocation: false
 4. **即时清理**：Sprint 全绿后，整段移除 `Active sprint` 区块，笔记写入 `.cursorGrowth/archive/`，并在 `LAST_DONE` 记一行；历史 Sprint 不堆回工作板。
 5. **先总后分**：先在 `plan.md` 定大方向，再在子任务中细化。
 
+## 调度
+
+- 结构类任务（改幕、调节拍、控节奏）在阶段 3 拆解后可委 **`novel-architect`** 出方案再落 plan。
+
 ## 反模式
 
 - ❌ 任务超过 5 步不写 `plan.md`。
