@@ -59,22 +59,22 @@ cp ../cursor-ai-novel/.gitignore ./   # 可选：忽略 .cursorGrowth/ 等
 | 闸门 | `skills/novel-plan/reference/universal-gates.md`（任意小说 SOP） |
 | 超长篇 | `skills/novel-check/reference/chunked-scan.md`（分批 → 检查点 → 汇总） |
 | Agents | architect / scanner / rewriter / check-master / continuity … |
-| Commands | `/nhelp` `/nplan` `/nrun` `/nloop` `/nwrite` `/ncheck` `/nfix` `/nnew` `/nlog` `/npublish` … |
+| Commands | `/nhelp` `/nplan` `/nrun` `/nloop` `/nwrite` `/ncheck` `/nfix` `/nnew` `/nlog` `/npublish` `/nstatus` … |
 | Templates | 章前卡 / 节前卡 / 场景卡 / 人物卡 / 组织卡 / 地点卡 / 节拍表 / 伏笔板 / 通用约束 / 节奏窗 / plan / 分卷大纲 / POV 台账 / 风格档 / logline / **连续性台账** |
 | 类型工艺 | `skills/novel-genre/reference/`：推理公平 · 感情线 · 力量体系 · 历史考据 · 喜剧 |
 | 文风原型 | `skills/novel-style/reference/`：**10 原型**（冷峻极简/绵密缠绕/奇喻感官/冷眼反讽/散文化留白/市井口语/智性迷宫/概念宏大/哥特压迫/魔幻日常） |
-| Tools | 母版自检 · **守卫反向测试** · **连续性机械核对** · **连续性机械核对** · 正文机械校验（含 `--style` 风格偏差）· 风格指纹分析 · 快照回滚 · EPUB/TXT 导出（仅标准库） |
+| Tools | **单入口验收** · 母版自检 · **守卫反向测试** · 连续性机械核对 · 正文机械校验（含 `--style` 风格偏差）· 风格指纹分析 · 快照回滚 · EPUB/TXT 导出（仅标准库） |
 
 母版目录说明：`.cursor/README.md`｜路径真源：`.cursor/rules/00-novel-meta.mdc` 资产登记表
 
-### 七个随手可跑的脚本（9 条常用命令，`analyze_style` 占两条）
+### 八个随手可跑的脚本（9 条常用命令，`analyze_style` 占两条）
 
 ```bash
-python3 .cursor/tools/check_integrity.py        # 母版自检（改完 .cursor 必跑）
+python3 .cursor/tools/verify.py                              # 母版验收（唯一入口：自检 + 反向测试 + 冒烟）
+python3 .cursor/tools/check_integrity.py                     # 母版结构自检（verify 的第 1 步，可单跑）
 python3 .cursor/tools/check_manuscript.py       # 正文机械校验：字数/密度/长句/元叙事/敏感词
 python3 .cursor/tools/snapshot.py snapshot --note 改稿前   # 覆盖正文前必留
 python3 .cursor/tools/build_export.py --author "<署名>"     # EPUB3 + 分章 TXT + 合并 MD
-python3 .cursor/tools/check_continuity.py                    # 连续性机械核对（零 token，先于语义评审）
 python3 .cursor/tools/check_continuity.py                    # 连续性机械核对（零 token，先于语义评审）
 python3 .cursor/tools/selftest.py                            # 守卫反向测试（投毒验证）
 python3 .cursor/tools/analyze_style.py --list-proto          # 10 个文风原型
@@ -91,14 +91,19 @@ cursor-ai-novel/
 ├── CHANGELOG.md       # 母版变更（倒序）
 ├── README.md
 ├── .gitignore         # 建议一并复制到新书
-└── .cursorGrowth/     # 本地工作记忆（不入库）
+├── .cursorGrowth/     # 小说工作流工作记忆（不入库）
+└── .dsh/growth/       # PlanRun 会话工作记忆：Sprint 板 / 归档 / learn（不入库）
 ```
 
 | 层 | 进 git？ | 放什么 |
 |----|----------|--------|
 | `.cursor/` | ✅ | 通用框架（禁止写具体书名/角色高潮） |
-| `.cursorGrowth/` | ❌ | plan、归档、会话偏好 |
+| `.cursorGrowth/` | ❌ | 小说工作流 plan、归档、会话偏好 |
+| `.dsh/growth/` | ❌ | **母版维护 Sprint 板**（`.dsh/growth/plan.md`）、归档、learn、session |
 | `主题/` · `章节/` | 各书项目 | **本母版仓不含**；由 `/nnew` 在新书生成 |
+
+> **两份 plan 的分工（禁止双写）**：`/nplan` · `/nrun` · `/nloop` 读 `.cursorGrowth/plan.md`（小说项目的工作板，母版仓保持 `closed`）；
+> 母版自身的能力演进用 `.dsh/growth/plan.md`（PlanRun Sprint 板）。同一时刻只有一个 `ACTIVE`，不互相镜像。
 
 ---
 
@@ -117,4 +122,6 @@ cursor-ai-novel/
 
 ## 版本
 
-当前：**v0.73.0**（见 `CHANGELOG.md`）
+当前：**v0.74.0**（见 `CHANGELOG.md`）
+
+> 验收一条命令：`python3 .cursor/tools/verify.py`（结构自检 + 守卫反向测试 + 工具冒烟，退 0 才算过）。

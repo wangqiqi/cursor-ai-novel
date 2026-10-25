@@ -20,7 +20,7 @@
 | 技法讲解 | `skills/novel-style/reference/strange-metaphor.md`（本文件） |
 | 数值真源 | `.cursor/tools/data/style-archetypes.json`（键名与区间一律引它） |
 
-## 2. 8 轴要点
+## 2. 轴要点（8 轴组 · 20 项）
 
 > 下列区间是 `.cursor/tools/data/style-archetypes.json` 中的**校准起点**，不是语料统计结论。用 `python3 .cursor/tools/analyze_style.py --proto strange-metaphor` 与正文对比，落定后写进 `主题/风格档.md`。
 

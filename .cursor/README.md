@@ -15,7 +15,7 @@
 | **Commands** | `commands/` | 用户入口（`/nhelp` `/nplan` `/nwrite` …） |
 | **Config** | `config/` | `workflow.json` · `roles.json`（字段消费表见 `config/README.md`） |
 | **Templates** | `templates/` | 卡片 / scaffold / 计划板 / 分卷 / POV 台账 |
-| **Tools** | `tools/` | 7 个只读或受控脚本（见下表） |
+| **Tools** | `tools/` | 8 个只读或受控脚本（见下表） |
 
 完整命令路由：`commands/nhelp.md` · `skills/novel-plan/reference/routes.md`
 Agent 层级：`agents/README.md`｜路径真源：`rules/00-novel-meta.mdc` 资产登记表
@@ -28,12 +28,13 @@ Agent 层级：`agents/README.md`｜路径真源：`rules/00-novel-meta.mdc` 资
 | `tools/check_manuscript.py` | **正文机械校验**：字数 / 加粗密度 / 长句 / 连续短句 / `##` 标题 / 作者元叙事 / AI 套词 / 标点 / 元数据残留 / 敏感词 | 每节写完、改稿后、check 前 |
 | `tools/snapshot.py` | **快照 · diff · 回滚**：`snapshot` / `list` / `diff` / `verify` / `restore` | 覆盖正文**之前**必留 |
 | `tools/build_export.py` | **外发打包**：合并 Markdown · 分章 TXT · EPUB3（手写）· 统计报告 | `/npublish` 阶段 |
-| `tools/analyze_style.py` | **风格指纹**：样本反推 8 轴 · 原型对比 · 生成风格档草稿 | 定风格 / 风格漂移排查 |
+| `tools/analyze_style.py` | **风格指纹**：样本反推 8 轴组 / 20 项 · 原型对比 · 生成风格档草稿 | 定风格 / 风格漂移排查 |
 | `tools/check_continuity.py` | **连续性机械核对**（零 token）：退场角色再出场 · 资源再现 · 层级回退 · 伏笔超期 · 节奏配额 · 事件冷却；带豁免账本 | `/nwrite` 定稿后 · `/ncheck` 阶段 1 |
 | `tools/selftest.py` | **守卫反向测试**：向临时副本投毒，确认每条守卫真的报警（守卫不响=回归） | 改完母版后必跑 |
+| `tools/verify.py` | **单入口验收**：结构自检 → 反向测试 → 全部工具 `--help` 冒烟；**任一步失败即退 1** | 改完母版后**只跑这一条** |
 
 ```bash
-python3 .cursor/tools/check_integrity.py          # 母版自检
+python3 .cursor/tools/verify.py                   # 母版验收（唯一入口：自检 + 反向测试 + 冒烟）
 python3 .cursor/tools/check_manuscript.py         # 正文机械校验（阈值读 主题/通用约束.md）
 python3 .cursor/tools/snapshot.py snapshot --note 改稿前
 python3 .cursor/tools/build_export.py --author "<署名>"
@@ -84,13 +85,16 @@ cd my-novel
 2. **节奏窗**：只给比例公式（`skills/novel-plot/reference/opening-protocol.md`）；绝对章号只在各项目 `主题/节奏窗.md`
 3. **回灌**：某书沉淀出的通用技法，经授权后再合入本母版；项目偏好用 `/nlearn` 进 Growth。跨书 SOP 真源：`skills/novel-plan/reference/universal-gates.md`。
 4. **版本**：母版变更记入仓库根 `CHANGELOG.md`，并打 tag
-5. **改完必自检**：
+5. **改完必自检（单入口）**：
 
 ```bash
-python3 .cursor/tools/check_integrity.py
+python3 .cursor/tools/verify.py
 ```
 
-校验：规则 frontmatter/globs、skill/command/agent 头部字段、**全部交叉引用不断链**、孤儿模板、tools 语法、reference 体例、`novel-genre` 派发表完整性、**写—读配对**（防止"只写不读"的孤岛资产）、`role.default` / `MAX_LOOPS` / `learn_dir` 四处配置一致、资产登记表与 `templates/` 对齐。
+校验：规则 frontmatter/globs、skill/command/agent 头部字段、**全部交叉引用不断链**、孤儿模板、tools 语法、reference 体例、`novel-genre` 派发表完整性、**写—读配对**（防止"只写不读"的孤岛资产）、`role.default` / `MAX_LOOPS` / `learn_dir` 四处配置一致、资产登记表与 `templates/` 对齐，以及三组**契约守卫**：**根级文档真值**（README/CHANGELOG 断链 · 工具清单 · 版本三方一致 · 重复行）、**标点与轴名同口径**（`check_manuscript` ↔ `analyze_style` 逐字一致；参考文档轴名必须 ∈ `_axes`）、**阈值契约**（`templates/constraints.md` §2.1 声明的默认值 ↔ 工具常量，双向比对）。
+**并且**用 `tools/selftest.py` 逐条投毒，证明上面每条守卫**真的会报警**——"自检通过"不是证据，"守卫会响"才是。
+**验收口径：`verify.py` 退 0**（= 结构自检零错误 且 反向测试全绿 且 全部工具 `--help` 正常）。
+6. **两份 plan 的分工（禁止双写）**：小说工作流（`/nplan` `/nrun` `/nloop`）只读 `.cursorGrowth/plan.md`——母版仓里它保持 `SPRINT_STATUS: closed`；**母版自身的能力演进**用 `.dsh/growth/plan.md`（PlanRun Sprint 板，gitignore）。同一时刻只有一个 `ACTIVE`，两份不互相镜像。
 
 ---
 

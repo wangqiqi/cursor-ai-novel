@@ -44,6 +44,46 @@
 | **链式句密度** | 见本项目 |  | 拆短句、加留白 |
 | **母题数字复读** | 见本项目 |  | 改动作折射 |
 
+### 2.1 母版默认阈值 · 机器可读（守卫 `[threshold]` 比对）
+
+> **本表是母版默认值的登记处**：`.cursor/tools/*.py` 里的同名常量必须与它逐项一致，
+> 否则结构自检报 `[threshold]` 错误。
+> **要改本书阈值请填上表的「本项目」列**（以及 §五 的本项目列），**不要改本表**——
+> 本表是契约，不是配置；改它等于改母版对所有书的默认口径。
+>
+> 这张表存在的理由：标点每章上限、弱化套词密度、句长反均匀化阈值这些数字原先
+> **只活在代码里**，而 `主题/通用约束.md` 声明自己是"唯一阈值真源"——作者查不到它们，
+> 也就无从知道自己在被哪条线判 🔴。
+>
+> **覆盖口径**：标点上限写「破折号 ≤ N · 省略号 ≤ N · 感叹号 ≤ N」，弱化套词写
+> 「… 合计 > N / 千字」，反均匀化写「每 100 字 ≥ N 个」或「句长 CV < N」，
+> 工具会读本文件的这些行覆盖上表默认值；字数窗与配额分别在 §一 / §五 覆盖。
+
+| 契约键 | 默认值 | 工具常量 |
+|--------|--------|----------|
+| `bold_warn` | 60 | `check_manuscript.py` → `DEFAULTS["bold_warn"]` |
+| `bold_fail` | 130 | `check_manuscript.py` → `DEFAULTS["bold_fail"]` |
+| `sec_target_min` | 2000 | `check_manuscript.py` → `DEFAULTS["sec_target_min"]` |
+| `sec_target_max` | 5000 | `check_manuscript.py` → `DEFAULTS["sec_target_max"]` |
+| `sec_hard_max` | 5000 | `check_manuscript.py` → `DEFAULTS["sec_hard_max"]` |
+| `long_sentence` | 30 | `check_manuscript.py` → `DEFAULTS["long_sentence"]` |
+| `short_sentence` | 8 | `check_manuscript.py` → `DEFAULTS["short_sentence"]` |
+| `short_run` | 4 | `check_manuscript.py` → `DEFAULTS["short_run"]` |
+| `dash_max` | 4 | `check_manuscript.py` → `DEFAULTS["dash_max"]` |
+| `ellipsis_max` | 3 | `check_manuscript.py` → `DEFAULTS["ellipsis_max"]` |
+| `exclaim_max` | 5 | `check_manuscript.py` → `DEFAULTS["exclaim_max"]` |
+| `soft_tic_per_kchar` | 3 | `check_manuscript.py` → `SOFT_TIC_PER_KCHAR` |
+| `sentence_cv_min` | 0.25 | `check_manuscript.py` → `SENTENCE_CV_MIN` |
+| `short_per_100` | 1 | `check_manuscript.py` → `SHORT_PER_100` |
+| `quota_per_chapter` | 1 | `check_continuity.py` → `QUOTA_PER_CHAPTER` |
+| `fast_streak_trigger` | 3 | `check_continuity.py` → `FAST_STREAK` |
+| `absent_max` | 8 | `check_continuity.py` → `ABSENT_MAX` |
+| `cooldown_conflict_thrill` | 2 | `check_continuity.py` → `EVENT_COOLDOWN["冲突刺激"]` |
+| `cooldown_bond_deepening` | 1 | `check_continuity.py` → `EVENT_COOLDOWN["关系深化"]` |
+| `cooldown_faction_building` | 2 | `check_continuity.py` → `EVENT_COOLDOWN["势力经营"]` |
+| `cooldown_world_painting` | 3 | `check_continuity.py` → `EVENT_COOLDOWN["世界观铺陈"]` |
+| `cooldown_tension_escalation` | 2 | `check_continuity.py` → `EVENT_COOLDOWN["张力升级"]` |
+
 ## 三、白名单 / 黑名单（项目特化）
 
 ### 3.1 加粗白名单（任何改稿模式都不得删除）

@@ -17,6 +17,11 @@
 /plan.md
 # 真源：.cursorGrowth/plan.md（随 .cursorGrowth/ 一并忽略）
 
+# ────── PlanRun / DSH 会话工作记忆（不入库）──────
+# 只忽略 growth（Sprint 板 · 归档 · learn · session）；.dsh/ 其余内容仍可入库。
+# 与 .cursorGrowth/ 的分工见 README「两份 plan 的分工」。
+/.dsh/growth/
+
 # ────── .cursor/ 软退路（事故快照 / 重放中转，不入库）──────
 .cursor.bak*
 .cursor.new*
@@ -38,6 +43,10 @@ $RECYCLE.BIN/
 *~
 *.orig
 *.rej
+
+# ────── Python 缓存（.cursor/tools/*.py 随母版分发，不得带 .pyc）──────
+__pycache__/
+*.pyc
 
 # ────── 环境 / 构建产物 ──────
 .env

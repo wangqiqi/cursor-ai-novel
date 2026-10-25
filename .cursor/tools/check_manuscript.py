@@ -51,6 +51,28 @@ DEFAULTS = {
 
 LEGAL_H2 = ("本节完", "本章完")
 
+# ── 标点变体归一（真源：rules/01-novel-language.mdc §二.4）──────────────────
+# 作者与模型打出的 `...`、`--`、`──`、`–`、`―`、`。。。` 与全角 `……`/`——`
+# 是**同一种毛病**，必须归一到同一次计数。此前只认 `…`/`—`，于是最脏的稿子
+# 反而 0 命中（实测：10×`...` + 6×`──` + 6×`--` + 6×`–` 报 🔴 0）。
+# ⚠ 这两个常量与 `analyze_style.py` 的 DASH_PAT / ELLIPSIS_PAT 必须**逐字一致**
+#   （守卫 `[punct]` 比对；风格指纹与写作闸门对同一段文本必须得到同一个"用了几次"）。
+DASH_PAT = r"(?:[—–―－]+|─{2,}|-{2,})"
+ELLIPSIS_PAT = r"(?:…+|。{3,}|\.{3,})"
+EXCLAIM_PAT = r"[！!]"
+# 变体明细（只用于把最脏的写法点名，便于改稿；与总数分开统计）
+PUNCT_VARIANTS = (
+    ("破折号", DASH_PAT, "dash_max", 4,
+     (("ASCII --", r"-{2,}"), ("箱线 ──", r"─{2,}"), ("非标准单破折号 –/―", r"[–―]"))),
+    ("省略号", ELLIPSIS_PAT, "ellipsis_max", 3,
+     (("ASCII ...", r"\.{3,}"), ("三连句号 。。。", r"。{3,}"))),
+    ("感叹号", EXCLAIM_PAT, "exclaim_max", 5, ()),
+)
+
+# 反均匀化阈值（真源：templates/constraints.md §2.1 机器表；守卫 `[threshold]` 比对）
+SENTENCE_CV_MIN = 0.25     # 句长变异系数 < 此值 → 🟡（句子过于整齐）
+SHORT_PER_100 = 1.0        # 每 100 汉字至少应有 N 个 ≤10 字短句
+
 # 分镜 / 电影术语（`05-novel-style.mdc` §二）
 FILMIC = ["镜头", "全景", "特写", "拉远", "切换到", "画面", "打点", "分镜", "场景切换"]
 # 作者元叙事（`.cursor/skills/novel-plan/reference/universal-gates.md` §8）
@@ -200,6 +222,21 @@ def apply_constraints(cfg, text):
     m = re.search(r"(\d+)\s*[–\-~]\s*(\d+)\s*/\s*100\s*字[^\n]*(?:偏高|🟡)", text)
     if m:
         cfg["bold_warn"] = float(m.group(2))
+    # 标点每章上限：`破折号 ≤ 4` 一类写法（值是「每章几次」，不是每千字）
+    for label, key in (("破折号", "dash_max"), ("省略号", "ellipsis_max"),
+                       ("感叹号", "exclaim_max")):
+        m = re.search(rf"{label}[^\n]*?[≤<＜]\s*(\d+)", text)
+        if m:
+            cfg[key] = int(m.group(1))
+    m = re.search(r"弱化套词[^\n]*?(\d+(?:\.\d+)?)\s*/\s*千字", text)
+    if m:
+        cfg["soft_tic_per_kchar"] = float(m.group(1))
+    m = re.search(r"(?:句长)?CV[^\n]*?[<＜]\s*(0?\.\d+)", text)
+    if m:
+        cfg["sentence_cv_min"] = float(m.group(1))
+    m = re.search(r"每\s*100\s*字[^\n]*?(\d+(?:\.\d+)?)\s*个", text)
+    if m:
+        cfg["short_per_100"] = float(m.group(1))
     return cfg
 
 
@@ -452,13 +489,18 @@ def check_file(path, cfg, sensitive, project_blacklist):
             add("🔴", "filmic-term", f"`{w}`")
 
     # ── 标点上限（每章）：取自公开去 AI 味阈值（deai ≤2/千字·inkflow ≤4/章）──
-    for label, pat, cap in (("破折号", r"[—－]+", cfg.get("dash_max", 4)),
-                            ("省略号", r"[…]+", cfg.get("ellipsis_max", 3)),
-                            ("感叹号", r"[！!]", cfg.get("exclaim_max", 5))):
+    # 变体归一（`...`/`--`/`──`/`–`/`。。。`）见 PUNCT_VARIANTS 定义处
+    for label, pat, key, default_cap, variants in PUNCT_VARIANTS:
+        cap = cfg.get(key, default_cap)          # 项目可在 主题/通用约束.md 覆盖
         n = len(re.findall(pat, text))
         if n > cap:
+            detail = ""
+            hit = [(vn, len(re.findall(vp, text))) for vn, vp in variants]
+            hit = [(vn, c) for vn, c in hit if c]
+            if hit:
+                detail = "（其中 " + "、".join(f"{vn} {c} 处" for vn, c in hit) + "）"
             add("🔴" if n > cap * 2 else "🟡", "punct-overuse",
-                f"{label} {n} 处 > 每章上限 {cap}（多用即模板腔，靠句法与留白替代）")
+                f"{label} {n} 处 > 每章上限 {cap}（多用即模板腔，靠句法与留白替代）{detail}")
 
     # ── 结构型套式（成对出现才是模板腔）──
     for pat, why in PATTERN_RULES:
@@ -468,10 +510,11 @@ def check_file(path, cfg, sensitive, project_blacklist):
 
     # ── 弱化副词堆叠（不禁止单词，只禁止密度）──
     tic = sum(text.count(w) for w in SOFT_TIC_WORDS)
-    if cjk and tic / (cjk / 1000) > SOFT_TIC_PER_KCHAR:
+    tic_cap = cfg.get("soft_tic_per_kchar", SOFT_TIC_PER_KCHAR)
+    if cjk and tic / (cjk / 1000) > tic_cap:
         add("🟡", "tic-density",
             f"弱化套词（{'/'.join(SOFT_TIC_WORDS)}）{tic} 次 = "
-            f"{tic / (cjk / 1000):.1f}/千字 > {SOFT_TIC_PER_KCHAR}")
+            f"{tic / (cjk / 1000):.1f}/千字 > {tic_cap}")
 
     # ── 反均匀化：每 100 字至少 1 句 ≤ 10 字（句子长度过分整齐 = AI 腔）──
     _sents = split_sentences(text)
@@ -479,17 +522,21 @@ def check_file(path, cfg, sensitive, project_blacklist):
         window = 100.0
         per_100 = cjk / window
         short = sum(1 for s in _sents if cjk_count(s) <= 10)
-        if short < per_100:
+        short_cap = cfg.get("short_per_100", SHORT_PER_100)
+        if short < per_100 * short_cap:
             add("🟡", "uniform-length",
-                f"每 100 字仅 {short / per_100:.2f} 个 ≤10 字短句（< 1）——句子长度过于均匀")
+                f"每 100 字仅 {short / per_100:.2f} 个 ≤10 字短句"
+                f"（< {short_cap:g}）——句子长度过于均匀")
         sd = 0.0
         lens = [cjk_count(s) for s in _sents]
         if len(lens) > 1:
             mean = sum(lens) / len(lens)
             sd = (sum((x - mean) ** 2 for x in lens) / len(lens)) ** 0.5
             cv = sd / mean if mean else 0
-            if cv < 0.25:
-                add("🟡", "uniform-length", f"句长变异系数 CV={cv:.2f} < 0.25（过于整齐）")
+            cv_min = cfg.get("sentence_cv_min", SENTENCE_CV_MIN)
+            if cv < cv_min:
+                add("🟡", "uniform-length",
+                    f"句长变异系数 CV={cv:.2f} < {cv_min}（过于整齐）")
 
     # ── 作者元叙事（只看叙事行；`#` 标题、`>` 视角标记、表格/列表行不算正文叙述）──
     for i, line in enumerate(text.splitlines(), 1):
@@ -530,7 +577,9 @@ def check_file(path, cfg, sensitive, project_blacklist):
         add("🔴", "html-comment", "正文含 HTML 注释（元数据）")
 
     # ── 标点：半角与引号 ──
-    for m in re.finditer(r"[\u4e00-\u9fff][,;!?]", text):
+    # 汉字后的半角标点一律可疑：此前只查 `,;!?`，漏掉最常被误打的 `.`（英文句号）
+    # 与 `:`（英文冒号）——正是 `...` 这类变体的入口。
+    for m in re.finditer(r"[\u4e00-\u9fff][,;.!?:]", text):
         add("🟡", "halfwidth-punct", f"`{m.group(0)}`")
         break
     if re.search(r'["\']', text):

@@ -21,7 +21,7 @@ disable-model-invocation: false
 
 | 层 | 文件 | 性质 |
 |---|---|---|
-| **数值层** | `tools/data/style-archetypes.json` | 10 个原型的 8 轴区间（**机器真源**） |
+| **数值层** | `tools/data/style-archetypes.json` | 10 个原型的 8 轴组 / 20 项区间（**机器真源**） |
 | **技法层** | `reference/<原型>.md`（本目录） | 每个原型的**怎么做**（人读参考） |
 | **项目层** | `主题/风格档.md`（模板 `templates/style-profile.md`） | 本书的目标值 + **合法偏离声明** |
 
@@ -33,20 +33,20 @@ disable-model-invocation: false
 
 | 入口 | 做法 |
 |---|---|
-| **有参照样本**（推荐） | 贴 1–2 千字 → `python3 .cursor/tools/analyze_style.py --sample <文件> --emit-profile` → 反推 8 轴数值 → 生成 `主题/风格档.md` 草稿 |
+| **有参照样本**（推荐） | 贴 1–2 千字 → `python3 .cursor/tools/analyze_style.py --sample <文件> --emit-profile` → 反推 8 轴组 / 20 项数值 → 生成 `主题/风格档.md` 草稿 |
 | **没样本，只想"像某类"** | `python3 .cursor/tools/analyze_style.py --list-proto` 挑原型 → 按其区间手填风格档 |
 | **已有书稿想看看现状** | `python3 .cursor/tools/analyze_style.py --manuscript` → 看当前实际指纹 |
 
 ### 阶段 2 · 加载原型技法
 
 读 `主题/风格档.md` 的「主原型」→ 加载 `reference/<主原型 file>.md`；有副原型再加载一份（**最多 2 份**）。
-每份参考都含：原型签名 · 8 轴要点 · 可操作技法 · **最容易做砸的地方** · 合法偏离声明 · 自检清单。
+每份参考都含：原型签名 · 轴要点（8 轴组 · 20 项） · 可操作技法 · **最容易做砸的地方** · 合法偏离声明 · 自检清单。
 
 ### 阶段 3 · 落参数（不许只读不落）
 
 | 落到哪 | 落什么 |
 |---|---|
-| `主题/风格档.md` §二 | 8 轴**本项目目标值**（原型区间为基础，可调） |
+| `主题/风格档.md` §二 | 8 轴组 / 20 项**本项目目标值**（原型区间为基础，可调） |
 | `主题/风格档.md` §三 | **合法偏离声明**——豁免哪条规则 / 放宽幅度 / 理由 |
 | `主题/通用约束.md` §九 | 风格登记（主副原型 + 一句话定位），供其他 skill 快速读取 |
 | `主题/通用约束.md` §3.2 | 该原型的**禁用万能词**（`check_manuscript.py` 会机械扫） |

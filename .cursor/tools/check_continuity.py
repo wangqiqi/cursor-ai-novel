@@ -52,6 +52,7 @@ EVENT_COOLDOWN = {      # 事件类型 → 冷却章数
     "世界观铺陈": 3, "world_painting": 3,
     "张力升级": 2, "tension_escalation": 2,
 }
+QUOTA_PER_CHAPTER = 1   # 单章"实质推进项"上限（> 此值 → 🔴）
 FUTURE_WORDS = ("已死亡", "已退场")
 GONE_WORDS = ("已消耗", "已损毁", "已转手")
 
@@ -282,9 +283,10 @@ def main():
                      r[3] if len(r) > 3 else ""))
     rows.sort()
     for no, gear, cnt, ev in rows:
-        if cnt > 1:
+        if cnt > QUOTA_PER_CHAPTER:
             hit("🔴", "quota-exceed", f"第{no:03d}章",
-                f"第{no:03d}章实质推进项 {cnt} 项 > 每章上限 1（防剧情加速：配额是硬上限）")
+                f"第{no:03d}章实质推进项 {cnt} 项 > 每章上限 {QUOTA_PER_CHAPTER}"
+                f"（防剧情加速：配额是硬上限）")
         if no > latest:
             hit("🟡", "ledger-ahead", f"第{no:03d}章",
                 f"台账已登记第{no:03d}章，但正文只到第{latest:03d}章")

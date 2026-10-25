@@ -141,6 +141,94 @@ def t_genre(cur):
     return "[genre]"
 
 
+# ── 根级文档守卫（README / CHANGELOG）──────────────────────────────────────
+# check_root_docs 只在项目根存在 README.md 时生效，所以这些用例要先把根文档
+# 复制进沙箱——否则守卫被整段跳过，"通过"就毫无意义。
+
+def _root_docs(cur):
+    """把根文档放进沙箱。
+
+    **消费方书项目没有母版 README/CHANGELOG**——直接 `shutil.copy` 会 FileNotFoundError，
+    让整条反向测试在书项目里变红（实测：`/verify.py` 在只含 `.cursor/` 的项目里 2/3）。
+    缺文件时改用最小可判样本，保证这条守卫在任何项目里都被**真的执行**，而不是整段跳过。
+    """
+    sandbox = os.path.dirname(cur)
+    src_proj = os.path.dirname(SRC)
+    real = {"README.md": os.path.join(src_proj, "README.md"),
+            "CHANGELOG.md": os.path.join(src_proj, "CHANGELOG.md")}
+    seeded = {
+        "README.md": "# 测试项目\n\n当前：**v1.0.0**（见 `CHANGELOG.md`）\n",
+        "CHANGELOG.md": "# CHANGELOG\n\n## [v1.0.0] · 2026-01-01 · init · 起始\n",
+    }
+    for name, dst in (("README.md", sandbox), ("CHANGELOG.md", sandbox)):
+        target = os.path.join(dst, name)
+        if os.path.isfile(real[name]):
+            shutil.copy(real[name], target)
+        else:
+            with open(target, "w", encoding="utf-8") as fh:
+                fh.write(seeded[name])
+
+
+def t_root_dup(cur):
+    """根 README 出现完全重复行（复制粘贴事故）"""
+    _root_docs(cur)
+    line = ("python3 .cursor/tools/check_manuscript.py       "
+            "# 正文机械校验：字数/密度/长句/元叙事/敏感词")
+    append(os.path.join(os.path.dirname(cur), "README.md"), f"\n{line}\n{line}\n")
+    return "[root-docs]"
+
+
+def t_root_version(cur):
+    """README 声明的版本与 CHANGELOG 首条不一致"""
+    _root_docs(cur)
+    p = os.path.join(os.path.dirname(cur), "README.md")
+    with open(p, encoding="utf-8") as fh:
+        t = fh.read()
+    t2 = re.sub(r"当前：\*\*v[\d.]+\*\*", "当前：**v0.0.1**", t, count=1)
+    if t2 == t:
+        raise AssertionError("README 里找不到版本声明锚点")
+    with open(p, "w", encoding="utf-8") as fh:
+        fh.write(t2)
+    return "[root-docs]"
+
+
+def t_root_tool_drift(cur):
+    """新加了工具，但两处清单都没登记（文档债）"""
+    _root_docs(cur)
+    with open(os.path.join(cur, "tools", "dummy_probe.py"), "w", encoding="utf-8") as fh:
+        fh.write('print("用法：probe")\n')
+    return "[root-docs]"
+
+
+def t_tools_junk(cur):
+    """工具目录残留 .pyc / __pycache__（会随 .cursor/ 复制进每一本新书）"""
+    os.makedirs(os.path.join(cur, "tools", "__pycache__"), exist_ok=True)
+    open(os.path.join(cur, "tools", "x.pyc"), "w").close()
+    return "[tools]"
+
+
+def t_punct_drift(cur):
+    """两个工具对「省略号」的口径漂移（同一份文本两套答案）"""
+    patch(os.path.join(cur, "tools", "analyze_style.py"),
+          'ELLIPSIS_PAT = re.compile(r"(?:…+|。{3,}|\\.{3,})")',
+          'ELLIPSIS_PAT = re.compile(r"[…]+")')
+    return "[punct]"
+
+
+def t_axis_ref(cur):
+    """参考文档里的轴名/轴组数量与 `_axes` 真源漂移"""
+    append(os.path.join(cur, "skills", "novel-style", "reference", "cold-minimal.md"),
+           "\n- 假轴：`fake_axis_zzz`\n- 声明：9 轴组 / 21 项\n")
+    return "[axis-ref]"
+
+
+def t_threshold_drift(cur):
+    """阈值只改了工具、没改声明真源（`主题/通用约束.md` 是唯一阈值真源）"""
+    patch(os.path.join(cur, "tools", "check_manuscript.py"),
+          '"dash_max": 4,', '"dash_max": 6,')
+    return "[threshold]"
+
+
 # (名称, 投毒函数, 期望标记, 期望至少几条)
 INTEGRITY_CASES = [
     ("clause：悬空 § 引用", t_clause, "[clause]", 1),
@@ -155,6 +243,13 @@ INTEGRITY_CASES = [
     ("link：悬空文件引用", t_link, "[link]", 1),
     ("skill：name 与目录不一致", t_skill_name, "[skill]", 1),
     ("genre：类型参考缺失", t_genre, "[genre]", 1),
+    ("root-docs：README 重复行", t_root_dup, "[root-docs]", 1),
+    ("root-docs：版本与 CHANGELOG 不一致", t_root_version, "[root-docs]", 1),
+    ("root-docs：新工具未登记清单", t_root_tool_drift, "[root-docs]", 1),
+    ("tools：残留 .pyc/__pycache__", t_tools_junk, "[tools]", 2),
+    ("punct：两工具标点口径漂移", t_punct_drift, "[punct]", 1),
+    ("axis-ref：轴名/轴组声明漂移", t_axis_ref, "[axis-ref]", 2),
+    ("threshold：阈值声明与工具常量漂移", t_threshold_drift, "[threshold]", 1),
 ]
 
 # ── 其它工具的门禁（各自在临时小项目里跑）─────────────────────────────────
@@ -281,6 +376,76 @@ def tc_analyze_bad_json(root):
     return rc == 2 and "Traceback" not in out
 
 
+def tc_punct_variants(root):
+    """★ 标点变体必须归一计数：`...` / `--` / `──` / `–` / `。。。` 与全角同罪。
+
+    本用例直接复刻已实证的反例：10×`...` + 6×`──` + 6×`--` + 6×`–`
+    在改动前报 **🔴 0**（省略号 cap 3 / 破折号 cap 4 形同虚设）。
+    """
+    import json as _json
+    body = "".join(f"她沉默...又开口{i}。\n" for i in range(10))
+    body += "".join(f"铁门──作响{i}。\n" for i in range(6))
+    body += "".join(f"灯灭--影长{i}。\n" for i in range(6))
+    body += "".join(f"风起–云涌{i}。\n" for i in range(6))
+    body += "夜里的风从巷口灌进来，吹得门帘一下一下撞着木框，声音闷闷的。" * 20
+    with open(os.path.join(root, "章节/第01章_a/第01节_b.md"), "w", encoding="utf-8") as fh:
+        fh.write("# 第01节 b\n\n> 【视角：他】\n\n" + body)
+    rc, out = run([sys.executable, ".cursor/tools/check_manuscript.py", "--json",
+                   "章节/第01章_a/第01节_b.md"], root)
+    if rc == 0:
+        return False
+    issues = _json.loads(out)["files"][0]["issues"]
+    reds = [i[1] for i in issues if i[0] == "🔴"]
+    return reds.count("punct-overuse") >= 2          # 破折号 + 省略号 各一条
+
+
+def tc_punct_override(root):
+    """项目覆盖必须真的生效：`主题/通用约束.md` 写「破折号 ≤ 1」后，2 处即报。
+
+    `templates/constraints.md` §2.1 承诺这些默认值可由项目覆盖——但解析器原先
+    **根本不读这些行**，覆盖是"写了不生效"的死路。两侧都验：
+    无覆盖（cap 4）不报 → 有覆盖（cap 1）必报。
+    """
+    import json as _json
+    tgt = "章节/第01章_a/第01节_c.md"
+    with open(os.path.join(root, tgt), "w", encoding="utf-8") as fh:
+        fh.write("# 第01节 c\n\n> 【视角：他】\n\n他站住——又走了——回头。\n"
+                 + "风从巷口灌进来，吹得门帘撞着木框。\n" * 40)
+
+    def dash_hits(out):
+        issues = _json.loads(out)["files"][0]["issues"]
+        return any(i[1] == "punct-overuse" and "破折号" in i[2] for i in issues)
+
+    _rc, out0 = run([sys.executable, ".cursor/tools/check_manuscript.py", "--json", tgt], root)
+    if dash_hits(out0):                     # 默认 cap 4，2 处不该报
+        return False
+    with open(os.path.join(root, "主题", "通用约束.md"), "w", encoding="utf-8") as fh:
+        fh.write("| 项 | 值 |\n|----|-----|\n"
+                 "| **标点每章上限** | 破折号 ≤ 1 · 省略号 ≤ 1 · 感叹号 ≤ 1 |\n")
+    _rc, out1 = run([sys.executable, ".cursor/tools/check_manuscript.py", "--json", tgt], root)
+    return dash_hits(out1)
+
+
+def tc_verify_gate(root):
+    """verify.py 必须**真的关闸**：干净副本绿、投毒副本红。
+
+    单入口验收最容易退化成装饰——打印 ✓ 但从不退 1。这里两侧都验：
+    干净副本必须退 0（不误报），注入一处断链后必须退 1 且写明"验收失败"。
+    """
+    sandbox = os.path.dirname(root)
+    clean = os.path.join(sandbox, "verify_clean")
+    shutil.rmtree(clean, ignore_errors=True)
+    os.makedirs(clean)
+    shutil.copytree(SRC, os.path.join(clean, ".cursor"))
+    rc_clean, out_clean = run([sys.executable, ".cursor/tools/verify.py", "--no-selftest"], clean)
+    if rc_clean != 0:
+        return False
+    append(os.path.join(clean, ".cursor", "skills", "novel-chapter", "SKILL.md"),
+           "\n- 见 `.cursor/tools/does_not_exist_verify.py`\n")
+    rc_bad, out_bad = run([sys.executable, ".cursor/tools/verify.py", "--no-selftest"], clean)
+    return rc_bad != 0 and "验收失败" in out_bad
+
+
 def tc_calibration_separation(root):
     """★ 评审校准：已知坏样本必须命中多项，已知好样本必须零 🔴。
 
@@ -367,6 +532,9 @@ def tc_continuity_no_ledger(root):
 
 
 TOOL_CASES = [
+    ("verify：门禁真的会关（干净绿/投毒红）", tc_verify_gate),
+    ("★ check_manuscript：标点变体归一（旧漏检反例）", tc_punct_variants),
+    ("★ check_manuscript：项目覆盖真的生效", tc_punct_override),
     ("check_manuscript：目标带单位仍被拦", tc_style_usnit),
     ("check_manuscript：目标无法解析按失败计", tc_style_notarget),
     ("check_manuscript：备注列伪造豁免失效", tc_style_fake_exempt),
@@ -385,6 +553,11 @@ TOOL_CASES = [
 
 
 def main():
+    if "-h" in sys.argv or "--help" in sys.argv:
+        # `--help` 必须是**纯查询**：在此之前它会真的把整个投毒矩阵跑一遍（31 行输出、rc=0），
+        # 使用者无法区分"这是帮助"还是"测试通过了"。
+        print(__doc__.strip())
+        return 0
     sandbox = tempfile.mkdtemp(prefix="novel-selftest-")
     ok = bad = 0
     print("守卫反向测试（投毒 → 期望守卫报警）\n")

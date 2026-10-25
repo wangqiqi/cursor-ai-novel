@@ -10,15 +10,26 @@ check_integrity.py · .cursor 工具链自检
     python3 .cursor/tools/check_integrity.py            # 在项目根或 .cursor/ 内运行均可
     python3 .cursor/tools/check_integrity.py --quiet     # 只输出问题
 
-检查项：
+检查项（19 类守卫；每类都有 `selftest.py` 的投毒用例证明它**真的会响**）：
   1  规则 frontmatter     alwaysApply=true 不得带 globs；false 必须带 globs；globs 不得含 < >
   2  skill frontmatter    name/description/disable-model-invocation 齐备，name 与目录同名
   3  command frontmatter  name 与文件名一致，description 存在
   4  agent frontmatter    name 与文件名一致，description 存在
-  5  断链引用             文本中引用的 .md/.mdc/.json 路径必须可解析
+  5  断链引用             文本中引用的 .md/.mdc/.json/.py/.txt 路径必须可解析
   6  孤儿模板             templates/ 下每个模板都应被至少一处引用
   7  配置一致性           role.default / MAX_LOOPS / learn_dir / persona_id 四处对齐
   8  资产登记表交叉核对   00-novel-meta 登记的模板都在 templates/ 里存在
+  9  工具语法             tools/*.py 可编译 + 敏感词示例表在位
+ 10  reference 体例       reference/*.md 无 frontmatter、首行为 `# 标题`
+ 11  类型工艺派发表        novel-genre 的 5 份参考「目录 ↔ 派发表」双向存在
+ 12  风格层三层一致       风格档模板 ↔ 原型库引用
+ 13  轴契约               `_axes` 声明 ↔ analyze_style.py 实际计算 + 单位可读
+ 14  上下文预算           必读表 ≤ 6 行（超即 ERROR）
+ 15  § 条款引用           `§X` 必须指向真实条款
+ 16  规则 glob 覆盖       登记资产须被语义对口的规则覆盖
+ 17  写—读配对            每个资产都要有读取方（防孤岛资产）
+ 18  根级文档真值         README/CHANGELOG：断链 · 工具清单 · 版本一致 · 重复行
+ 19  标点/轴名/阈值契约   两工具标点同口径 · 轴名与轴组数不漂移 · 阈值声明 ↔ 工具常量
 """
 
 import json
@@ -34,7 +45,8 @@ warnings = []
 
 # 项目侧（由工作流在项目里生成，母版中本就不存在）——引用它们不算断链
 PROJECT_SIDE = (
-    "主题/", "章节/", ".cursorGrowth/", "build/", "dist/", "out/",
+    "主题/", "章节/", ".cursorGrowth/", ".dsh/growth/", ".dsh/",
+    "build/", "dist/", "out/",
     "archive/", "check/", "learn/", "session/",
 )
 # 明确允许的根级文件
@@ -351,6 +363,15 @@ def check_tools():
     ex = os.path.join(tools_dir, "data", "sensitive-words.example.txt")
     if not os.path.isfile(ex):
         errors.append("[tools] 缺 tools/data/sensitive-words.example.txt（check_manuscript 的回退词表）")
+    # `tools/` 随母版**复制给每一本新书**：带上 .pyc/__pycache__ 会污染下游项目。
+    # （`compile()` 只做语法检查、不落盘，就是为了不产生它；本地手跑 py_compile 会。）
+    for dirpath, dirnames, filenames in os.walk(tools_dir):
+        if "__pycache__" in dirnames:
+            errors.append(f"[tools] {rel(os.path.join(dirpath, '__pycache__'))}/ 不应留在母版"
+                          f"（随 .cursor/ 分发会带到新书项目；已加入 .gitignore）")
+        for fn in filenames:
+            if fn.endswith(".pyc"):
+                errors.append(f"[tools] {rel(os.path.join(dirpath, fn))} 不应留在母版")
 
 
 # ── 10. reference 文件体例 ──────────────────────────────────────────────────
@@ -774,6 +795,265 @@ def check_write_read_pairs():
             )
 
 
+# ── 16. 根级文档真值（README / CHANGELOG）──────────────────────────────────
+# 此前自检只走 `.cursor/`，而母版**对外**的承诺（工具清单、计数、版本、
+# "改完怎么验"）全写在仓库根两份文档里，一处守卫都没有。
+DUP_MIN_LEN = 25          # 短行（表格分隔、`---`、空标题）重复是正常的
+VERSION_RE = re.compile(r"当前：\*\*(v[\d.]+)\*\*")
+CHLOG_VER_RE = re.compile(r"^##\s*\[(v[\d.]+)\]", re.M)
+
+
+def _resolves_root(token, origin_dir):
+    """根文档专用解析：先走通用 resolves，再按 basename 全树兜底。
+
+    根文档正文常用不带路径的短名（如 `comedy-craft.md`），而 CHANGELOG 里的
+    `xxx.md→yyy.md` 是**改名记录**——只在最新条目上做断链检查（见 check_root_docs）。
+    """
+    if resolves(token, origin_dir) != "missing":
+        return "ok"
+    if "/" not in token:
+        for _dp, _dn, fns in os.walk(ROOT):
+            if token in fns:
+                return "ok"
+    return "missing"
+
+
+def _current_section(lines):
+    """CHANGELOG 只检查**最新一条**：历史条目是"当时发生过什么"的记录，
+    里面天然含有已被改名/删除的旧路径（如 `xxx.md→yyy.md`），
+    用今天的文件系统去判它就是假阳性，还会逼人改写历史。"""
+    seen = 0
+    for i, line in enumerate(lines):
+        if line.startswith("## ["):
+            seen += 1
+            if seen == 2:
+                return lines[:i]
+    return lines
+
+
+def check_root_docs():
+    """① 断链 ② 工具清单覆盖 ③ 版本一致 ④ 全等重复行。"""
+    readme_p = os.path.join(PROJECT, "README.md")
+    if not os.path.isfile(readme_p):
+        return                      # 消费方书项目没有母版 README 属正常
+    chlog_p = os.path.join(PROJECT, "CHANGELOG.md")
+    docs = [(readme_p, "README.md", read(readme_p).splitlines())]
+    if os.path.isfile(chlog_p):
+        docs.append((chlog_p, "CHANGELOG.md", _current_section(read(chlog_p).splitlines())))
+    cur_readme_p = os.path.join(ROOT, "README.md")
+
+    # ① 断链：根文档里引用的文件必须能解析（含 `.cursor/...` 与裸文件名）
+    for _path, label, lines in docs:
+        for i, line in enumerate(lines, 1):
+            if any(s in line for s in SKIP_LINE_SUBSTR):
+                continue
+            for token in PATH_RE.findall(line):
+                token = token.strip("`（）()|,;:")
+                if not token or token.startswith(SKIP_PREFIX):
+                    continue
+                if any(s in token for s in SKIP_SUBSTR):
+                    continue
+                if _resolves_root(token, PROJECT) == "missing":
+                    errors.append(f"[root-docs] {label}:{i}: 引用无法解析 → {token}")
+
+    # ② 工具清单覆盖：新加工具而两处清单没跟上 = 文档债
+    tools = sorted(f for f in os.listdir(os.path.join(ROOT, "tools")) if f.endswith(".py"))
+    readme_text = read(readme_p)
+    cur_text = read(cur_readme_p) if os.path.isfile(cur_readme_p) else ""
+    for f in tools:
+        if f not in readme_text:
+            errors.append(f"[root-docs] 根 README 未登记新工具 tools/{f}（清单漂移）")
+        if cur_text and f not in cur_text:
+            errors.append(f"[root-docs] .cursor/README.md 未登记新工具 tools/{f}（清单漂移）")
+
+    # ③ 版本一致：README 声明 == CHANGELOG 首条（git tag 缺失只警告）
+    m = VERSION_RE.search(readme_text)
+    if not m:
+        errors.append("[root-docs] 根 README 缺「当前：**vX.Y.Z**」版本声明")
+    elif os.path.isfile(chlog_p):
+        mc = CHLOG_VER_RE.search(read(chlog_p))
+        if not mc:
+            errors.append("[root-docs] CHANGELOG 缺 `## [vX.Y.Z]` 首条版本")
+        elif mc.group(1) != m.group(1):
+            errors.append(f"[root-docs] 版本不一致：README {m.group(1)} != CHANGELOG {mc.group(1)}")
+        elif os.path.isdir(os.path.join(PROJECT, ".git")):
+            import subprocess
+            try:
+                got = subprocess.run(["git", "tag", "-l", m.group(1)], cwd=PROJECT,
+                                     capture_output=True, text=True, timeout=10)
+                if not got.stdout.strip():
+                    warnings.append(
+                        f"[root-docs] 版本 {m.group(1)} 尚无 git tag（提交时应同步打 tag）")
+            except Exception:       # noqa: BLE001  缺 git / 超时都不该中断自检
+                pass
+
+    # ④ 全等重复行：复制粘贴事故（如 README 里同一条命令出现两次）
+    for _path, label, lines in docs:
+        seen = {}
+        for i, line in enumerate(lines, 1):
+            s = line.strip()
+            if len(s) < DUP_MIN_LEN or s[0] in "#|>-":
+                continue
+            if s in seen:
+                errors.append(f"[root-docs] {label}:{i}: 与第 {seen[s]} 行完全重复 → {s[:40]}…")
+            else:
+                seen[s] = i
+
+
+# ── 17. 标点变体归一契约（check_manuscript ↔ analyze_style）──────────────
+PUNCT_KEYS = ("DASH_PAT", "ELLIPSIS_PAT")
+
+
+def check_punct_contract():
+    """同一段文本，写作闸门与风格指纹必须得到同一个「用了几次」。
+
+    两个工具都是可直接单跑的脚本、不共享模块，所以标点模式是各自定义的字面量，
+    会漂移。它**已经漂移过**：`analyze_style` 认 `...` 算省略号，`check_manuscript`
+    不认 —— 同一份样本，指纹说「省略号 8 次/千字」，闸门报 0 处。
+    """
+    pats = {}
+    for tool in ("check_manuscript.py", "analyze_style.py"):
+        p = os.path.join(ROOT, "tools", tool)
+        if not os.path.isfile(p):
+            errors.append(f"[punct] 缺 tools/{tool}")
+            return
+        src = read(p)
+        for key in PUNCT_KEYS:
+            m = re.search(rf'^{key}\s*=\s*(?:re\.compile\()?r"([^"]+)"', src, re.M)
+            if not m:
+                errors.append(f"[punct] tools/{tool} 找不到 {key} 的字面量（守卫无法比对）")
+                continue
+            pats.setdefault(key, {})[tool] = m.group(1)
+    for key, got in pats.items():
+        if len(set(got.values())) > 1:
+            errors.append(
+                f"[punct] {key} 两处口径不一致："
+                + "；".join(f"{t}={v}" for t, v in sorted(got.items()))
+                + "（写作闸门与风格指纹必须同口径）")
+
+
+# ── 18. 风格轴名 / 轴组声明（正文 ↔ `_axes` 真源）──────────────────────────
+AXIS_CLAIM_RE = re.compile(r"(\d+)\s*轴组\s*/\s*(\d+)\s*项")
+AXIS_TOKEN_RE = re.compile(r"`([a-z][a-z0-9]*(?:_[a-z0-9]+)+)`")
+
+
+def check_axis_refs():
+    """① 参考文档里反引号包着的轴名必须真在 `_axes` 里；
+       ② 「N 轴组 / M 项」的声明必须与 `_axes` 实际数量一致。
+
+    为什么需要：`[axis]` 只比对 JSON ↔ analyze_style.py，**正文是盲区**。
+    已实证：`cold-minimal.md` 写 `first_ratio`（真名 `first_person_ratio`）、
+    20 处正文把 8 个轴组说成「8 轴」，而机器真源是 8 组 / 20 项。
+    """
+    json_p = os.path.join(ROOT, "tools", "data", "style-archetypes.json")
+    if not os.path.isfile(json_p):
+        return
+    try:
+        axes = json.loads(read(json_p)).get("_axes", {})
+    except json.JSONDecodeError:
+        return                      # 解析失败已由 [axis] 报，不重复
+    if not axes:
+        return
+    groups = {v.get("axis") for v in axes.values() if v.get("axis")}
+    style_dir = os.path.join(ROOT, "skills", "novel-style")
+
+    for dirpath, _dirnames, filenames in os.walk(ROOT):
+        for fn in sorted(filenames):
+            if not fn.endswith((".md", ".mdc")):
+                continue
+            path = os.path.join(dirpath, fn)
+            for i, line in enumerate(read(path).splitlines(), 1):
+                if os.path.commonpath([path, style_dir]) == style_dir:
+                    for tok in AXIS_TOKEN_RE.findall(line):
+                        if tok not in axes:
+                            errors.append(
+                                f"[axis-ref] {rel(path)}:{i}: `{tok}` 不是 `_axes` 里的轴名"
+                                f"（正文与机器真源漂移）")
+                for g, n in AXIS_CLAIM_RE.findall(line):
+                    if int(g) != len(groups) or int(n) != len(axes):
+                        errors.append(
+                            f"[axis-ref] {rel(path)}:{i}: 写「{g} 轴组 / {n} 项」，"
+                            f"真源是 {len(groups)} 组 / {len(axes)} 项")
+
+
+# ── 19. 阈值契约（声明真源 ↔ 工具常量）────────────────────────────────────
+# `主题/通用约束.md` 自称"本项目唯一的阈值真源"，但这些数字原先**只活在代码里**。
+# 双向比对：
+#   ① 契约表每个键 → 工具常量必须存在且数值相等（改工具不改模板 → ERROR）；
+#   ② 工具每个阈值常量 → 契约表必须登记（隐形阈值 → ERROR）。
+THRESHOLD_CONTRACT = (
+    ("bold_warn", "check_manuscript.py", "DEFAULTS:bold_warn"),
+    ("bold_fail", "check_manuscript.py", "DEFAULTS:bold_fail"),
+    ("sec_target_min", "check_manuscript.py", "DEFAULTS:sec_target_min"),
+    ("sec_target_max", "check_manuscript.py", "DEFAULTS:sec_target_max"),
+    ("sec_hard_max", "check_manuscript.py", "DEFAULTS:sec_hard_max"),
+    ("long_sentence", "check_manuscript.py", "DEFAULTS:long_sentence"),
+    ("short_sentence", "check_manuscript.py", "DEFAULTS:short_sentence"),
+    ("short_run", "check_manuscript.py", "DEFAULTS:short_run"),
+    ("dash_max", "check_manuscript.py", "DEFAULTS:dash_max"),
+    ("ellipsis_max", "check_manuscript.py", "DEFAULTS:ellipsis_max"),
+    ("exclaim_max", "check_manuscript.py", "DEFAULTS:exclaim_max"),
+    ("soft_tic_per_kchar", "check_manuscript.py", "CONST:SOFT_TIC_PER_KCHAR"),
+    ("sentence_cv_min", "check_manuscript.py", "CONST:SENTENCE_CV_MIN"),
+    ("short_per_100", "check_manuscript.py", "CONST:SHORT_PER_100"),
+    ("quota_per_chapter", "check_continuity.py", "CONST:QUOTA_PER_CHAPTER"),
+    ("fast_streak_trigger", "check_continuity.py", "CONST:FAST_STREAK"),
+    ("absent_max", "check_continuity.py", "CONST:ABSENT_MAX"),
+    ("cooldown_conflict_thrill", "check_continuity.py", "COOLDOWN:冲突刺激"),
+    ("cooldown_bond_deepening", "check_continuity.py", "COOLDOWN:关系深化"),
+    ("cooldown_faction_building", "check_continuity.py", "COOLDOWN:势力经营"),
+    ("cooldown_world_painting", "check_continuity.py", "COOLDOWN:世界观铺陈"),
+    ("cooldown_tension_escalation", "check_continuity.py", "COOLDOWN:张力升级"),
+)
+CONTRACT_TABLE = os.path.join("templates", "constraints.md")
+CONTRACT_ROW_RE = re.compile(r"^\|\s*`([a-z0-9_]+)`\s*\|\s*([0-9.]+)\s*\|", re.M)
+
+
+def _tool_threshold(src, expr):
+    """按 `DEFAULTS:key` / `CONST:NAME` / `COOLDOWN:事件名` 取工具常量的数值。"""
+    kind, _, key = expr.partition(":")
+    if kind == "CONST":
+        m = re.search(rf"^{re.escape(key)}\s*=\s*([0-9.]+)", src, re.M)
+    else:                                   # DEFAULTS / COOLDOWN 都是字典字面量
+        m = re.search(rf'"{re.escape(key)}"\s*:\s*([0-9.]+)', src)
+    return float(m.group(1)) if m else None
+
+
+def check_threshold_contract():
+    table_p = os.path.join(ROOT, CONTRACT_TABLE)
+    if not os.path.isfile(table_p):
+        errors.append(f"[threshold] 缺 {rel(table_p)}（阈值契约表真源）")
+        return
+    declared = {k: float(v) for k, v in CONTRACT_ROW_RE.findall(read(table_p))}
+    if not declared:
+        errors.append(f"[threshold] {rel(table_p)} 里没有解析到任何契约行")
+        return
+
+    checked, bad = 0, len(errors)
+    for key, tool, expr in THRESHOLD_CONTRACT:
+        tool_p = os.path.join(ROOT, "tools", tool)
+        if not os.path.isfile(tool_p):
+            errors.append(f"[threshold] {key}: 缺 tools/{tool}")
+            continue
+        got = _tool_threshold(read(tool_p), expr)
+        if got is None:
+            errors.append(f"[threshold] {key}: tools/{tool} 里找不到 {expr}"
+                          f"（常量被改名/删除——守卫无法比对）")
+        elif key not in declared:
+            errors.append(f"[threshold] `{key}`（{tool} {expr}={got:g}）未登记进 "
+                          f"{CONTRACT_TABLE} §2.1——隐形阈值，作者查不到")
+        elif abs(declared[key] - got) > 1e-9:
+            errors.append(f"[threshold] `{key}` 声明 {declared[key]:g} != "
+                          f"{tool} {expr}={got:g}（改一处忘另一处）")
+        else:
+            checked += 1
+    for key in sorted(set(declared) - {k for k, _t, _e in THRESHOLD_CONTRACT}):
+        errors.append(f"[threshold] {CONTRACT_TABLE} 登记的 `{key}` 在守卫契约表里不存在"
+                      f"（登记项没有对应工具常量）")
+    if checked and len(errors) == bad:
+        warnings.append(f"[threshold] 阈值契约 {checked} 项一致（声明 ↔ 工具常量）")
+
+
 def main():
     if "-h" in sys.argv or "--help" in sys.argv:
         print(__doc__.strip())
@@ -796,6 +1076,10 @@ def main():
     check_clause_citations()
     check_rule_glob_coverage()
     check_write_read_pairs()
+    check_root_docs()
+    check_punct_contract()
+    check_axis_refs()
+    check_threshold_contract()
 
     if not quiet:
         rules = len(list(walk("rules")))
